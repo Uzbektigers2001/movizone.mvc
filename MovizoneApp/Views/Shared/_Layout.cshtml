@@ -59,6 +59,46 @@
             background-color: #ff3385;
             border-color: #ff3385;
         }
+
+        /* Mobile Responsive Improvements */
+        @@media (max-width: 768px) {
+            .header__logo {
+                font-size: 1.25rem;
+            }
+            .header__nav-link {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.9rem;
+            }
+            .card-title {
+                font-size: 0.95rem;
+            }
+            .btn {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .footer {
+                padding: 2rem 0 1rem;
+                margin-top: 2rem;
+            }
+            h1, .h1 {
+                font-size: 1.75rem;
+            }
+            h2, .h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .navbar-nav .nav-link {
+                padding: 0.5rem 0;
+            }
+            .pagination {
+                font-size: 0.875rem;
+            }
+            .card-body {
+                padding: 0.75rem;
+            }
+        }
     </style>
 </head>
 
@@ -87,7 +127,13 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" asp-controller="Movie" asp-action="Catalog">Movies</a></li>
                                         <li><a class="dropdown-item" asp-controller="TVSeries" asp-action="Catalog">TV Series</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Actor" asp-action="Index">Actors</a></li>
                                     </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="header__nav-link nav-link" asp-controller="Search" asp-action="Index">
+                                        <i class="ti ti-search"></i> Search
+                                    </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="header__nav-link nav-link" asp-controller="Pricing" asp-action="Index">Pricing</a>
@@ -110,12 +156,28 @@
                                         <i class="ti ti-bookmark"></i> Watchlist
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="header__nav-link nav-link" asp-controller="Auth" asp-action="SignIn">Sign In</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="header__nav-link nav-link" asp-controller="Auth" asp-action="SignUp">Sign Up</a>
-                                </li>
+                                @if (Context.Session.GetInt32("UserId").HasValue)
+                                {
+                                    <li class="nav-item">
+                                        <a class="header__nav-link nav-link" asp-controller="Auth" asp-action="Profile">
+                                            <i class="ti ti-user"></i> @Context.Session.GetString("UserName")
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="header__nav-link nav-link" asp-controller="Auth" asp-action="Logout">
+                                            <i class="ti ti-logout"></i> Logout
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="header__nav-link nav-link" asp-controller="Auth" asp-action="SignIn">Sign In</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="header__nav-link nav-link" asp-controller="Auth" asp-action="SignUp">Sign Up</a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </nav>

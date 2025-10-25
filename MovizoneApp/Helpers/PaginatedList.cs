@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace MovizoneApp.Helpers
 {
     public class PaginatedList<T> : List<T>

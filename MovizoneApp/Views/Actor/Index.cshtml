@@ -1,0 +1,55 @@
+@model List<MovizoneApp.Models.Actor>
+@{
+    ViewData["Title"] = "Actors";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2">
+                    <i class="ti ti-users"></i> All Actors
+                </h1>
+                <p class="text-muted">Browse our talented cast</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var actor in Model)
+                {
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="card bg-dark text-white h-100">
+                            <a asp-action="Details" asp-route-id="@actor.Id" class="text-decoration-none">
+                                @if (!string.IsNullOrEmpty(actor.Photo))
+                                {
+                                    <img src="@actor.Photo" class="card-img-top" alt="@actor.Name" style="height: 250px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
+                                        <i class="ti ti-user" style="font-size: 64px;"></i>
+                                    </div>
+                                }
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-white mb-1">@actor.Name</h6>
+                                    @if (actor.BirthDate.HasValue)
+                                    {
+                                        <small class="text-muted">Born @actor.BirthDate.Value.Year</small>
+                                    }
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="alert alert-info">No actors found in the database.</div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
