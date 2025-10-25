@@ -1,0 +1,57 @@
+@model List<MovizoneApp.Models.TVSeries>
+@{
+    ViewData["Title"] = "TV Series Catalog";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2">TV Series Catalog</h1>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var series in Model)
+                {
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card bg-dark text-white h-100">
+                            <div class="position-relative">
+                                <img src="https://via.placeholder.com/300x450/1a1a2e/ff55a5?text=@Uri.EscapeDataString(series.Title)"
+                                     class="card-img-top" alt="@series.Title">
+                                <span class="position-absolute top-0 end-0 m-2 item__rate--green">
+                                    @series.Rating
+                                </span>
+                                <span class="position-absolute top-0 start-0 m-2 badge bg-primary">
+                                    @series.Status
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a asp-action="Details" asp-route-id="@series.Id"
+                                       class="text-white text-decoration-none">
+                                        @series.Title
+                                    </a>
+                                </h5>
+                                <p class="card-text">
+                                    <small class="text-muted">@series.Genre</small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">@series.Seasons Seasons • @series.TotalEpisodes Episodes</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <p class="text-center">No TV series found.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>

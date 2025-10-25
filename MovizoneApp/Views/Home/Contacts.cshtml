@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 mb-3">Contact Us</h1>
+                <p class="lead">We'd love to hear from you</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card bg-dark text-white">
+                    <div class="card-body p-4">
+                        <h2 class="h4 mb-4">Send us a message</h2>
+
+                        <form>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Your name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Your email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Your message" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 mb-4">
+                <h2 class="h4 mb-4">Get in Touch</h2>
+
+                <div class="mb-4">
+                    <h5 class="mb-2">
+                        <i class="ti ti-mail me-2" style="color: #ff55a5;"></i>Email
+                    </h5>
+                    <p class="text-muted">support@hotflix.com</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="mb-2">
+                        <i class="ti ti-phone me-2" style="color: #ff55a5;"></i>Phone
+                    </h5>
+                    <p class="text-muted">+1 (555) 123-4567</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="mb-2">
+                        <i class="ti ti-map-pin me-2" style="color: #ff55a5;"></i>Address
+                    </h5>
+                    <p class="text-muted">
+                        123 Streaming Street<br>
+                        Los Angeles, CA 90001<br>
+                        United States
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="mb-2">
+                        <i class="ti ti-clock me-2" style="color: #ff55a5;"></i>Business Hours
+                    </h5>
+                    <p class="text-muted">
+                        Monday - Friday: 9:00 AM - 6:00 PM PST<br>
+                        Saturday - Sunday: Closed
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
