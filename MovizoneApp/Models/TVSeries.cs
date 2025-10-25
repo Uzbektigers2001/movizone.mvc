@@ -19,6 +19,7 @@ namespace MovizoneApp.Models
         public string PosterImage { get; set; } = string.Empty; // Video player poster/thumbnail
         public string VideoUrl { get; set; } = string.Empty;
         public List<string> Actors { get; set; } = new List<string>();
+        public List<Episode> Episodes { get; set; } = new List<Episode>();
         public bool IsFeatured { get; set; }
         public DateTime FirstAired { get; set; }
         public string Status { get; set; } = string.Empty; // "Ongoing" or "Completed"
