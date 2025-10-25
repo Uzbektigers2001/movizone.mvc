@@ -1,0 +1,124 @@
+﻿@using MovizoneApp.Models
+@{
+    ViewData["Title"] = "Home";
+    var featuredMovies = ViewBag.FeaturedMovies as List<Movie>;
+    var featuredSeries = ViewBag.FeaturedSeries as List<TVSeries>;
+}
+
+<!-- Hero Section -->
+<section class="home py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4 fw-bold mb-3">
+                    <span class="text-white">NEW ITEMS</span>
+                    <span style="color: #ff55a5;">OF THIS SEASON</span>
+                </h1>
+                <p class="lead">Discover the latest movies and TV shows</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Movies -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="h3 mb-4">Featured Movies</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            @if (featuredMovies != null && featuredMovies.Any())
+            {
+                foreach (var movie in featuredMovies)
+                {
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card bg-dark text-white h-100">
+                            <div class="position-relative">
+                                <img src="https://via.placeholder.com/300x450/1a1a2e/ff55a5?text=@Uri.EscapeDataString(movie.Title)"
+                                     class="card-img-top" alt="@movie.Title">
+                                <span class="position-absolute top-0 end-0 m-2 item__rate--green">
+                                    @movie.Rating
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id"
+                                       class="text-white text-decoration-none">
+                                        @movie.Title
+                                    </a>
+                                </h5>
+                                <p class="card-text">
+                                    <small class="text-muted">@movie.Genre</small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">@movie.Year • @movie.Duration min</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Featured TV Series -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="h3 mb-4">Featured TV Series</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            @if (featuredSeries != null && featuredSeries.Any())
+            {
+                foreach (var series in featuredSeries)
+                {
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card bg-dark text-white h-100">
+                            <div class="position-relative">
+                                <img src="https://via.placeholder.com/300x450/1a1a2e/ff55a5?text=@Uri.EscapeDataString(series.Title)"
+                                     class="card-img-top" alt="@series.Title">
+                                <span class="position-absolute top-0 end-0 m-2 item__rate--green">
+                                    @series.Rating
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id"
+                                       class="text-white text-decoration-none">
+                                        @series.Title
+                                    </a>
+                                </h5>
+                                <p class="card-text">
+                                    <small class="text-muted">@series.Genre</small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">@series.Seasons Seasons • @series.Status</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="h3 mb-4">Ready to watch?</h2>
+                <p class="lead mb-4">Choose your plan and start streaming today</p>
+                <a asp-controller="Pricing" asp-action="Index" class="btn btn-primary btn-lg">
+                    View Pricing Plans
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

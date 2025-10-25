@@ -1,0 +1,110 @@
+@{
+    ViewData["Title"] = "Help Center - FAQ";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 mb-3">Help Center</h1>
+                <p class="lead">Frequently Asked Questions</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item bg-dark text-white mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                What is HotFlix?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                HotFlix is a streaming service that offers a wide variety of movies and TV shows.
+                                You can watch as much as you want, whenever you want, on any internet-connected device.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-dark text-white mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How much does HotFlix cost?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                HotFlix offers several plans to meet your needs. The plan you choose will determine the
+                                number of devices you can watch on at the same time and whether you can watch in HD or Ultra HD.
+                                Check our Pricing page for current plans and prices.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-dark text-white mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Where can I watch?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                You can watch HotFlix on any internet-connected device that offers the HotFlix app,
+                                including smart TVs, game consoles, streaming media players, set-top boxes, smartphones, and tablets.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-dark text-white mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                How do I cancel?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                HotFlix is flexible. There are no annoying contracts and no commitments.
+                                You can easily cancel your account online in two clicks. There are no cancellation fees.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-dark text-white mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                What can I watch on HotFlix?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                HotFlix has an extensive library of feature films, documentaries, TV shows, anime, and more.
+                                Watch as much as you want, anytime you want. New movies and shows are added regularly.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-dark text-white mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                Is HotFlix good for kids?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                The HotFlix Kids experience is included in your membership to give parents control
+                                while kids enjoy family-friendly TV shows and movies in their own space.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <p class="mb-3">Still have questions?</p>
+                    <a asp-action="Contacts" class="btn btn-primary">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

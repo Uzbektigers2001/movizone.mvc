@@ -1,0 +1,78 @@
+@model MovizoneApp.Models.TVSeries
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4 mb-4">
+                <img src="https://via.placeholder.com/400x600/1a1a2e/ff55a5?text=@Uri.EscapeDataString(Model.Title)"
+                     class="img-fluid rounded" alt="@Model.Title">
+            </div>
+            <div class="col-12 col-md-8">
+                <h1 class="h2 mb-3">@Model.Title</h1>
+
+                <div class="mb-3">
+                    <span class="item__rate--green me-2">@Model.Rating</span>
+                    <span class="badge bg-primary me-2">@Model.Status</span>
+                    <span class="text-muted">@Model.Year</span>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Overview</h5>
+                    <p>@Model.Description</p>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-6 col-md-4 mb-3">
+                        <h6 class="text-muted">Genre</h6>
+                        <p>@Model.Genre</p>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <h6 class="text-muted">Seasons</h6>
+                        <p>@Model.Seasons</p>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <h6 class="text-muted">Episodes</h6>
+                        <p>@Model.TotalEpisodes</p>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <h6 class="text-muted">Country</h6>
+                        <p>@Model.Country</p>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <h6 class="text-muted">Creator</h6>
+                        <p>@Model.Creator</p>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <h6 class="text-muted">First Aired</h6>
+                        <p>@Model.FirstAired.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                </div>
+
+                @if (Model.Actors.Any())
+                {
+                    <div class="mb-4">
+                        <h5>Cast</h5>
+                        <ul class="list-unstyled">
+                            @foreach (var actor in Model.Actors)
+                            {
+                                <li class="mb-1">• @actor</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="mt-4">
+                    <a asp-action="Catalog" class="btn btn-secondary">
+                        <i class="ti ti-arrow-left"></i> Back to Catalog
+                    </a>
+                    <button class="btn btn-primary">
+                        <i class="ti ti-player-play"></i> Watch Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

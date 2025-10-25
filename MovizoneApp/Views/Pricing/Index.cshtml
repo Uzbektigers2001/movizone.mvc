@@ -1,0 +1,60 @@
+@model List<MovizoneApp.Models.PricingPlan>
+@{
+    ViewData["Title"] = "Pricing Plans";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 mb-3">Choose Your Plan</h1>
+                <p class="lead">Select the perfect plan for your streaming needs</p>
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var plan in Model)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card bg-dark text-white h-100 @(plan.IsPopular ? "border-primary" : "")">
+                            @if (plan.IsPopular)
+                            {
+                                <div class="card-header bg-primary text-center">
+                                    <strong>Most Popular</strong>
+                                </div>
+                            }
+                            <div class="card-body p-4 text-center">
+                                <h3 class="card-title mb-3">@plan.Name</h3>
+                                <div class="mb-4">
+                                    <span class="display-4" style="color: #ff55a5;">$@plan.Price</span>
+                                    <span class="text-muted">/@plan.Period</span>
+                                </div>
+
+                                <ul class="list-unstyled mb-4">
+                                    @foreach (var feature in plan.Features)
+                                    {
+                                        <li class="mb-2">
+                                            <i class="ti ti-check text-success"></i> @feature
+                                        </li>
+                                    }
+                                </ul>
+
+                                <button class="btn @(plan.IsPopular ? "btn-primary" : "btn-outline-primary") w-100">
+                                    Choose Plan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <p class="text-muted">All plans include a 30-day money-back guarantee</p>
+            </div>
+        </div>
+    </div>
+</section>
