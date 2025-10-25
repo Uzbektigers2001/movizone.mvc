@@ -194,7 +194,10 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">
-                <video id="seriesPlayer" playsinline controls data-poster="@Model.CoverImage">
+                @{
+                    var posterImage = !string.IsNullOrEmpty(Model.PosterImage) ? Model.PosterImage : Model.CoverImage;
+                }
+                <video id="seriesPlayer" playsinline controls data-poster="@posterImage">
                     @if (!string.IsNullOrEmpty(Model.VideoUrl))
                     {
                         <source src="@Model.VideoUrl" type="video/mp4" size="1080">

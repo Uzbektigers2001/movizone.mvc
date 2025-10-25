@@ -68,6 +68,18 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Poster Image Path (for video player)</label>
+                    <input asp-for="PosterImage" class="form-control" placeholder="/img/posters/poster1.jpg">
+                    <small class="text-muted">Or upload below. Falls back to cover image if not set.</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Upload Poster Image</label>
+                    <input type="file" name="posterFile" class="form-control" accept="image/*">
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Actors (comma separated)</label>
                 <input type="text" name="actorsList" class="form-control" placeholder="Tom Cruise, Emily Blunt">

@@ -15,6 +15,7 @@ namespace MovizoneApp.Models
         public string Country { get; set; } = string.Empty;
         public string Director { get; set; } = string.Empty;
         public string CoverImage { get; set; } = string.Empty;
+        public string PosterImage { get; set; } = string.Empty; // Video player poster/thumbnail
         public string VideoUrl { get; set; } = string.Empty;
         public List<string> Actors { get; set; } = new List<string>();
         public bool IsFeatured { get; set; }
