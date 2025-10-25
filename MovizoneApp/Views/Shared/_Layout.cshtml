@@ -42,17 +42,19 @@
 							</li>
 							<!-- end dropdown -->
 
-							<!-- dropdown -->
+							<!-- Catalog Items -->
 							<li class="header__nav-item">
-								<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catalog <i class="ti ti-chevron-down"></i></a>
-
-								<ul class="dropdown-menu header__dropdown-menu">
-									<li><a asp-controller="Movie" asp-action="Catalog">Movies</a></li>
-									<li><a asp-controller="TVSeries" asp-action="Catalog">TV Series</a></li>
-									<li><a asp-controller="Actor" asp-action="Index">Actors</a></li>
-								</ul>
+								<a asp-controller="Movie" asp-action="Catalog" class="header__nav-link">Movies</a>
 							</li>
-							<!-- end dropdown -->
+
+							<li class="header__nav-item">
+								<a asp-controller="TVSeries" asp-action="Catalog" class="header__nav-link">TV Series</a>
+							</li>
+
+							<li class="header__nav-item">
+								<a asp-controller="Actor" asp-action="Index" class="header__nav-link">Actors</a>
+							</li>
+							<!-- end Catalog Items -->
 
 							<li class="header__nav-item">
 								<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">Pricing plan</a>

@@ -301,7 +301,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, string? actorsList)
+        public async Task<IActionResult> CreateSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -339,6 +339,27 @@ namespace MovizoneApp.Controllers
                 series.PosterImage = $"/img/posters/{posterFileName}";
             }
 
+            // Handle banner image upload
+            if (bannerFile != null && bannerFile.Length > 0)
+            {
+                // Create banners directory if it doesn't exist
+                var bannersDir = Path.Combine("wwwroot/img/banners");
+                if (!Directory.Exists(bannersDir))
+                {
+                    Directory.CreateDirectory(bannersDir);
+                }
+
+                var bannerFileName = $"banner_{Guid.NewGuid()}{Path.GetExtension(bannerFile.FileName)}";
+                var bannerPath = Path.Combine(bannersDir, bannerFileName);
+
+                using (var stream = new FileStream(bannerPath, FileMode.Create))
+                {
+                    await bannerFile.CopyToAsync(stream);
+                }
+
+                series.BannerImage = $"/img/banners/{bannerFileName}";
+            }
+
             if (!string.IsNullOrEmpty(actorsList))
             {
                 series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
@@ -359,7 +380,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, string? actorsList)
+        public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -395,6 +416,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 series.PosterImage = $"/img/posters/{posterFileName}";
+            }
+
+            // Handle banner file upload
+            if (bannerFile != null && bannerFile.Length > 0)
+            {
+                // Create banners directory if it doesn't exist
+                var bannersDir = Path.Combine("wwwroot/img/banners");
+                if (!Directory.Exists(bannersDir))
+                {
+                    Directory.CreateDirectory(bannersDir);
+                }
+
+                var bannerFileName = $"banner_{Guid.NewGuid()}{Path.GetExtension(bannerFile.FileName)}";
+                var bannerPath = Path.Combine(bannersDir, bannerFileName);
+
+                using (var stream = new FileStream(bannerPath, FileMode.Create))
+                {
+                    await bannerFile.CopyToAsync(stream);
+                }
+
+                series.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
             if (!string.IsNullOrEmpty(actorsList))

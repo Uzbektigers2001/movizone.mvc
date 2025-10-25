@@ -2,10 +2,39 @@
 @{
     ViewData["Title"] = "Home - HotFlix";
     var bannerMovies = ViewBag.BannerMovies as List<Movie> ?? new List<Movie>();
+    var bannerSeries = ViewBag.BannerSeries as List<TVSeries> ?? new List<TVSeries>();
     var featuredMovies = ViewBag.FeaturedMovies as List<Movie> ?? new List<Movie>();
     var topRatedMovies = ViewBag.TopRatedMovies as List<Movie> ?? new List<Movie>();
     var recentMovies = ViewBag.RecentMovies as List<Movie> ?? new List<Movie>();
     var allGenres = (ViewBag.Genres as List<string> ?? new List<string>()).Distinct().OrderBy(g => g).ToList();
+
+    // Combine movies and series for banner
+    var bannerItems = new List<dynamic>();
+    foreach (var movie in bannerMovies)
+    {
+        bannerItems.Add(new {
+            Title = movie.Title,
+            Rating = movie.Rating,
+            Description = movie.Description,
+            Genre = movie.Genre,
+            BannerImage = movie.BannerImage,
+            Type = "movie",
+            Id = movie.Id
+        });
+    }
+    foreach (var series in bannerSeries)
+    {
+        bannerItems.Add(new {
+            Title = series.Title,
+            Rating = series.Rating,
+            Description = series.Description,
+            Genre = series.Genre,
+            BannerImage = series.BannerImage,
+            Type = "series",
+            Id = series.Id
+        });
+    }
+    bannerItems = bannerItems.OrderByDescending(x => x.Rating).Take(5).ToList();
 }
 
 <!-- Hero Carousel -->
@@ -14,20 +43,28 @@
         <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
             <div class="carousel-inner">
                 @{
-                    var heroMovies = bannerMovies.Any() ? bannerMovies.Take(5).ToList() : featuredMovies.Take(3).ToList();
+                    var heroItems = bannerItems.Any() ? bannerItems.Take(5).ToList() : featuredMovies.Take(3).Select(m => new {
+                        Title = m.Title,
+                        Rating = m.Rating,
+                        Description = m.Description,
+                        Genre = m.Genre,
+                        BannerImage = m.BannerImage,
+                        Type = "movie",
+                        Id = m.Id
+                    }).ToList();
                     var backgrounds = new[] { "slide__bg-1.jpg", "slide__bg-2.jpg", "slide__bg-3.jpg" };
 
-                    for (int i = 0; i < Math.Max(heroMovies.Count, 3); i++)
+                    for (int i = 0; i < Math.Max(heroItems.Count, 3); i++)
                     {
-                        var movie = i < heroMovies.Count ? heroMovies[i] : null;
+                        var item = i < heroItems.Count ? heroItems[i] : null;
                         var isActive = i == 0 ? "active" : "";
                         var bg = backgrounds[i % backgrounds.Length];
                         // Use BannerImage if available, otherwise use default bg
-                        var bannerBg = movie != null && !string.IsNullOrEmpty(movie.BannerImage) ? movie.BannerImage : $"/img/bg/{bg}";
-                        var ratingColor = movie != null && movie.Rating >= 8 ? "success" : movie != null && movie.Rating >= 6 ? "warning" : "danger";
-                        var title = movie?.Title ?? (i == 0 ? "Savage Beauty" : i == 1 ? "From the Other Side" : "Endless Horizon");
-                        var rating = movie?.Rating.ToString("0.0") ?? (i == 0 ? "9.8" : i == 1 ? "6.9" : "6.2");
-                        var desc = movie?.Description ?? (i == 0 ? "A brilliant scientist discovers a way to harness the power of the ocean's currents to create a new, renewable energy source. But when her groundbreaking technology falls into the wrong hands, she must race against time to stop it from being used for evil." : i == 1 ? "In a world where magic is outlawed and hunted, a young witch must use her powers to fight back against the corrupt authorities who seek to destroy her kind." : "When a renowned archaeologist goes missing, his daughter sets out on a perilous journey to the heart of the Amazon rainforest to find him. Along the way, she discovers a hidden city and a dangerous conspiracy that threatens the very balance of power in the world.");
+                        var bannerBg = item != null && !string.IsNullOrEmpty(item.BannerImage) ? item.BannerImage : $"/img/bg/{bg}";
+                        var ratingColor = item != null && item.Rating >= 8 ? "success" : item != null && item.Rating >= 6 ? "warning" : "danger";
+                        var title = item?.Title ?? (i == 0 ? "Savage Beauty" : i == 1 ? "From the Other Side" : "Endless Horizon");
+                        var rating = item?.Rating.ToString("0.0") ?? (i == 0 ? "9.8" : i == 1 ? "6.9" : "6.2");
+                        var desc = item?.Description ?? (i == 0 ? "A brilliant scientist discovers a way to harness the power of the ocean's currents to create a new, renewable energy source. But when her groundbreaking technology falls into the wrong hands, she must race against time to stop it from being used for evil." : i == 1 ? "In a world where magic is outlawed and hunted, a young witch must use her powers to fight back against the corrupt authorities who seek to destroy her kind." : "When a renowned archaeologist goes missing, his daughter sets out on a perilous journey to the heart of the Amazon rainforest to find him. Along the way, she discovers a hidden city and a dangerous conspiracy that threatens the very balance of power in the world.");
                 <div class="carousel-item @isActive" style="height: 600px; position: relative;">
                     <img src="@bannerBg" class="d-block w-100" alt="@title" style="height: 100%; object-fit: cover; filter: brightness(0.4);">
                     <div class="carousel-caption" style="bottom: 20%; left: 10%; right: 10%; text-align: left;">
@@ -38,9 +75,9 @@
                             @desc
                         </p>
                         <p class="mb-4">
-                            @if (movie != null)
+                            @if (item != null)
                             {
-                                foreach (var genre in movie.Genre.Split(',').Take(2))
+                                foreach (var genre in item.Genre.Split(',').Take(2))
                                 {
                                     <a href="#" class="badge bg-secondary text-decoration-none me-2" style="font-size: 1rem;">@genre.Trim()</a>
                                 }
@@ -51,7 +88,7 @@
                                 <a href="#" class="badge bg-secondary text-decoration-none me-2" style="font-size: 1rem;">Drama</a>
                             }
                         </p>
-                        <a href="@(movie != null ? Url.Action("Details", "Movie", new { id = movie.Id }) : "#")" class="btn btn-primary btn-lg px-5 py-3" style="box-shadow: 0 4px 12px rgba(255, 85, 165, 0.3);">
+                        <a href="@(item != null ? Url.Action("Details", item.Type == "movie" ? "Movie" : "TVSeries", new { id = item.Id }) : "#")" class="btn btn-primary btn-lg px-5 py-3" style="box-shadow: 0 4px 12px rgba(255, 85, 165, 0.3);">
                             <i class="ti ti-player-play-filled me-2"></i> Watch Now
                         </a>
                     </div>
