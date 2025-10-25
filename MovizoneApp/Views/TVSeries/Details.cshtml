@@ -190,106 +190,205 @@
 		</div>
 	</div>
 	<!-- end Episodes Section -->
+</section>
+<!-- end details -->
 
-	<!-- Reviews Section -->
-	<div class="container mt-5">
-		<div class="row">
-			<div class="col-12">
-				<div class="section__title-wrap">
-					<h2 class="section__title"><i class="ti ti-messages"></i> Reviews & Comments</h2>
-					@if (ViewBag.ReviewCount > 0)
-					{
-						<span class="section__title-meta">
-							Average: <span class="item__rate--green">@ViewBag.AverageRating.ToString("0.0")</span>
-							(@ViewBag.ReviewCount review@(ViewBag.ReviewCount != 1 ? "s" : ""))
-						</span>
-					}
-				</div>
+<!-- content -->
+<section class="content">
+	<div class="content__head content__head--mt">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<!-- content title -->
+					<h2 class="content__title">Discover</h2>
+					<!-- end content title -->
 
-				<div class="reviews">
-					@if (TempData["Success"] != null)
-					{
-						<div class="alert alert-success">@TempData["Success"]</div>
-					}
-					@if (TempData["Error"] != null)
-					{
-						<div class="alert alert-danger">@TempData["Error"]</div>
-					}
+					<!-- content tabs nav -->
+					<ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button id="reviews-tab" class="active" data-bs-toggle="tab" data-bs-target="#tab-reviews" type="button" role="tab" aria-controls="tab-reviews" aria-selected="true">
+								Reviews
+								@if (ViewBag.ReviewCount > 0)
+								{
+									<span>(@ViewBag.ReviewCount)</span>
+								}
+							</button>
+						</li>
 
-					<!-- Add Review Form -->
-					<form asp-action="AddReview" method="post" class="reviews__form">
-						<div class="row">
-							<div class="col-12">
-								<h5 class="reviews__form-title">Add Your Review</h5>
-							</div>
-							<input type="hidden" name="seriesId" value="@Model.Id" />
-							<div class="col-12 col-md-6">
-								<input type="text" class="form-control" name="userName" placeholder="Your Name" required>
-							</div>
-							<div class="col-12 col-md-6">
-								<select class="form-select" name="rating" required>
-									<option value="">Select rating...</option>
-									<option value="10">10 - Masterpiece</option>
-									<option value="9">9 - Excellent</option>
-									<option value="8">8 - Very Good</option>
-									<option value="7">7 - Good</option>
-									<option value="6">6 - Above Average</option>
-									<option value="5">5 - Average</option>
-									<option value="4">4 - Below Average</option>
-									<option value="3">3 - Poor</option>
-									<option value="2">2 - Very Poor</option>
-									<option value="1">1 - Terrible</option>
-								</select>
-							</div>
-							<div class="col-12">
-								<textarea class="form-control" name="comment" rows="4" placeholder="Your Review" required></textarea>
-							</div>
-							<div class="col-12">
-								<button type="submit" class="item__btn">
-									<i class="ti ti-send"></i> Submit Review
-								</button>
-							</div>
-						</div>
-					</form>
-
-					<!-- Display Reviews -->
-					@if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
-					{
-						<div class="reviews__list">
-							@foreach (var review in ViewBag.Reviews)
-							{
-								<div class="reviews__item">
-									<div class="reviews__autor">
-										<div class="reviews__avatar">
-											<i class="ti ti-user"></i>
-										</div>
-										<div class="reviews__meta">
-											<h6 class="reviews__name">@review.UserName</h6>
-											<span class="reviews__time">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
-											<span class="reviews__rating @(review.Rating >= 7 ? "reviews__rating--green" : review.Rating >= 5 ? "reviews__rating--yellow" : "reviews__rating--red")">
-												@review.Rating/10
-											</span>
-										</div>
-									</div>
-									<p class="reviews__text">@review.Comment</p>
-								</div>
-							}
-						</div>
-					}
-					else
-					{
-						<div class="reviews__empty">
-							<i class="ti ti-message-off"></i>
-							<p>No reviews yet. Be the first to review this series!</p>
-						</div>
-					}
+						<li class="nav-item" role="presentation">
+							<button id="info-tab" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab" aria-controls="tab-info" aria-selected="false">Information</button>
+						</li>
+					</ul>
+					<!-- end content tabs nav -->
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- end Reviews Section -->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-lg-8">
+				<!-- content tabs -->
+				<div class="tab-content">
+					<!-- Reviews Tab -->
+					<div class="tab-pane fade show active" id="tab-reviews" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
+						<div class="row">
+							<!-- reviews -->
+							<div class="col-12">
+								@if (TempData["Success"] != null)
+								{
+									<div class="alert alert-success">@TempData["Success"]</div>
+								}
+								@if (TempData["Error"] != null)
+								{
+									<div class="alert alert-danger">@TempData["Error"]</div>
+								}
+
+								<!-- Add Review Form -->
+								<form asp-action="AddReview" method="post" class="review-form">
+									<input type="hidden" name="seriesId" value="@Model.Id" />
+									<div class="review-form__group">
+										<label for="userName" class="review-form__label">Your Name</label>
+										<input type="text" class="review-form__input" id="userName" name="userName" placeholder="Enter your name" required>
+									</div>
+									<div class="review-form__group">
+										<label for="rating" class="review-form__label">Rating</label>
+										<select class="review-form__select" id="rating" name="rating" required>
+											<option value="">Select rating...</option>
+											<option value="10">10 - Masterpiece</option>
+											<option value="9">9 - Excellent</option>
+											<option value="8">8 - Very Good</option>
+											<option value="7">7 - Good</option>
+											<option value="6">6 - Above Average</option>
+											<option value="5">5 - Average</option>
+											<option value="4">4 - Below Average</option>
+											<option value="3">3 - Poor</option>
+											<option value="2">2 - Very Poor</option>
+											<option value="1">1 - Terrible</option>
+										</select>
+									</div>
+									<div class="review-form__group">
+										<label for="comment" class="review-form__label">Your Review</label>
+										<textarea class="review-form__textarea" id="comment" name="comment" rows="5" placeholder="Write your review..." required></textarea>
+									</div>
+									<button type="submit" class="review-form__btn">
+										<i class="ti ti-send"></i> Submit Review
+									</button>
+								</form>
+
+								<!-- Display Reviews -->
+								<div class="reviews">
+									@if (ViewBag.ReviewCount > 0)
+									{
+										<div class="reviews__header">
+											<h3 class="reviews__title">User Reviews</h3>
+											<span class="reviews__stats">
+												Average Rating: <span class="item__rate item__rate--small @(ViewBag.AverageRating >= 8 ? "item__rate--green" : ViewBag.AverageRating >= 6 ? "item__rate--yellow" : "item__rate--red")">
+													@ViewBag.AverageRating.ToString("0.0")
+												</span>
+											</span>
+										</div>
+									}
+
+									@if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
+									{
+										<ul class="reviews__list">
+											@foreach (var review in ViewBag.Reviews)
+											{
+												<li class="reviews__item">
+													<div class="reviews__autor">
+														<img class="reviews__avatar" src="/img/user-placeholder.png" alt="@review.UserName" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232b2b3f%22 width=%2250%22 height=%2250%22/%3E%3Ctext fill=%22%23fff%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E@review.UserName.Substring(0, 1).ToUpper()%3C/text%3E%3C/svg%3E'">
+														<div>
+															<span class="reviews__name">@review.UserName</span>
+															<span class="reviews__time">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
+														</div>
+														<span class="item__rate item__rate--small @(review.Rating >= 7 ? "item__rate--green" : review.Rating >= 5 ? "item__rate--yellow" : "item__rate--red")">
+															@review.Rating
+														</span>
+													</div>
+													<p class="reviews__text">@review.Comment</p>
+												</li>
+											}
+										</ul>
+									}
+									else
+									{
+										<div class="reviews__empty">
+											<i class="ti ti-message-off"></i>
+											<p>No reviews yet. Be the first to review this series!</p>
+										</div>
+									}
+								</div>
+							</div>
+							<!-- end reviews -->
+						</div>
+					</div>
+					<!-- end Reviews Tab -->
+
+					<!-- Information Tab -->
+					<div class="tab-pane fade" id="tab-info" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
+						<div class="row">
+							<div class="col-12">
+								<div class="info-list">
+									<div class="info-list__item">
+										<span class="info-list__label">Title:</span>
+										<span class="info-list__value">@Model.Title</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Creator:</span>
+										<span class="info-list__value">@Model.Creator</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Genre:</span>
+										<span class="info-list__value">@Model.Genre</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Year:</span>
+										<span class="info-list__value">@Model.Year</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Country:</span>
+										<span class="info-list__value">@Model.Country</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Seasons:</span>
+										<span class="info-list__value">@Model.Seasons</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Total Episodes:</span>
+										<span class="info-list__value">@Model.TotalEpisodes</span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">Status:</span>
+										<span class="info-list__value"><span class="badge @(Model.Status == "Completed" ? "bg-success" : "bg-primary")">@Model.Status</span></span>
+									</div>
+									<div class="info-list__item">
+										<span class="info-list__label">First Aired:</span>
+										<span class="info-list__value">@Model.FirstAired.ToString("MMMM dd, yyyy")</span>
+									</div>
+									@if (Model.Actors.Any())
+									{
+										<div class="info-list__item">
+											<span class="info-list__label">Cast:</span>
+											<span class="info-list__value">@string.Join(", ", Model.Actors)</span>
+										</div>
+									}
+									<div class="info-list__item info-list__item--full">
+										<span class="info-list__label">Description:</span>
+										<span class="info-list__value">@Model.Description</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end Information Tab -->
+				</div>
+				<!-- end content tabs -->
+			</div>
+		</div>
+	</div>
 </section>
-<!-- end details -->
+<!-- end content -->
 
 @section Scripts {
 	<script>
