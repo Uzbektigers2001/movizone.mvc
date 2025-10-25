@@ -1,0 +1,117 @@
+@model MovizoneApp.Models.TVSeries
+@{
+    ViewData["Title"] = "Edit TV Series";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mb-4">
+    <a asp-action="Series" class="btn btn-outline-secondary">
+        <i class="ti ti-arrow-left"></i> Back to Series
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0">Edit Series: @Model.Title</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="EditSeries" method="post" enctype="multipart/form-data">
+            <input asp-for="Id" type="hidden">
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Title *</label>
+                    <input asp-for="Title" class="form-control" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Year *</label>
+                    <input asp-for="Year" type="number" class="form-control" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Rating *</label>
+                    <input asp-for="Rating" type="number" step="0.1" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Creator *</label>
+                    <input asp-for="Creator" class="form-control" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Seasons *</label>
+                    <input asp-for="Seasons" type="number" class="form-control" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Total Episodes *</label>
+                    <input asp-for="TotalEpisodes" type="number" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Country *</label>
+                    <input asp-for="Country" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Status *</label>
+                    <select asp-for="Status" class="form-select" required>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Genre *</label>
+                <input asp-for="Genre" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description *</label>
+                <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Current Cover</label>
+                    <div class="mb-2">
+                        @if (!string.IsNullOrEmpty(Model.CoverImage))
+                        {
+                            <img src="@Model.CoverImage" alt="Cover" style="max-width: 150px;">
+                        }
+                    </div>
+                    <input asp-for="CoverImage" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Upload New Cover</label>
+                    <input type="file" name="coverFile" class="form-control" accept="image/*">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Actors (comma separated)</label>
+                <input type="text" name="actorsList" class="form-control" value="@string.Join(", ", Model.Actors)">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">First Aired</label>
+                <input asp-for="FirstAired" type="date" class="form-control">
+            </div>
+
+            <div class="mb-3 form-check">
+                <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured">
+                <label class="form-check-label" for="featured">
+                    Featured Series
+                </label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i> Update Series
+                </button>
+                <a asp-action="Series" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

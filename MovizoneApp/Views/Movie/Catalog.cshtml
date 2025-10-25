@@ -6,14 +6,32 @@
 <section class="py-5">
     <div class="container">
         <div class="row mb-4">
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <h1 class="h2">Movies Catalog</h1>
             </div>
-            <div class="col-12 col-md-6">
-                <form asp-action="Catalog" method="get" class="d-flex">
-                    <input type="text" name="search" class="form-control me-2"
-                           placeholder="Search movies..." value="@ViewBag.SearchQuery">
-                    <button type="submit" class="btn btn-primary">Search</button>
+            <div class="col-12 col-md-8">
+                <form asp-action="Catalog" method="get" class="row g-2">
+                    <div class="col-md-4">
+                        <select name="genre" class="form-select bg-dark text-white">
+                            <option value="">All Genres</option>
+                            @if (ViewBag.Genres != null)
+                            {
+                                foreach (var genre in ViewBag.Genres)
+                                {
+                                    <option value="@genre" selected="@(ViewBag.SelectedGenre == genre ? "selected" : null)">@genre</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="search" class="form-control bg-dark text-white"
+                               placeholder="Search movies..." value="@ViewBag.SearchQuery">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="ti ti-search"></i> Filter
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

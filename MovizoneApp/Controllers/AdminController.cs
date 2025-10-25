@@ -101,16 +101,32 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMovie(Movie movie)
+        public async Task<IActionResult> CreateMovie(Movie movie, IFormFile? coverFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            if (ModelState.IsValid)
+            // Handle file upload
+            if (coverFile != null && coverFile.Length > 0)
             {
-                _movieService.AddMovie(movie);
-                return RedirectToAction("Movies");
+                var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
+                var filePath = Path.Combine("wwwroot/img/covers", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await coverFile.CopyToAsync(stream);
+                }
+
+                movie.CoverImage = $"/img/covers/{fileName}";
             }
-            return View(movie);
+
+            // Parse actors list
+            if (!string.IsNullOrEmpty(actorsList))
+            {
+                movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            }
+
+            _movieService.AddMovie(movie);
+            return RedirectToAction("Movies");
         }
 
         public IActionResult EditMovie(int id)
@@ -124,16 +140,32 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditMovie(Movie movie)
+        public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            if (ModelState.IsValid)
+            // Handle file upload
+            if (coverFile != null && coverFile.Length > 0)
             {
-                _movieService.UpdateMovie(movie);
-                return RedirectToAction("Movies");
+                var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
+                var filePath = Path.Combine("wwwroot/img/covers", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await coverFile.CopyToAsync(stream);
+                }
+
+                movie.CoverImage = $"/img/covers/{fileName}";
             }
-            return View(movie);
+
+            // Parse actors list
+            if (!string.IsNullOrEmpty(actorsList))
+            {
+                movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            }
+
+            _movieService.UpdateMovie(movie);
+            return RedirectToAction("Movies");
         }
 
         [HttpPost]
@@ -161,16 +193,30 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateSeries(TVSeries series)
+        public async Task<IActionResult> CreateSeries(TVSeries series, IFormFile? coverFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            if (ModelState.IsValid)
+            if (coverFile != null && coverFile.Length > 0)
             {
-                _seriesService.AddSeries(series);
-                return RedirectToAction("Series");
+                var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
+                var filePath = Path.Combine("wwwroot/img/covers", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await coverFile.CopyToAsync(stream);
+                }
+
+                series.CoverImage = $"/img/covers/{fileName}";
             }
-            return View(series);
+
+            if (!string.IsNullOrEmpty(actorsList))
+            {
+                series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            }
+
+            _seriesService.AddSeries(series);
+            return RedirectToAction("Series");
         }
 
         public IActionResult EditSeries(int id)
@@ -184,16 +230,30 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditSeries(TVSeries series)
+        public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            if (ModelState.IsValid)
+            if (coverFile != null && coverFile.Length > 0)
             {
-                _seriesService.UpdateSeries(series);
-                return RedirectToAction("Series");
+                var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
+                var filePath = Path.Combine("wwwroot/img/covers", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await coverFile.CopyToAsync(stream);
+                }
+
+                series.CoverImage = $"/img/covers/{fileName}";
             }
-            return View(series);
+
+            if (!string.IsNullOrEmpty(actorsList))
+            {
+                series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            }
+
+            _seriesService.UpdateSeries(series);
+            return RedirectToAction("Series");
         }
 
         [HttpPost]
@@ -262,16 +322,35 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateActor(Actor actor)
+        public async Task<IActionResult> CreateActor(Actor actor, IFormFile? photoFile, string? moviesList, string? seriesList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            if (ModelState.IsValid)
+            if (photoFile != null && photoFile.Length > 0)
             {
-                _actorService.AddActor(actor);
-                return RedirectToAction("Actors");
+                var fileName = $"actor_{Guid.NewGuid()}{Path.GetExtension(photoFile.FileName)}";
+                var filePath = Path.Combine("wwwroot/img/covers", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photoFile.CopyToAsync(stream);
+                }
+
+                actor.Photo = $"/img/covers/{fileName}";
             }
-            return View(actor);
+
+            if (!string.IsNullOrEmpty(moviesList))
+            {
+                actor.Movies = moviesList.Split(',').Select(m => m.Trim()).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(seriesList))
+            {
+                actor.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
+            }
+
+            _actorService.AddActor(actor);
+            return RedirectToAction("Actors");
         }
 
         public IActionResult EditActor(int id)
@@ -285,16 +364,35 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditActor(Actor actor)
+        public async Task<IActionResult> EditActor(Actor actor, IFormFile? photoFile, string? moviesList, string? seriesList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            if (ModelState.IsValid)
+            if (photoFile != null && photoFile.Length > 0)
             {
-                _actorService.UpdateActor(actor);
-                return RedirectToAction("Actors");
+                var fileName = $"actor_{Guid.NewGuid()}{Path.GetExtension(photoFile.FileName)}";
+                var filePath = Path.Combine("wwwroot/img/covers", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photoFile.CopyToAsync(stream);
+                }
+
+                actor.Photo = $"/img/covers/{fileName}";
             }
-            return View(actor);
+
+            if (!string.IsNullOrEmpty(moviesList))
+            {
+                actor.Movies = moviesList.Split(',').Select(m => m.Trim()).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(seriesList))
+            {
+                actor.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
+            }
+
+            _actorService.UpdateActor(actor);
+            return RedirectToAction("Actors");
         }
 
         [HttpPost]

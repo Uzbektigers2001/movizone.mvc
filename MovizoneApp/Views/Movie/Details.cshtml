@@ -66,6 +66,114 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal">
                         <i class="ti ti-player-play"></i> Watch Now
                     </button>
+                    @if (ViewBag.IsInWatchlist)
+                    {
+                        <form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
+                            <input type="hidden" name="movieId" value="@Model.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="ti ti-bookmark-off"></i> Remove from Watchlist
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
+                            <input type="hidden" name="movieId" value="@Model.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="ti ti-bookmark-plus"></i> Add to Watchlist
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-header border-secondary">
+                        <h4 class="mb-0">Reviews & Comments</h4>
+                        @if (ViewBag.ReviewCount > 0)
+                        {
+                            <small class="text-muted">
+                                Average Rating: <span class="item__rate--green">@ViewBag.AverageRating.ToString("0.0")</span>
+                                (@ViewBag.ReviewCount review@(ViewBag.ReviewCount != 1 ? "s" : ""))
+                            </small>
+                        }
+                    </div>
+                    <div class="card-body">
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["Success"]</div>
+                        }
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
+
+                        <!-- Add Review Form -->
+                        <form asp-action="AddReview" method="post" class="mb-4 p-3 bg-dark border border-secondary rounded">
+                            <h5 class="mb-3">Add Your Review</h5>
+                            <input type="hidden" name="movieId" value="@Model.Id" />
+                            <div class="mb-3">
+                                <label for="userName" class="form-label">Your Name</label>
+                                <input type="text" class="form-control bg-dark text-white" id="userName" name="userName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="rating" class="form-label">Rating</label>
+                                <select class="form-select bg-dark text-white" id="rating" name="rating" required>
+                                    <option value="">Select rating...</option>
+                                    <option value="10">10 - Masterpiece</option>
+                                    <option value="9">9 - Excellent</option>
+                                    <option value="8">8 - Very Good</option>
+                                    <option value="7">7 - Good</option>
+                                    <option value="6">6 - Above Average</option>
+                                    <option value="5">5 - Average</option>
+                                    <option value="4">4 - Below Average</option>
+                                    <option value="3">3 - Poor</option>
+                                    <option value="2">2 - Very Poor</option>
+                                    <option value="1">1 - Terrible</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Your Review</label>
+                                <textarea class="form-control bg-dark text-white" id="comment" name="comment" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-send"></i> Submit Review
+                            </button>
+                        </form>
+
+                        <!-- Display Reviews -->
+                        @if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
+                        {
+                            <h5 class="mb-3">User Reviews</h5>
+                            @foreach (var review in ViewBag.Reviews)
+                            {
+                                <div class="card bg-dark border-secondary mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-0">@review.UserName</h6>
+                                                <small class="text-muted">@review.CreatedAt.ToString("MMMM dd, yyyy")</small>
+                                            </div>
+                                            <span class="badge @(review.Rating >= 7 ? "bg-success" : review.Rating >= 5 ? "bg-warning" : "bg-danger")">
+                                                @review.Rating/10
+                                            </span>
+                                        </div>
+                                        <p class="mb-0">@review.Comment</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">No reviews yet. Be the first to review this movie!</div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
