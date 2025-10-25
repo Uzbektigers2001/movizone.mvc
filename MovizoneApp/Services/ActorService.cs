@@ -49,5 +49,35 @@ namespace MovizoneApp.Services
         public List<Actor> GetAllActors() => _actors;
 
         public Actor? GetActorById(int id) => _actors.FirstOrDefault(a => a.Id == id);
+
+        public void AddActor(Actor actor)
+        {
+            actor.Id = _actors.Any() ? _actors.Max(a => a.Id) + 1 : 1;
+            _actors.Add(actor);
+        }
+
+        public void UpdateActor(Actor actor)
+        {
+            var existingActor = GetActorById(actor.Id);
+            if (existingActor != null)
+            {
+                existingActor.Name = actor.Name;
+                existingActor.Bio = actor.Bio;
+                existingActor.BirthDate = actor.BirthDate;
+                existingActor.Country = actor.Country;
+                existingActor.Photo = actor.Photo;
+                existingActor.Movies = actor.Movies;
+                existingActor.TVSeries = actor.TVSeries;
+            }
+        }
+
+        public void DeleteActor(int id)
+        {
+            var actor = GetActorById(id);
+            if (actor != null)
+            {
+                _actors.Remove(actor);
+            }
+        }
     }
 }

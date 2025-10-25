@@ -1,0 +1,72 @@
+@model List<MovizoneApp.Models.Movie>
+@{
+    ViewData["Title"] = "Movies Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Movies</h2>
+    <a asp-action="CreateMovie" class="btn btn-primary">
+        <i class="ti ti-plus"></i> Add New Movie
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Rating</th>
+                        <th>Genre</th>
+                        <th>Duration</th>
+                        <th>Featured</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var movie in Model)
+                    {
+                        <tr>
+                            <td>@movie.Id</td>
+                            <td>
+                                <strong>@movie.Title</strong><br>
+                                <small class="text-muted">@movie.Director</small>
+                            </td>
+                            <td>@movie.Year</td>
+                            <td>
+                                <span class="badge bg-success">@movie.Rating</span>
+                            </td>
+                            <td>@movie.Genre</td>
+                            <td>@movie.Duration min</td>
+                            <td>
+                                @if (movie.IsFeatured)
+                                {
+                                    <span class="badge bg-primary">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">No</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="EditMovie" asp-route-id="@movie.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="ti ti-edit"></i>
+                                </a>
+                                <form asp-action="DeleteMovie" asp-route-id="@movie.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Delete this movie?')">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

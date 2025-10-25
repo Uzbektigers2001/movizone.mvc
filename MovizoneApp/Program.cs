@@ -5,11 +5,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add session support for admin authentication
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // Register InMemory services
 builder.Services.AddSingleton<IMovieService, MovieService>();
 builder.Services.AddSingleton<ITVSeriesService, TVSeriesService>();
 builder.Services.AddSingleton<IActorService, ActorService>();
 builder.Services.AddSingleton<IPricingService, PricingService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -25,6 +34,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 

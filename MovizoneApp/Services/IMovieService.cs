@@ -8,5 +8,8 @@ namespace MovizoneApp.Services
         Movie? GetMovieById(int id);
         List<Movie> GetFeaturedMovies();
         List<Movie> SearchMovies(string query);
+        void AddMovie(Movie movie);
+        void UpdateMovie(Movie movie);
+        void DeleteMovie(int id);
     }
 }

@@ -167,5 +167,41 @@ namespace MovizoneApp.Services
                 m.Genre.ToLower().Contains(query)
             ).ToList();
         }
+
+        public void AddMovie(Movie movie)
+        {
+            movie.Id = _movies.Any() ? _movies.Max(m => m.Id) + 1 : 1;
+            _movies.Add(movie);
+        }
+
+        public void UpdateMovie(Movie movie)
+        {
+            var existingMovie = GetMovieById(movie.Id);
+            if (existingMovie != null)
+            {
+                existingMovie.Title = movie.Title;
+                existingMovie.Description = movie.Description;
+                existingMovie.Year = movie.Year;
+                existingMovie.Rating = movie.Rating;
+                existingMovie.Genre = movie.Genre;
+                existingMovie.Duration = movie.Duration;
+                existingMovie.Country = movie.Country;
+                existingMovie.Director = movie.Director;
+                existingMovie.CoverImage = movie.CoverImage;
+                existingMovie.VideoUrl = movie.VideoUrl;
+                existingMovie.Actors = movie.Actors;
+                existingMovie.IsFeatured = movie.IsFeatured;
+                existingMovie.ReleaseDate = movie.ReleaseDate;
+            }
+        }
+
+        public void DeleteMovie(int id)
+        {
+            var movie = GetMovieById(id);
+            if (movie != null)
+            {
+                _movies.Remove(movie);
+            }
+        }
     }
 }

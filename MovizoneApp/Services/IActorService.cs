@@ -6,5 +6,8 @@ namespace MovizoneApp.Services
     {
         List<Actor> GetAllActors();
         Actor? GetActorById(int id);
+        void AddActor(Actor actor);
+        void UpdateActor(Actor actor);
+        void DeleteActor(int id);
     }
 }
