@@ -1,250 +1,344 @@
 @model MovizoneApp.Models.TVSeries
 @{
     ViewData["Title"] = Model.Title;
+    var seasons = Model.Episodes.GroupBy(e => e.SeasonNumber).OrderBy(g => g.Key).ToList();
 }
 
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-4 mb-4">
-                <img src="@Model.CoverImage"
-                     class="img-fluid rounded" alt="@Model.Title" style="max-height: 600px; object-fit: cover;">
-            </div>
-            <div class="col-12 col-md-8">
-                <h1 class="h2 mb-3">@Model.Title</h1>
+<!-- details -->
+<section class="section section--details">
+	<!-- details content -->
+	<div class="container">
+		<div class="row">
+			<!-- title -->
+			<div class="col-12">
+				<h1 class="section__title section__title--head">@Model.Title</h1>
+			</div>
+			<!-- end title -->
 
-                <div class="mb-3">
-                    <span class="item__rate--green me-2">@Model.Rating</span>
-                    <span class="badge bg-primary me-2">@Model.Status</span>
-                    <span class="text-muted">@Model.Year</span>
-                </div>
+			<!-- content -->
+			<div class="col-12 col-xl-6">
+				<div class="item item--details">
+					<div class="row">
+						<!-- card cover -->
+						<div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6 col-xxl-5">
+							<div class="item__cover">
+								<img src="@Model.CoverImage" alt="@Model.Title">
+								<span class="item__rate @(Model.Rating >= 8 ? "item__rate--green" : Model.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@Model.Rating</span>
+								@if (ViewBag.IsInWatchlist)
+								{
+									<form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
+										<input type="hidden" name="movieId" value="@Model.Id" />
+										<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+										<button class="item__favorite item__favorite--static item__favorite--active" type="submit" title="Remove from watchlist">
+											<i class="ti ti-bookmark-filled"></i>
+										</button>
+									</form>
+								}
+								else
+								{
+									<form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
+										<input type="hidden" name="movieId" value="@Model.Id" />
+										<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+										<button class="item__favorite item__favorite--static" type="submit" title="Add to watchlist">
+											<i class="ti ti-bookmark"></i>
+										</button>
+									</form>
+								}
+							</div>
+						</div>
+						<!-- end card cover -->
 
-                <div class="mb-4">
-                    <h5>Overview</h5>
-                    <p>@Model.Description</p>
-                </div>
+						<!-- card content -->
+						<div class="col-12 col-md-7 col-lg-8 col-xl-6 col-xxl-7">
+							<div class="item__content">
+								<ul class="item__meta">
+									<li><span>Creator:</span> @Model.Creator</li>
+									@if (Model.Actors.Any())
+									{
+										<li>
+											<span>Cast:</span>
+											@foreach (var actor in Model.Actors.Take(5))
+											{
+												<a href="#">@actor</a>
+											}
+											@if (Model.Actors.Count > 5)
+											{
+												<span>+@(Model.Actors.Count - 5) more</span>
+											}
+										</li>
+									}
+									<li><span>Genre:</span> <a href="#">@Model.Genre</a></li>
+									<li><span>Year:</span> @Model.Year</li>
+									<li><span>Seasons:</span> @Model.Seasons</li>
+									<li><span>Episodes:</span> @Model.TotalEpisodes</li>
+									<li><span>Country:</span> <a href="#">@Model.Country</a></li>
+									<li><span>Status:</span> <span class="badge @(Model.Status == "Completed" ? "bg-success" : "bg-primary")">@Model.Status</span></li>
+									<li><span>First Aired:</span> @Model.FirstAired.ToString("MMMM dd, yyyy")</li>
+								</ul>
 
-                <div class="row mb-4">
-                    <div class="col-6 col-md-4 mb-3">
-                        <h6 class="text-muted">Genre</h6>
-                        <p>@Model.Genre</p>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                        <h6 class="text-muted">Seasons</h6>
-                        <p>@Model.Seasons</p>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                        <h6 class="text-muted">Episodes</h6>
-                        <p>@Model.TotalEpisodes</p>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                        <h6 class="text-muted">Country</h6>
-                        <p>@Model.Country</p>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                        <h6 class="text-muted">Creator</h6>
-                        <p>@Model.Creator</p>
-                    </div>
-                    <div class="col-6 col-md-4 mb-3">
-                        <h6 class="text-muted">First Aired</h6>
-                        <p>@Model.FirstAired.ToString("MMMM dd, yyyy")</p>
-                    </div>
-                </div>
+								<div class="item__description">
+									<p>@Model.Description</p>
+								</div>
 
-                @if (Model.Actors.Any())
-                {
-                    <div class="mb-4">
-                        <h5>Cast</h5>
-                        <ul class="list-unstyled">
-                            @foreach (var actor in Model.Actors)
-                            {
-                                <li class="mb-1">• @actor</li>
-                            }
-                        </ul>
-                    </div>
-                }
+								<div class="item__btns">
+									<a asp-action="Catalog" class="item__btn item__btn--secondary">
+										<i class="ti ti-arrow-left"></i> Back to Catalog
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- end card content -->
+					</div>
+				</div>
+			</div>
+			<!-- end content -->
 
-                <div class="mt-4">
-                    <a asp-action="Catalog" class="btn btn-secondary">
-                        <i class="ti ti-arrow-left"></i> Back to Catalog
-                    </a>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal">
-                        <i class="ti ti-player-play"></i> Watch Now
-                    </button>
-                    @if (ViewBag.IsInWatchlist)
-                    {
-                        <form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
-                            <input type="hidden" name="movieId" value="@Model.Id" />
-                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                            <button type="submit" class="btn btn-outline-danger">
-                                <i class="ti ti-bookmark-off"></i> Remove from Watchlist
-                            </button>
-                        </form>
-                    }
-                    else
-                    {
-                        <form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
-                            <input type="hidden" name="movieId" value="@Model.Id" />
-                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                            <button type="submit" class="btn btn-outline-success">
-                                <i class="ti ti-bookmark-plus"></i> Add to Watchlist
-                            </button>
-                        </form>
-                    }
-                </div>
-            </div>
-        </div>
+			<!-- player -->
+			<div class="col-12 col-xl-6">
+				<div class="item__video">
+					@{
+						var posterImage = !string.IsNullOrEmpty(Model.PosterImage) ? Model.PosterImage : Model.CoverImage;
+						var firstEpisode = Model.Episodes.OrderBy(e => e.SeasonNumber).ThenBy(e => e.EpisodeNumber).FirstOrDefault();
+					}
+					<video id="seriesPlayer" playsinline controls data-poster="@posterImage">
+						@if (firstEpisode != null && !string.IsNullOrEmpty(firstEpisode.VideoUrl))
+						{
+							<source src="@firstEpisode.VideoUrl" type="video/mp4" size="1080">
+						}
+						else
+						{
+							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4" size="720">
+							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" size="1080">
+						}
+					</video>
+				</div>
+			</div>
+			<!-- end player -->
+		</div>
+	</div>
+	<!-- end details content -->
 
-        <!-- Reviews Section -->
-        <div class="row mt-5">
-            <div class="col-12">
-                <div class="card bg-dark border-secondary">
-                    <div class="card-header border-secondary">
-                        <h4 class="mb-0">Reviews & Comments</h4>
-                        @if (ViewBag.ReviewCount > 0)
-                        {
-                            <small class="text-muted">
-                                Average Rating: <span class="item__rate--green">@ViewBag.AverageRating.ToString("0.0")</span>
-                                (@ViewBag.ReviewCount review@(ViewBag.ReviewCount != 1 ? "s" : ""))
-                            </small>
-                        }
-                    </div>
-                    <div class="card-body">
-                        @if (TempData["Success"] != null)
-                        {
-                            <div class="alert alert-success">@TempData["Success"]</div>
-                        }
-                        @if (TempData["Error"] != null)
-                        {
-                            <div class="alert alert-danger">@TempData["Error"]</div>
-                        }
+	<!-- Episodes Section -->
+	<div class="container mt-5">
+		<div class="row">
+			<div class="col-12">
+				<div class="section__title-wrap">
+					<h2 class="section__title"><i class="ti ti-list"></i> Episodes</h2>
+				</div>
 
-                        <!-- Add Review Form -->
-                        <form asp-action="AddReview" method="post" class="mb-4 p-3 bg-dark border border-secondary rounded">
-                            <h5 class="mb-3">Add Your Review</h5>
-                            <input type="hidden" name="seriesId" value="@Model.Id" />
-                            <div class="mb-3">
-                                <label for="userName" class="form-label">Your Name</label>
-                                <input type="text" class="form-control bg-dark text-white" id="userName" name="userName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="rating" class="form-label">Rating</label>
-                                <select class="form-select bg-dark text-white" id="rating" name="rating" required>
-                                    <option value="">Select rating...</option>
-                                    <option value="10">10 - Masterpiece</option>
-                                    <option value="9">9 - Excellent</option>
-                                    <option value="8">8 - Very Good</option>
-                                    <option value="7">7 - Good</option>
-                                    <option value="6">6 - Above Average</option>
-                                    <option value="5">5 - Average</option>
-                                    <option value="4">4 - Below Average</option>
-                                    <option value="3">3 - Poor</option>
-                                    <option value="2">2 - Very Poor</option>
-                                    <option value="1">1 - Terrible</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="comment" class="form-label">Your Review</label>
-                                <textarea class="form-control bg-dark text-white" id="comment" name="comment" rows="4" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="ti ti-send"></i> Submit Review
-                            </button>
-                        </form>
+				@if (seasons.Any())
+				{
+					<!-- Season Tabs -->
+					<ul class="nav nav-tabs series-tabs mb-4" id="seasonTabs" role="tablist">
+						@for (int i = 0; i < seasons.Count; i++)
+						{
+							var season = seasons[i];
+							var isActive = i == 0 ? "active" : "";
+							<li class="nav-item" role="presentation">
+								<button class="nav-link @isActive" id="season-@season.Key-tab" data-bs-toggle="tab"
+									data-bs-target="#season-@season.Key" type="button" role="tab">
+									Season @season.Key
+								</button>
+							</li>
+						}
+					</ul>
 
-                        <!-- Display Reviews -->
-                        @if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
-                        {
-                            <h5 class="mb-3">User Reviews</h5>
-                            @foreach (var review in ViewBag.Reviews)
-                            {
-                                <div class="card bg-dark border-secondary mb-3">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <div>
-                                                <h6 class="mb-0">@review.UserName</h6>
-                                                <small class="text-muted">@review.CreatedAt.ToString("MMMM dd, yyyy")</small>
-                                            </div>
-                                            <span class="badge @(review.Rating >= 7 ? "bg-success" : review.Rating >= 5 ? "bg-warning" : "bg-danger")">
-                                                @review.Rating/10
-                                            </span>
-                                        </div>
-                                        <p class="mb-0">@review.Comment</p>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div class="alert alert-info">No reviews yet. Be the first to review this series!</div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					<!-- Season Tab Content -->
+					<div class="tab-content" id="seasonTabsContent">
+						@for (int i = 0; i < seasons.Count; i++)
+						{
+							var season = seasons[i];
+							var isActive = i == 0 ? "show active" : "";
+							<div class="tab-pane fade @isActive" id="season-@season.Key" role="tabpanel">
+								<div class="episodes-list">
+									@foreach (var episode in season.OrderBy(e => e.EpisodeNumber))
+									{
+										<div class="episode-card" data-video-url="@episode.VideoUrl" data-episode-title="@episode.Title">
+											<div class="episode-number">
+												<span>@episode.EpisodeNumber</span>
+											</div>
+											<div class="episode-content">
+												<div class="episode-header">
+													<h5 class="episode-title">@episode.EpisodeNumber. @episode.Title</h5>
+													<span class="episode-duration">@episode.Duration min</span>
+												</div>
+												<p class="episode-description">@episode.Description</p>
+												@if (episode.AirDate.HasValue)
+												{
+													<small class="episode-date"><i class="ti ti-calendar"></i> @episode.AirDate.Value.ToString("MMM dd, yyyy")</small>
+												}
+											</div>
+											<div class="episode-action">
+												<button class="btn-play-episode" title="Play Episode">
+													<i class="ti ti-player-play-filled"></i>
+												</button>
+											</div>
+										</div>
+									}
+								</div>
+							</div>
+						}
+					</div>
+				}
+				else
+				{
+					<div class="alert alert-info">
+						<i class="ti ti-info-circle"></i> No episodes available yet.
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+	<!-- end Episodes Section -->
+
+	<!-- Reviews Section -->
+	<div class="container mt-5">
+		<div class="row">
+			<div class="col-12">
+				<div class="section__title-wrap">
+					<h2 class="section__title"><i class="ti ti-messages"></i> Reviews & Comments</h2>
+					@if (ViewBag.ReviewCount > 0)
+					{
+						<span class="section__title-meta">
+							Average: <span class="item__rate--green">@ViewBag.AverageRating.ToString("0.0")</span>
+							(@ViewBag.ReviewCount review@(ViewBag.ReviewCount != 1 ? "s" : ""))
+						</span>
+					}
+				</div>
+
+				<div class="reviews">
+					@if (TempData["Success"] != null)
+					{
+						<div class="alert alert-success">@TempData["Success"]</div>
+					}
+					@if (TempData["Error"] != null)
+					{
+						<div class="alert alert-danger">@TempData["Error"]</div>
+					}
+
+					<!-- Add Review Form -->
+					<form asp-action="AddReview" method="post" class="reviews__form">
+						<div class="row">
+							<div class="col-12">
+								<h5 class="reviews__form-title">Add Your Review</h5>
+							</div>
+							<input type="hidden" name="seriesId" value="@Model.Id" />
+							<div class="col-12 col-md-6">
+								<input type="text" class="form-control" name="userName" placeholder="Your Name" required>
+							</div>
+							<div class="col-12 col-md-6">
+								<select class="form-select" name="rating" required>
+									<option value="">Select rating...</option>
+									<option value="10">10 - Masterpiece</option>
+									<option value="9">9 - Excellent</option>
+									<option value="8">8 - Very Good</option>
+									<option value="7">7 - Good</option>
+									<option value="6">6 - Above Average</option>
+									<option value="5">5 - Average</option>
+									<option value="4">4 - Below Average</option>
+									<option value="3">3 - Poor</option>
+									<option value="2">2 - Very Poor</option>
+									<option value="1">1 - Terrible</option>
+								</select>
+							</div>
+							<div class="col-12">
+								<textarea class="form-control" name="comment" rows="4" placeholder="Your Review" required></textarea>
+							</div>
+							<div class="col-12">
+								<button type="submit" class="item__btn">
+									<i class="ti ti-send"></i> Submit Review
+								</button>
+							</div>
+						</div>
+					</form>
+
+					<!-- Display Reviews -->
+					@if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
+					{
+						<div class="reviews__list">
+							@foreach (var review in ViewBag.Reviews)
+							{
+								<div class="reviews__item">
+									<div class="reviews__autor">
+										<div class="reviews__avatar">
+											<i class="ti ti-user"></i>
+										</div>
+										<div class="reviews__meta">
+											<h6 class="reviews__name">@review.UserName</h6>
+											<span class="reviews__time">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
+											<span class="reviews__rating @(review.Rating >= 7 ? "reviews__rating--green" : review.Rating >= 5 ? "reviews__rating--yellow" : "reviews__rating--red")">
+												@review.Rating/10
+											</span>
+										</div>
+									</div>
+									<p class="reviews__text">@review.Comment</p>
+								</div>
+							}
+						</div>
+					}
+					else
+					{
+						<div class="reviews__empty">
+							<i class="ti ti-message-off"></i>
+							<p>No reviews yet. Be the first to review this series!</p>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end Reviews Section -->
 </section>
-
-<!-- Video Modal -->
-<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content bg-dark">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="videoModalLabel">@Model.Title - Episode 1</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-                @{
-                    var posterImage = !string.IsNullOrEmpty(Model.PosterImage) ? Model.PosterImage : Model.CoverImage;
-                }
-                <video id="seriesPlayer" playsinline controls data-poster="@posterImage">
-                    @if (!string.IsNullOrEmpty(Model.VideoUrl))
-                    {
-                        <source src="@Model.VideoUrl" type="video/mp4" size="1080">
-                    }
-                    else
-                    {
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4" size="720">
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" size="1080">
-                    }
-                </video>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- end details -->
 
 @section Scripts {
-    <script>
-        // Initialize Plyr for TV Series
-        document.addEventListener('DOMContentLoaded', function() {
-            let seriesPlayer = null;
+	<script>
+		// Initialize Plyr for TV Series
+		document.addEventListener('DOMContentLoaded', function() {
+			let seriesPlayer = new Plyr('#seriesPlayer', {
+				controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'],
+				settings: ['quality', 'speed'],
+				speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+				quality: {
+					default: 720,
+					options: [1080, 720]
+				},
+				ratio: '16:9',
+				clickToPlay: true,
+				keyboard: { focused: true, global: true }
+			});
 
-            // Initialize player when modal is shown
-            document.getElementById('videoModal').addEventListener('shown.bs.modal', function () {
-                if (!seriesPlayer) {
-                    seriesPlayer = new Plyr('#seriesPlayer', {
-                        controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'],
-                        settings: ['quality', 'speed'],
-                        speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
-                        quality: {
-                            default: 720,
-                            options: [1080, 720]
-                        },
-                        ratio: '16:9',
-                        autoplay: true,
-                        clickToPlay: true,
-                        keyboard: { focused: true, global: true }
-                    });
-                }
-            });
+			// Handle episode click
+			document.querySelectorAll('.episode-card').forEach(function(card) {
+				card.querySelector('.btn-play-episode').addEventListener('click', function() {
+					const videoUrl = card.getAttribute('data-video-url');
+					const episodeTitle = card.getAttribute('data-episode-title');
 
-            // Pause and reset when modal is closed
-            document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
-                if (seriesPlayer) {
-                    seriesPlayer.pause();
-                    seriesPlayer.currentTime = 0;
-                }
-            });
-        });
-    </script>
+					// Update video source
+					seriesPlayer.source = {
+						type: 'video',
+						sources: [{
+							src: videoUrl,
+							type: 'video/mp4',
+							size: 1080
+						}]
+					};
+
+					// Scroll to player
+					document.getElementById('seriesPlayer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+					// Play the video
+					setTimeout(function() {
+						seriesPlayer.play();
+					}, 300);
+
+					// Highlight selected episode
+					document.querySelectorAll('.episode-card').forEach(function(c) {
+						c.classList.remove('episode-card--active');
+					});
+					card.classList.add('episode-card--active');
+				});
+			});
+		});
+	</script>
 }
