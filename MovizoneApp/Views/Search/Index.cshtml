@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Advanced Search";
+}
+
+<section class="py-5">
+    <div class="container">
+        <h1 class="h2 mb-4">
+            <i class="ti ti-search"></i> Advanced Search
+        </h1>
+
+        <!-- Search Form -->
+        <div class="card bg-dark mb-4">
+            <div class="card-body">
+                <form asp-action="Index" method="get">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Search Query</label>
+                            <input type="text" name="query" class="form-control bg-dark text-white"
+                                   placeholder="Title, description, director..." value="@ViewBag.Query">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Type</label>
+                            <select name="type" class="form-select bg-dark text-white">
+                                <option value="all" selected="@(ViewBag.Type == "all" ? "selected" : null)">All</option>
+                                <option value="movies" selected="@(ViewBag.Type == "movies" ? "selected" : null)">Movies Only</option>
+                                <option value="series" selected="@(ViewBag.Type == "series" ? "selected" : null)">TV Series Only</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Genre</label>
+                            <select name="genre" class="form-select bg-dark text-white">
+                                <option value="">All Genres</option>
+                                @if (ViewBag.Genres != null)
+                                {
+                                    foreach (var genre in ViewBag.Genres)
+                                    {
+                                        <option value="@genre" selected="@(ViewBag.Genre == genre ? "selected" : null)">@genre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Year From</label>
+                            <input type="number" name="yearFrom" class="form-control bg-dark text-white"
+                                   placeholder="1900" min="1900" max="@DateTime.Now.Year" value="@ViewBag.YearFrom">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Year To</label>
+                            <input type="number" name="yearTo" class="form-control bg-dark text-white"
+                                   placeholder="@DateTime.Now.Year" min="1900" max="@DateTime.Now.Year" value="@ViewBag.YearTo">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Rating From</label>
+                            <input type="number" name="ratingFrom" class="form-control bg-dark text-white"
+                                   placeholder="0" min="0" max="10" step="0.1" value="@ViewBag.RatingFrom">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Rating To</label>
+                            <input type="number" name="ratingTo" class="form-control bg-dark text-white"
+                                   placeholder="10" min="0" max="10" step="0.1" value="@ViewBag.RatingTo">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Actor</label>
+                            <input type="text" name="actor" class="form-control bg-dark text-white"
+                                   placeholder="Actor name..." value="@ViewBag.Actor">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results -->
+        @if (ViewBag.TotalResults > 0)
+        {
+            <h4 class="mb-3">Found @ViewBag.TotalResults result(s)</h4>
+
+            @if (ViewBag.Movies != null && ViewBag.Movies.Count > 0)
+            {
+                <h5 class="mb-3">
+                    <i class="ti ti-movie"></i> Movies (@ViewBag.Movies.Count)
+                </h5>
+                <div class="row g-4 mb-4">
+                    @foreach (var movie in ViewBag.Movies)
+                    {
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                            <div class="card bg-dark h-100">
+                                <img src="@movie.CoverImage" class="card-img-top" alt="@movie.Title" style="height: 250px; object-fit: cover;">
+                                <div class="card-body p-2">
+                                    <h6 class="card-title mb-1">
+                                        <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id" class="text-white text-decoration-none">
+                                            @movie.Title
+                                        </a>
+                                    </h6>
+                                    <p class="mb-0">
+                                        <small class="text-muted">@movie.Year</small><br>
+                                        <span class="item__rate--green">@movie.Rating</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (ViewBag.Series != null && ViewBag.Series.Count > 0)
+            {
+                <h5 class="mb-3">
+                    <i class="ti ti-device-tv"></i> TV Series (@ViewBag.Series.Count)
+                </h5>
+                <div class="row g-4">
+                    @foreach (var series in ViewBag.Series)
+                    {
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                            <div class="card bg-dark h-100">
+                                <img src="@series.CoverImage" class="card-img-top" alt="@series.Title" style="height: 250px; object-fit: cover;">
+                                <div class="card-body p-2">
+                                    <h6 class="card-title mb-1">
+                                        <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id" class="text-white text-decoration-none">
+                                            @series.Title
+                                        </a>
+                                    </h6>
+                                    <p class="mb-0">
+                                        <small class="text-muted">@series.Year</small><br>
+                                        <span class="item__rate--green">@series.Rating</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else if (!string.IsNullOrEmpty(ViewBag.Query) || !string.IsNullOrEmpty(ViewBag.Genre) || ViewBag.YearFrom != null || ViewBag.RatingFrom != null)
+        {
+            <div class="alert alert-warning">
+                <i class="ti ti-alert-triangle"></i> No results found matching your criteria. Try adjusting your filters.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="ti ti-info-circle"></i> Use the form above to search for movies and TV series with advanced filters.
+            </div>
+        }
+    </div>
+</section>

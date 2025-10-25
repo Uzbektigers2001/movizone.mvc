@@ -191,14 +191,24 @@
             <div class="modal-body">
                 <div class="ratio ratio-16x9">
                     <video id="moviePlayer" controls>
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                        {
+                            <source src="@Model.VideoUrl" type="video/mp4">
+                        }
+                        else
+                        {
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        }
                         Your browser does not support the video tag.
                     </video>
                 </div>
-                <div class="mt-3">
-                    <p class="text-muted mb-1">Sample video - In production, this would be the actual movie.</p>
-                    <p class="text-muted mb-0"><small>Video: Big Buck Bunny (Open Source)</small></p>
-                </div>
+                @if (string.IsNullOrEmpty(Model.VideoUrl))
+                {
+                    <div class="mt-3">
+                        <p class="text-muted mb-1">Sample video - In production, this would be the actual movie.</p>
+                        <p class="text-muted mb-0"><small>Video: Big Buck Bunny (Open Source)</small></p>
+                    </div>
+                }
             </div>
         </div>
     </div>

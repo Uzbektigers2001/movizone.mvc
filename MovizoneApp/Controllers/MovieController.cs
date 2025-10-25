@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MovizoneApp.Models;
 using MovizoneApp.Services;
+using MovizoneApp.Helpers;
 
 namespace MovizoneApp.Controllers
 {
@@ -18,7 +19,7 @@ namespace MovizoneApp.Controllers
             _watchlistService = watchlistService;
         }
 
-        public IActionResult Catalog(string search = "", string genre = "")
+        public IActionResult Catalog(string search = "", string genre = "", int pageNumber = 1)
         {
             var movies = _movieService.GetAllMovies();
 
@@ -35,7 +36,11 @@ namespace MovizoneApp.Controllers
             ViewBag.SearchQuery = search;
             ViewBag.SelectedGenre = genre;
             ViewBag.Genres = _movieService.GetAllMovies().Select(m => m.Genre).Distinct().OrderBy(g => g).ToList();
-            return View(movies);
+
+            int pageSize = 12;
+            var paginatedMovies = PaginatedList<Movie>.Create(movies, pageNumber, pageSize);
+
+            return View(paginatedMovies);
         }
 
         public IActionResult Details(int id)

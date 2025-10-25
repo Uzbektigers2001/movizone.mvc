@@ -24,8 +24,33 @@ public class HomeController : Controller
         var featuredMovies = _movieService.GetFeaturedMovies();
         var featuredSeries = _tvSeriesService.GetFeaturedSeries();
 
+        // Top Rated (rating >= 8.0)
+        var topRatedMovies = _movieService.GetAllMovies()
+            .OrderByDescending(m => m.Rating)
+            .Take(6)
+            .ToList();
+
+        // Recent Additions (last 30 days or most recent)
+        var recentMovies = _movieService.GetAllMovies()
+            .OrderByDescending(m => m.ReleaseDate)
+            .Take(6)
+            .ToList();
+
+        // Popular TV Series
+        var popularSeries = _tvSeriesService.GetAllSeries()
+            .OrderByDescending(s => s.Rating)
+            .Take(6)
+            .ToList();
+
         ViewBag.FeaturedMovies = featuredMovies;
         ViewBag.FeaturedSeries = featuredSeries;
+        ViewBag.TopRatedMovies = topRatedMovies;
+        ViewBag.RecentMovies = recentMovies;
+        ViewBag.PopularSeries = popularSeries;
+
+        // Statistics
+        ViewBag.TotalMovies = _movieService.GetAllMovies().Count;
+        ViewBag.TotalSeries = _tvSeriesService.GetAllSeries().Count;
 
         return View();
     }

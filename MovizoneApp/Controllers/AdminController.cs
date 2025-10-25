@@ -107,11 +107,11 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMovie(Movie movie, IFormFile? coverFile, string? actorsList)
+        public async Task<IActionResult> CreateMovie(Movie movie, IFormFile? coverFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            // Handle file upload
+            // Handle cover image upload
             if (coverFile != null && coverFile.Length > 0)
             {
                 var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
@@ -123,6 +123,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 movie.CoverImage = $"/img/covers/{fileName}";
+            }
+
+            // Handle video file upload
+            if (videoFile != null && videoFile.Length > 0)
+            {
+                // Create videos directory if it doesn't exist
+                var videosDir = Path.Combine("wwwroot/videos");
+                if (!Directory.Exists(videosDir))
+                {
+                    Directory.CreateDirectory(videosDir);
+                }
+
+                var videoFileName = $"video_{Guid.NewGuid()}{Path.GetExtension(videoFile.FileName)}";
+                var videoPath = Path.Combine(videosDir, videoFileName);
+
+                using (var stream = new FileStream(videoPath, FileMode.Create))
+                {
+                    await videoFile.CopyToAsync(stream);
+                }
+
+                movie.VideoUrl = $"/videos/{videoFileName}";
             }
 
             // Parse actors list

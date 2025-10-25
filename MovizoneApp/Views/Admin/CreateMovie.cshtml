@@ -80,8 +80,15 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Video URL</label>
-                    <input asp-for="VideoUrl" class="form-control" placeholder="https://...">
+                    <input asp-for="VideoUrl" class="form-control" placeholder="https://... or upload below">
+                    <small class="text-muted">Or upload video file below</small>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Upload Video File</label>
+                <input type="file" name="videoFile" class="form-control" accept="video/*">
+                <small class="text-muted">Supported formats: MP4, WebM, AVI (max 500MB)</small>
             </div>
 
             <div class="mb-3 form-check">
