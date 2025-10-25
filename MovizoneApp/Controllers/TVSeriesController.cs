@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovizoneApp.Models;
 using MovizoneApp.Services;
+using MovizoneApp.Helpers;
 
 namespace MovizoneApp.Controllers
 {
@@ -17,7 +18,7 @@ namespace MovizoneApp.Controllers
             _watchlistService = watchlistService;
         }
 
-        public IActionResult Catalog(string search = "", string genre = "")
+        public IActionResult Catalog(string search = "", string genre = "", int pageNumber = 1)
         {
             var series = _tvSeriesService.GetAllSeries();
 
@@ -35,7 +36,11 @@ namespace MovizoneApp.Controllers
             ViewBag.SearchQuery = search;
             ViewBag.SelectedGenre = genre;
             ViewBag.Genres = _tvSeriesService.GetAllSeries().Select(s => s.Genre).Distinct().OrderBy(g => g).ToList();
-            return View(series);
+
+            int pageSize = 12;
+            var paginatedSeries = PaginatedList<TVSeries>.Create(series, pageNumber, pageSize);
+
+            return View(paginatedSeries);
         }
 
         public IActionResult Details(int id)
