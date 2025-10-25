@@ -120,11 +120,19 @@
                 <input asp-for="FirstAired" type="date" class="form-control">
             </div>
 
-            <div class="mb-3 form-check">
-                <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured">
-                <label class="form-check-label" for="featured">
-                    Featured Series
-                </label>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured">
+                    <label class="form-check-label" for="featured">
+                        Featured Series (show in featured sections)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="IsHidden" type="checkbox" class="form-check-input" id="hidden">
+                    <label class="form-check-label" for="hidden">
+                        Hide from Public (draft mode)
+                    </label>
+                </div>
             </div>
 
             <div class="d-flex gap-2">

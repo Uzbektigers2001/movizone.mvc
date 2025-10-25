@@ -59,6 +59,14 @@ namespace MovizoneApp.Controllers
             // Check if in watchlist (userId = 1 for demo)
             ViewBag.IsInWatchlist = _watchlistService.IsInWatchlist(1, id);
 
+            // Get similar movies based on genre (exclude current movie and hidden movies)
+            var similarMovies = _movieService.GetAllMovies()
+                .Where(m => m.Id != id && !m.IsHidden && m.Genre == movie.Genre)
+                .OrderByDescending(m => m.Rating)
+                .Take(6)
+                .ToList();
+            ViewBag.SimilarMovies = similarMovies;
+
             return View(movie);
         }
 
