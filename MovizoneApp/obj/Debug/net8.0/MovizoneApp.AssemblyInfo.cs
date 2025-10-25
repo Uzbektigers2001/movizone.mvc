@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MovizoneApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8ce4b221b44ac062928a02e75a65a9d71ee2e0d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f07c0c5663b1308e4233f9d0ba3057878e3ef526")]
 [assembly: System.Reflection.AssemblyProductAttribute("MovizoneApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MovizoneApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

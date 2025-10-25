@@ -18,6 +18,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = /home/user/movizone.mvc/MovizoneApp
 build_property._RazorSourceGeneratorDebug = 
 
+[/home/user/movizone.mvc/MovizoneApp/Views/Admin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/user/movizone.mvc/MovizoneApp/Views/Admin/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/user/movizone.mvc/MovizoneApp/Views/Admin/Movies.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vTW92aWVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/user/movizone.mvc/MovizoneApp/Views/Auth/ForgotPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9Gb3Jnb3RQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -64,6 +76,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/home/user/movizone.mvc/MovizoneApp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/user/movizone.mvc/MovizoneApp/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19BZG1pbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/user/movizone.mvc/MovizoneApp/Views/Shared/_ValidationScriptsPartial.cshtml]

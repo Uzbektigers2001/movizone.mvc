@@ -90,5 +90,42 @@ namespace MovizoneApp.Services
         public TVSeries? GetSeriesById(int id) => _series.FirstOrDefault(s => s.Id == id);
 
         public List<TVSeries> GetFeaturedSeries() => _series.Where(s => s.IsFeatured).ToList();
+
+        public void AddSeries(TVSeries series)
+        {
+            series.Id = _series.Any() ? _series.Max(s => s.Id) + 1 : 1;
+            _series.Add(series);
+        }
+
+        public void UpdateSeries(TVSeries series)
+        {
+            var existingSeries = GetSeriesById(series.Id);
+            if (existingSeries != null)
+            {
+                existingSeries.Title = series.Title;
+                existingSeries.Description = series.Description;
+                existingSeries.Year = series.Year;
+                existingSeries.Rating = series.Rating;
+                existingSeries.Genre = series.Genre;
+                existingSeries.Seasons = series.Seasons;
+                existingSeries.TotalEpisodes = series.TotalEpisodes;
+                existingSeries.Country = series.Country;
+                existingSeries.Creator = series.Creator;
+                existingSeries.CoverImage = series.CoverImage;
+                existingSeries.Actors = series.Actors;
+                existingSeries.IsFeatured = series.IsFeatured;
+                existingSeries.FirstAired = series.FirstAired;
+                existingSeries.Status = series.Status;
+            }
+        }
+
+        public void DeleteSeries(int id)
+        {
+            var series = GetSeriesById(id);
+            if (series != null)
+            {
+                _series.Remove(series);
+            }
+        }
     }
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - HotFlix Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 60px;
+        }
+        body {
+            background: #f8f9fa;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: #2d3748;
+            padding-top: var(--header-height);
+            overflow-y: auto;
+        }
+        .sidebar .nav-link {
+            color: #cbd5e0;
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #ff55a5;
+        }
+        .admin-header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--header-height);
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+        }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding-top: calc(var(--header-height) + 2rem);
+            padding-bottom: 2rem;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 py-2">
+            <h5 class="text-white mb-3">
+                <i class="ti ti-flame" style="color: #ff55a5;"></i> HotFlix
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <i class="ti ti-dashboard me-2"></i> Dashboard
+            </a>
+            <a asp-action="Movies" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Movies" ? "active" : "")">
+                <i class="ti ti-movie me-2"></i> Movies
+            </a>
+            <a asp-action="Series" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Series" ? "active" : "")">
+                <i class="ti ti-device-tv me-2"></i> TV Series
+            </a>
+            <a asp-action="Actors" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Actors" ? "active" : "")">
+                <i class="ti ti-users me-2"></i> Actors
+            </a>
+            <a asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
+                <i class="ti ti-user me-2"></i> Users
+            </a>
+            <hr class="my-2" style="border-color: rgba(255,255,255,0.1);">
+            <a asp-controller="Home" asp-action="Index" class="nav-link">
+                <i class="ti ti-world me-2"></i> View Site
+            </a>
+            <a asp-action="Logout" class="nav-link">
+                <i class="ti ti-logout me-2"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="admin-header d-flex align-items-center px-4">
+        <h4 class="mb-0">@ViewData["Title"]</h4>
+        <div class="ms-auto">
+            <span class="text-muted">Welcome, @Context.Session.GetString("UserName")</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-fluid px-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
