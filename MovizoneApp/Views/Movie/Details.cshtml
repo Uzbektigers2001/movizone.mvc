@@ -96,15 +96,18 @@
 			<!-- player -->
 			<div class="col-12 col-xl-6">
 				<div class="item__video">
+					@{
+						var posterImage = !string.IsNullOrEmpty(Model.PosterImage) ? Model.PosterImage : Model.CoverImage;
+					}
 					@if (!string.IsNullOrEmpty(Model.VideoUrl))
 					{
-						<video id="player" playsinline controls data-poster="@Model.CoverImage">
+						<video id="player" playsinline controls data-poster="@posterImage">
 							<source src="@Model.VideoUrl" type="video/mp4" size="1080">
 						</video>
 					}
 					else
 					{
-						<video id="player" playsinline controls data-poster="@Model.CoverImage">
+						<video id="player" playsinline controls data-poster="@posterImage">
 							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" size="720">
 							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" size="1080">
 						</video>
@@ -365,7 +368,7 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body p-0">
-				<video id="moviePlayer" playsinline controls data-poster="@Model.CoverImage">
+				<video id="moviePlayer" playsinline controls data-poster="@posterImage">
 					@if (!string.IsNullOrEmpty(Model.VideoUrl))
 					{
 						<source src="@Model.VideoUrl" type="video/mp4" size="1080">

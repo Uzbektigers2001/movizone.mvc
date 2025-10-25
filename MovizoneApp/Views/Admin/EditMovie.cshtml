@@ -75,6 +75,27 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Current Poster Image (for video player)</label>
+                    <div class="mb-2">
+                        @if (!string.IsNullOrEmpty(Model.PosterImage))
+                        {
+                            <img src="@Model.PosterImage" alt="Poster" style="max-width: 150px; height: auto;">
+                        }
+                        else
+                        {
+                            <small class="text-muted">No poster set (will use cover image)</small>
+                        }
+                    </div>
+                    <input asp-for="PosterImage" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Upload New Poster</label>
+                    <input type="file" name="posterFile" class="form-control" accept="image/*">
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Actors (comma separated)</label>
                 <input type="text" name="actorsList" class="form-control" value="@string.Join(", ", Model.Actors)">

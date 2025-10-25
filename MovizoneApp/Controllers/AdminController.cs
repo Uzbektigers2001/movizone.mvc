@@ -101,7 +101,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMovie(Movie movie, IFormFile? coverFile, IFormFile? videoFile, string? actorsList)
+        public async Task<IActionResult> CreateMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -117,6 +117,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 movie.CoverImage = $"/img/covers/{fileName}";
+            }
+
+            // Handle poster image upload
+            if (posterFile != null && posterFile.Length > 0)
+            {
+                // Create posters directory if it doesn't exist
+                var postersDir = Path.Combine("wwwroot/img/posters");
+                if (!Directory.Exists(postersDir))
+                {
+                    Directory.CreateDirectory(postersDir);
+                }
+
+                var posterFileName = $"poster_{Guid.NewGuid()}{Path.GetExtension(posterFile.FileName)}";
+                var posterPath = Path.Combine(postersDir, posterFileName);
+
+                using (var stream = new FileStream(posterPath, FileMode.Create))
+                {
+                    await posterFile.CopyToAsync(stream);
+                }
+
+                movie.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             // Handle video file upload
@@ -161,11 +182,11 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, string? actorsList)
+        public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            // Handle file upload
+            // Handle cover file upload
             if (coverFile != null && coverFile.Length > 0)
             {
                 var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
@@ -177,6 +198,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 movie.CoverImage = $"/img/covers/{fileName}";
+            }
+
+            // Handle poster file upload
+            if (posterFile != null && posterFile.Length > 0)
+            {
+                // Create posters directory if it doesn't exist
+                var postersDir = Path.Combine("wwwroot/img/posters");
+                if (!Directory.Exists(postersDir))
+                {
+                    Directory.CreateDirectory(postersDir);
+                }
+
+                var posterFileName = $"poster_{Guid.NewGuid()}{Path.GetExtension(posterFile.FileName)}";
+                var posterPath = Path.Combine(postersDir, posterFileName);
+
+                using (var stream = new FileStream(posterPath, FileMode.Create))
+                {
+                    await posterFile.CopyToAsync(stream);
+                }
+
+                movie.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             // Parse actors list
@@ -214,7 +256,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSeries(TVSeries series, IFormFile? coverFile, string? actorsList)
+        public async Task<IActionResult> CreateSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -229,6 +271,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 series.CoverImage = $"/img/covers/{fileName}";
+            }
+
+            // Handle poster image upload
+            if (posterFile != null && posterFile.Length > 0)
+            {
+                // Create posters directory if it doesn't exist
+                var postersDir = Path.Combine("wwwroot/img/posters");
+                if (!Directory.Exists(postersDir))
+                {
+                    Directory.CreateDirectory(postersDir);
+                }
+
+                var posterFileName = $"poster_{Guid.NewGuid()}{Path.GetExtension(posterFile.FileName)}";
+                var posterPath = Path.Combine(postersDir, posterFileName);
+
+                using (var stream = new FileStream(posterPath, FileMode.Create))
+                {
+                    await posterFile.CopyToAsync(stream);
+                }
+
+                series.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             if (!string.IsNullOrEmpty(actorsList))
@@ -251,7 +314,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, string? actorsList)
+        public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -266,6 +329,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 series.CoverImage = $"/img/covers/{fileName}";
+            }
+
+            // Handle poster file upload
+            if (posterFile != null && posterFile.Length > 0)
+            {
+                // Create posters directory if it doesn't exist
+                var postersDir = Path.Combine("wwwroot/img/posters");
+                if (!Directory.Exists(postersDir))
+                {
+                    Directory.CreateDirectory(postersDir);
+                }
+
+                var posterFileName = $"poster_{Guid.NewGuid()}{Path.GetExtension(posterFile.FileName)}";
+                var posterPath = Path.Combine(postersDir, posterFileName);
+
+                using (var stream = new FileStream(posterPath, FileMode.Create))
+                {
+                    await posterFile.CopyToAsync(stream);
+                }
+
+                series.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             if (!string.IsNullOrEmpty(actorsList))
