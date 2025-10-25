@@ -36,8 +36,8 @@
                     <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                         <div class="card bg-dark text-white h-100">
                             <div class="position-relative">
-                                <img src="https://via.placeholder.com/300x450/1a1a2e/ff55a5?text=@Uri.EscapeDataString(movie.Title)"
-                                     class="card-img-top" alt="@movie.Title">
+                                <img src="@movie.CoverImage"
+                                     class="card-img-top" alt="@movie.Title" style="height: 350px; object-fit: cover;">
                                 <span class="position-absolute top-0 end-0 m-2 item__rate--green">
                                     @movie.Rating
                                 </span>
@@ -80,8 +80,8 @@
                     <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                         <div class="card bg-dark text-white h-100">
                             <div class="position-relative">
-                                <img src="https://via.placeholder.com/300x450/1a1a2e/ff55a5?text=@Uri.EscapeDataString(series.Title)"
-                                     class="card-img-top" alt="@series.Title">
+                                <img src="@series.CoverImage"
+                                     class="card-img-top" alt="@series.Title" style="height: 350px; object-fit: cover;">
                                 <span class="position-absolute top-0 end-0 m-2 item__rate--green">
                                     @series.Rating
                                 </span>
