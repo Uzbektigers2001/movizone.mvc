@@ -47,6 +47,9 @@ public class HomeController : Controller
         ViewBag.RecentMovies = recentMovies;
         ViewBag.PopularSeries = popularSeries;
 
+        // Genres for filter
+        ViewBag.Genres = _movieService.GetAllMovies().Select(m => m.Genre).Distinct().ToList();
+
         // Statistics
         ViewBag.TotalMovies = _movieService.GetAllMovies().Count;
         ViewBag.TotalSeries = _tvSeriesService.GetAllSeries().Count;
