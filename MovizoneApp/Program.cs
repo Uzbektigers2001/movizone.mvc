@@ -19,6 +19,8 @@ builder.Services.AddSingleton<ITVSeriesService, TVSeriesService>();
 builder.Services.AddSingleton<IActorService, ActorService>();
 builder.Services.AddSingleton<IPricingService, PricingService>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IReviewService, ReviewService>();
+builder.Services.AddSingleton<IWatchlistService, WatchlistService>();
 
 var app = builder.Build();
 
