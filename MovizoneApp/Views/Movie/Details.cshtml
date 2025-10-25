@@ -98,18 +98,17 @@
 				<div class="item__video">
 					@if (!string.IsNullOrEmpty(Model.VideoUrl))
 					{
-						<video controls crossorigin playsinline poster="@Model.CoverImage" id="player" class="item__video-player">
-							<source src="@Model.VideoUrl" type="video/mp4">
-							Your browser does not support the video tag.
+						<video id="player" playsinline controls data-poster="@Model.CoverImage">
+							<source src="@Model.VideoUrl" type="video/mp4" size="1080">
 						</video>
 					}
 					else
 					{
-						<video controls crossorigin playsinline poster="@Model.CoverImage" id="player" class="item__video-player">
-							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-							Your browser does not support the video tag.
+						<video id="player" playsinline controls data-poster="@Model.CoverImage">
+							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" size="720">
+							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" size="1080">
 						</video>
-						<p class="text-muted mt-2"><small>Sample video - In production, this would be the actual movie.</small></p>
+						<p class="text-muted mt-2 text-center"><small><i class="ti ti-info-circle"></i> Sample video - In production, this would be the actual movie.</small></p>
 					}
 				</div>
 			</div>
@@ -366,19 +365,17 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body p-0">
-				<div class="ratio ratio-16x9">
-					<video id="moviePlayer" controls controlsList="nodownload">
-						@if (!string.IsNullOrEmpty(Model.VideoUrl))
-						{
-							<source src="@Model.VideoUrl" type="video/mp4">
-						}
-						else
-						{
-							<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-						}
-						Your browser does not support the video tag.
-					</video>
-				</div>
+				<video id="moviePlayer" playsinline controls data-poster="@Model.CoverImage">
+					@if (!string.IsNullOrEmpty(Model.VideoUrl))
+					{
+						<source src="@Model.VideoUrl" type="video/mp4" size="1080">
+					}
+					else
+					{
+						<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" size="720">
+						<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" size="1080">
+					}
+				</video>
 			</div>
 		</div>
 	</div>
@@ -386,13 +383,52 @@
 
 @section Scripts {
 	<script>
-		// Pause video when modal is closed
-		document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
-			var video = document.getElementById('moviePlayer');
-			if (video) {
-				video.pause();
-				video.currentTime = 0;
-			}
+		// Initialize Plyr players
+		document.addEventListener('DOMContentLoaded', function() {
+			// Main player
+			const player = new Plyr('#player', {
+				controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'],
+				settings: ['quality', 'speed'],
+				speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+				quality: {
+					default: 720,
+					options: [1080, 720]
+				},
+				ratio: '16:9',
+				autoplay: false,
+				clickToPlay: true,
+				keyboard: { focused: true, global: true }
+			});
+
+			// Modal player
+			let modalPlayer = null;
+
+			// Initialize modal player when modal is shown
+			document.getElementById('videoModal').addEventListener('shown.bs.modal', function () {
+				if (!modalPlayer) {
+					modalPlayer = new Plyr('#moviePlayer', {
+						controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'],
+						settings: ['quality', 'speed'],
+						speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+						quality: {
+							default: 720,
+							options: [1080, 720]
+						},
+						ratio: '16:9',
+						autoplay: true,
+						clickToPlay: true,
+						keyboard: { focused: true, global: true }
+					});
+				}
+			});
+
+			// Pause and reset when modal is closed
+			document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
+				if (modalPlayer) {
+					modalPlayer.pause();
+					modalPlayer.currentTime = 0;
+				}
+			});
 		});
 	</script>
 }
