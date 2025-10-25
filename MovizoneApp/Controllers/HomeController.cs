@@ -25,7 +25,12 @@ public class HomeController : Controller
         var bannerMovies = _movieService.GetAllMovies()
             .Where(m => m.ShowInBanner && !m.IsHidden)
             .OrderByDescending(m => m.Rating)
-            .Take(5)
+            .ToList();
+
+        // Banner Series (only series with ShowInBanner=true and not hidden)
+        var bannerSeries = _tvSeriesService.GetAllSeries()
+            .Where(s => s.ShowInBanner && !s.IsHidden)
+            .OrderByDescending(s => s.Rating)
             .ToList();
 
         var featuredMovies = _movieService.GetFeaturedMovies().Where(m => !m.IsHidden).ToList();
@@ -53,6 +58,7 @@ public class HomeController : Controller
             .ToList();
 
         ViewBag.BannerMovies = bannerMovies;
+        ViewBag.BannerSeries = bannerSeries;
         ViewBag.FeaturedMovies = featuredMovies;
         ViewBag.FeaturedSeries = featuredSeries;
         ViewBag.TopRatedMovies = topRatedMovies;

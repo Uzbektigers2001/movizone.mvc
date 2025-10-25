@@ -110,6 +110,28 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Current Banner Image (for homepage carousel)</label>
+                    <div class="mb-2">
+                        @if (!string.IsNullOrEmpty(Model.BannerImage))
+                        {
+                            <img src="@Model.BannerImage" alt="Banner" style="max-width: 200px; height: auto;">
+                        }
+                        else
+                        {
+                            <small class="text-muted">No banner image set</small>
+                        }
+                    </div>
+                    <input asp-for="BannerImage" class="form-control" placeholder="/img/banners/banner10.jpg">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Upload New Banner Image</label>
+                    <input type="file" name="bannerFile" class="form-control" accept="image/*">
+                    <small class="text-muted">Recommended: 1920x800px or wider</small>
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Actors (comma separated)</label>
                 <input type="text" name="actorsList" class="form-control" value="@string.Join(", ", Model.Actors)">
@@ -125,6 +147,12 @@
                     <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured">
                     <label class="form-check-label" for="featured">
                         Featured Series (show in featured sections)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="ShowInBanner" type="checkbox" class="form-check-input" id="showInBanner">
+                    <label class="form-check-label" for="showInBanner">
+                        Show in Homepage Banner Carousel
                     </label>
                 </div>
                 <div class="form-check">
