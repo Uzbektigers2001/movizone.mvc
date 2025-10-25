@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace MovizoneApp.Models
 {
     public class PricingPlan

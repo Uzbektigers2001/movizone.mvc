@@ -1,3 +1,5 @@
+using System;
+
 namespace MovizoneApp.Models
 {
     public class WatchlistItem
