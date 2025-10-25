@@ -22,7 +22,7 @@ namespace MovizoneApp.Controllers
 
         public IActionResult Catalog(string search = "", string genre = "", int pageNumber = 1)
         {
-            var series = _tvSeriesService.GetAllSeries();
+            var series = _tvSeriesService.GetAllSeries().Where(s => !s.IsHidden).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -37,7 +37,7 @@ namespace MovizoneApp.Controllers
 
             ViewBag.SearchQuery = search;
             ViewBag.SelectedGenre = genre;
-            ViewBag.Genres = _tvSeriesService.GetAllSeries().Select(s => s.Genre).Distinct().OrderBy(g => g).ToList();
+            ViewBag.Genres = _tvSeriesService.GetAllSeries().Where(s => !s.IsHidden).Select(s => s.Genre).Distinct().OrderBy(g => g).ToList();
 
             int pageSize = 12;
             var paginatedSeries = PaginatedList<TVSeries>.Create(series, pageNumber, pageSize);

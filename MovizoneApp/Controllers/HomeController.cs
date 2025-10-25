@@ -21,27 +21,38 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var featuredMovies = _movieService.GetFeaturedMovies();
-        var featuredSeries = _tvSeriesService.GetFeaturedSeries();
+        // Banner Movies (only movies with ShowInBanner=true and not hidden)
+        var bannerMovies = _movieService.GetAllMovies()
+            .Where(m => m.ShowInBanner && !m.IsHidden)
+            .OrderByDescending(m => m.Rating)
+            .Take(5)
+            .ToList();
+
+        var featuredMovies = _movieService.GetFeaturedMovies().Where(m => !m.IsHidden).ToList();
+        var featuredSeries = _tvSeriesService.GetFeaturedSeries().Where(s => !s.IsHidden).ToList();
 
         // Top Rated (rating >= 8.0)
         var topRatedMovies = _movieService.GetAllMovies()
+            .Where(m => !m.IsHidden)
             .OrderByDescending(m => m.Rating)
             .Take(6)
             .ToList();
 
         // Recent Additions (last 30 days or most recent)
         var recentMovies = _movieService.GetAllMovies()
+            .Where(m => !m.IsHidden)
             .OrderByDescending(m => m.ReleaseDate)
             .Take(6)
             .ToList();
 
         // Popular TV Series
         var popularSeries = _tvSeriesService.GetAllSeries()
+            .Where(s => !s.IsHidden)
             .OrderByDescending(s => s.Rating)
             .Take(6)
             .ToList();
 
+        ViewBag.BannerMovies = bannerMovies;
         ViewBag.FeaturedMovies = featuredMovies;
         ViewBag.FeaturedSeries = featuredSeries;
         ViewBag.TopRatedMovies = topRatedMovies;
@@ -49,11 +60,11 @@ public class HomeController : Controller
         ViewBag.PopularSeries = popularSeries;
 
         // Genres for filter
-        ViewBag.Genres = _movieService.GetAllMovies().Select(m => m.Genre).Distinct().ToList();
+        ViewBag.Genres = _movieService.GetAllMovies().Where(m => !m.IsHidden).Select(m => m.Genre).Distinct().ToList();
 
         // Statistics
-        ViewBag.TotalMovies = _movieService.GetAllMovies().Count;
-        ViewBag.TotalSeries = _tvSeriesService.GetAllSeries().Count;
+        ViewBag.TotalMovies = _movieService.GetAllMovies().Where(m => !m.IsHidden).Count();
+        ViewBag.TotalSeries = _tvSeriesService.GetAllSeries().Where(s => !s.IsHidden).Count();
 
         return View();
     }
