@@ -8,17 +8,20 @@ namespace MovizoneApp.Controllers
     {
         private readonly IMovieService _movieService;
         private readonly ITVSeriesService _seriesService;
+        private readonly IEpisodeService _episodeService;
         private readonly IUserService _userService;
         private readonly IActorService _actorService;
 
         public AdminController(
             IMovieService movieService,
             ITVSeriesService seriesService,
+            IEpisodeService episodeService,
             IUserService userService,
             IActorService actorService)
         {
             _movieService = movieService;
             _seriesService = seriesService;
+            _episodeService = episodeService;
             _userService = userService;
             _actorService = actorService;
         }
@@ -507,6 +510,161 @@ namespace MovizoneApp.Controllers
 
             _actorService.DeleteActor(id);
             return RedirectToAction("Actors");
+        }
+
+        // Episodes Management
+        public IActionResult Episodes(int? seriesId)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            var allSeries = _seriesService.GetAllSeries();
+            ViewBag.AllSeries = allSeries;
+            ViewBag.SelectedSeriesId = seriesId;
+
+            List<Episode> episodes;
+            if (seriesId.HasValue)
+            {
+                episodes = _episodeService.GetEpisodesBySeriesId(seriesId.Value);
+                var selectedSeries = _seriesService.GetSeriesById(seriesId.Value);
+                ViewBag.SelectedSeriesTitle = selectedSeries?.Title;
+            }
+            else
+            {
+                episodes = _episodeService.GetAllEpisodes();
+            }
+
+            return View(episodes);
+        }
+
+        public IActionResult CreateEpisode(int? seriesId)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            ViewBag.AllSeries = _seriesService.GetAllSeries();
+            ViewBag.SelectedSeriesId = seriesId;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEpisode(Episode episode, IFormFile? thumbnailFile, IFormFile? videoFile)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            // Handle thumbnail upload
+            if (thumbnailFile != null && thumbnailFile.Length > 0)
+            {
+                var thumbnailDir = Path.Combine("wwwroot/img/episodes");
+                if (!Directory.Exists(thumbnailDir))
+                {
+                    Directory.CreateDirectory(thumbnailDir);
+                }
+
+                var thumbnailFileName = $"episode_{Guid.NewGuid()}{Path.GetExtension(thumbnailFile.FileName)}";
+                var thumbnailPath = Path.Combine(thumbnailDir, thumbnailFileName);
+
+                using (var stream = new FileStream(thumbnailPath, FileMode.Create))
+                {
+                    await thumbnailFile.CopyToAsync(stream);
+                }
+
+                episode.ThumbnailImage = $"/img/episodes/{thumbnailFileName}";
+            }
+
+            // Handle video upload
+            if (videoFile != null && videoFile.Length > 0)
+            {
+                var videosDir = Path.Combine("wwwroot/videos/episodes");
+                if (!Directory.Exists(videosDir))
+                {
+                    Directory.CreateDirectory(videosDir);
+                }
+
+                var videoFileName = $"episode_{Guid.NewGuid()}{Path.GetExtension(videoFile.FileName)}";
+                var videoPath = Path.Combine(videosDir, videoFileName);
+
+                using (var stream = new FileStream(videoPath, FileMode.Create))
+                {
+                    await videoFile.CopyToAsync(stream);
+                }
+
+                episode.VideoUrl = $"/videos/episodes/{videoFileName}";
+            }
+
+            _episodeService.AddEpisode(episode);
+            return RedirectToAction("Episodes", new { seriesId = episode.TVSeriesId });
+        }
+
+        public IActionResult EditEpisode(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            var episode = _episodeService.GetEpisodeById(id);
+            if (episode == null) return NotFound();
+
+            ViewBag.AllSeries = _seriesService.GetAllSeries();
+            return View(episode);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEpisode(Episode episode, IFormFile? thumbnailFile, IFormFile? videoFile)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            // Handle thumbnail upload
+            if (thumbnailFile != null && thumbnailFile.Length > 0)
+            {
+                var thumbnailDir = Path.Combine("wwwroot/img/episodes");
+                if (!Directory.Exists(thumbnailDir))
+                {
+                    Directory.CreateDirectory(thumbnailDir);
+                }
+
+                var thumbnailFileName = $"episode_{Guid.NewGuid()}{Path.GetExtension(thumbnailFile.FileName)}";
+                var thumbnailPath = Path.Combine(thumbnailDir, thumbnailFileName);
+
+                using (var stream = new FileStream(thumbnailPath, FileMode.Create))
+                {
+                    await thumbnailFile.CopyToAsync(stream);
+                }
+
+                episode.ThumbnailImage = $"/img/episodes/{thumbnailFileName}";
+            }
+
+            // Handle video upload
+            if (videoFile != null && videoFile.Length > 0)
+            {
+                var videosDir = Path.Combine("wwwroot/videos/episodes");
+                if (!Directory.Exists(videosDir))
+                {
+                    Directory.CreateDirectory(videosDir);
+                }
+
+                var videoFileName = $"episode_{Guid.NewGuid()}{Path.GetExtension(videoFile.FileName)}";
+                var videoPath = Path.Combine(videosDir, videoFileName);
+
+                using (var stream = new FileStream(videoPath, FileMode.Create))
+                {
+                    await videoFile.CopyToAsync(stream);
+                }
+
+                episode.VideoUrl = $"/videos/episodes/{videoFileName}";
+            }
+
+            _episodeService.UpdateEpisode(episode);
+            return RedirectToAction("Episodes", new { seriesId = episode.TVSeriesId });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteEpisode(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            var episode = _episodeService.GetEpisodeById(id);
+            int? seriesId = episode?.TVSeriesId;
+
+            _episodeService.DeleteEpisode(id);
+            return RedirectToAction("Episodes", new { seriesId = seriesId });
         }
     }
 }

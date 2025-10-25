@@ -71,6 +71,9 @@
             <a asp-action="Series" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Series" ? "active" : "")">
                 <i class="ti ti-device-tv me-2"></i> TV Series
             </a>
+            <a asp-action="Episodes" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Episodes" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateEpisode" || ViewContext.RouteData.Values["action"]?.ToString() == "EditEpisode" ? "active" : "")">
+                <i class="ti ti-list me-2"></i> Episodes
+            </a>
             <a asp-action="Actors" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Actors" ? "active" : "")">
                 <i class="ti ti-users me-2"></i> Actors
             </a>

@@ -16,6 +16,7 @@ builder.Services.AddSession(options =>
 // Register InMemory services
 builder.Services.AddSingleton<IMovieService, MovieService>();
 builder.Services.AddSingleton<ITVSeriesService, TVSeriesService>();
+builder.Services.AddSingleton<IEpisodeService, EpisodeService>();
 builder.Services.AddSingleton<IActorService, ActorService>();
 builder.Services.AddSingleton<IPricingService, PricingService>();
 builder.Services.AddSingleton<IUserService, UserService>();
