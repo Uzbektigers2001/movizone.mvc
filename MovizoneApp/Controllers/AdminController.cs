@@ -164,6 +164,24 @@ namespace MovizoneApp.Controllers
                 return View(movie);
             }
 
+            // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
+            if (string.IsNullOrWhiteSpace(movie.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            {
+                _logger.LogWarning("Movie creation failed - No video content provided");
+                TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
+                ModelState.AddModelError("VideoUrl", "Either Video URL or video file is required");
+                return View(movie);
+            }
+
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(movie.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("Movie creation failed - No cover image provided");
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
+                return View(movie);
+            }
+
             // Handle cover image upload
             if (coverFile != null && coverFile.Length > 0)
             {
@@ -281,7 +299,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
+        public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -290,6 +308,24 @@ namespace MovizoneApp.Controllers
             {
                 _logger.LogWarning("Movie update failed - ModelState invalid for ID: {MovieId}", movie.Id);
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(movie);
+            }
+
+            // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
+            if (string.IsNullOrWhiteSpace(movie.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            {
+                _logger.LogWarning("Movie update failed - No video content provided for ID: {MovieId}", movie.Id);
+                TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
+                ModelState.AddModelError("VideoUrl", "Either Video URL or video file is required");
+                return View(movie);
+            }
+
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(movie.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("Movie update failed - No cover image provided for ID: {MovieId}", movie.Id);
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
                 return View(movie);
             }
 
@@ -347,6 +383,27 @@ namespace MovizoneApp.Controllers
                 }
 
                 movie.BannerImage = $"/img/banners/{bannerFileName}";
+            }
+
+            // Handle video file upload
+            if (videoFile != null && videoFile.Length > 0)
+            {
+                // Create videos directory if it doesn't exist
+                var videosDir = Path.Combine("wwwroot/videos");
+                if (!Directory.Exists(videosDir))
+                {
+                    Directory.CreateDirectory(videosDir);
+                }
+
+                var videoFileName = $"video_{Guid.NewGuid()}{Path.GetExtension(videoFile.FileName)}";
+                var videoPath = Path.Combine(videosDir, videoFileName);
+
+                using (var stream = new FileStream(videoPath, FileMode.Create))
+                {
+                    await videoFile.CopyToAsync(stream);
+                }
+
+                movie.VideoUrl = $"/videos/{videoFileName}";
             }
 
             // Parse actors list
@@ -433,6 +490,15 @@ namespace MovizoneApp.Controllers
             {
                 _logger.LogWarning("TV series creation failed - ModelState invalid");
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(series);
+            }
+
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(series.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("TV series creation failed - No cover image provided");
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
                 return View(series);
             }
 
@@ -539,6 +605,15 @@ namespace MovizoneApp.Controllers
             {
                 _logger.LogWarning("TV series update failed - ModelState invalid for ID: {SeriesId}", series.Id);
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(series);
+            }
+
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(series.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("TV series update failed - No cover image provided for ID: {SeriesId}", series.Id);
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
                 return View(series);
             }
 
@@ -901,6 +976,20 @@ namespace MovizoneApp.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
+            // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
+            if (string.IsNullOrWhiteSpace(episode.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            {
+                _logger.LogWarning("Episode creation failed - No video content provided");
+                TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
+
+                // Re-populate ViewBag for form
+                var allSeriesDto = await _seriesService.GetAllSeriesAsync();
+                var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
+                ViewBag.AllSeries = allSeries;
+
+                return View(episode);
+            }
+
             // Handle thumbnail upload
             if (thumbnailFile != null && thumbnailFile.Length > 0)
             {
@@ -962,6 +1051,20 @@ namespace MovizoneApp.Controllers
         public async Task<IActionResult> EditEpisode(Episode episode, IFormFile? thumbnailFile, IFormFile? videoFile)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
+
+            // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
+            if (string.IsNullOrWhiteSpace(episode.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            {
+                _logger.LogWarning("Episode update failed - No video content provided for ID: {EpisodeId}", episode.Id);
+                TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
+
+                // Re-populate ViewBag for form
+                var allSeriesDto = await _seriesService.GetAllSeriesAsync();
+                var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
+                ViewBag.AllSeries = allSeries;
+
+                return View(episode);
+            }
 
             // Handle thumbnail upload
             if (thumbnailFile != null && thumbnailFile.Length > 0)
