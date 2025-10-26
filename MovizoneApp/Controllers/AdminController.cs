@@ -803,11 +803,11 @@ namespace MovizoneApp.Controllers
         }
 
         // Episodes Management
-        public IActionResult Episodes(int? seriesId, int page = 1)
+        public async Task<IActionResult> Episodes(int? seriesId, int page = 1)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var allSeries = _seriesService.GetAllSeries();
+            var allSeries = await _seriesService.GetAllSeriesAsync();
             ViewBag.AllSeries = allSeries;
             ViewBag.SelectedSeriesId = seriesId;
 
@@ -815,7 +815,7 @@ namespace MovizoneApp.Controllers
             if (seriesId.HasValue)
             {
                 episodes = _episodeService.GetEpisodesBySeriesId(seriesId.Value);
-                var selectedSeries = _seriesService.GetSeriesById(seriesId.Value);
+                var selectedSeries = await _seriesService.GetSeriesByIdAsync(seriesId.Value);
                 ViewBag.SelectedSeriesTitle = selectedSeries?.Title;
             }
             else
@@ -831,11 +831,11 @@ namespace MovizoneApp.Controllers
             return View(paginatedEpisodes);
         }
 
-        public IActionResult CreateEpisode(int? seriesId)
+        public async Task<IActionResult> CreateEpisode(int? seriesId)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            ViewBag.AllSeries = _seriesService.GetAllSeries();
+            ViewBag.AllSeries = await _seriesService.GetAllSeriesAsync();
             ViewBag.SelectedSeriesId = seriesId;
 
             return View();
@@ -890,14 +890,14 @@ namespace MovizoneApp.Controllers
             return RedirectToAction("Episodes", new { seriesId = episode.TVSeriesId });
         }
 
-        public IActionResult EditEpisode(int id)
+        public async Task<IActionResult> EditEpisode(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             var episode = _episodeService.GetEpisodeById(id);
             if (episode == null) return NotFound();
 
-            ViewBag.AllSeries = _seriesService.GetAllSeries();
+            ViewBag.AllSeries = await _seriesService.GetAllSeriesAsync();
             return View(episode);
         }
 
