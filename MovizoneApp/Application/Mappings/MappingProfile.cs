@@ -12,7 +12,9 @@ namespace MovizoneApp.Application.Mappings
         public MappingProfile()
         {
             // Movie mappings
-            CreateMap<Movie, MovieDto>();
+            CreateMap<Movie, MovieDto>()
+                .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Actor.Name).ToList()));
             CreateMap<MovieDto, Movie>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
             CreateMap<CreateMovieDto, Movie>()
@@ -44,7 +46,9 @@ namespace MovizoneApp.Application.Mappings
             // TVSeries mappings
             CreateMap<TVSeries, TVSeriesDto>()
                 .ForMember(dest => dest.TotalSeasons, opt => opt.MapFrom(src => src.Seasons))
-                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator));
+                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator))
+                .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.Actor.Name).ToList()));
             CreateMap<TVSeriesDto, TVSeries>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Seasons, opt => opt.MapFrom(src => src.TotalSeasons))
@@ -88,7 +92,11 @@ namespace MovizoneApp.Application.Mappings
             CreateMap<TVSeriesDto, UpdateTVSeriesDto>(); // DTO to DTO mapping for EditSeries
 
             // Actor mappings
-            CreateMap<Actor, ActorDto>();
+            CreateMap<Actor, ActorDto>()
+                .ForMember(dest => dest.Movies, opt => opt.MapFrom(src =>
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Movie.Title).ToList()))
+                .ForMember(dest => dest.TVSeries, opt => opt.MapFrom(src =>
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.TVSeries.Title).ToList()));
             CreateMap<ActorDto, Actor>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
             CreateMap<CreateActorDto, Actor>()

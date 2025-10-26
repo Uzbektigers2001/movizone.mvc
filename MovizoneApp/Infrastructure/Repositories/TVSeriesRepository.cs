@@ -14,14 +14,39 @@ namespace MovizoneApp.Infrastructure.Repositories
         {
         }
 
+        // Override to include TVSeriesActors and Actor navigation properties
+        public override async Task<TVSeries?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(s => s.TVSeriesActors)
+                    .ThenInclude(tsa => tsa.Actor)
+                .Include(s => s.Episodes)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public override async Task<IEnumerable<TVSeries>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(s => s.TVSeriesActors)
+                    .ThenInclude(tsa => tsa.Actor)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<TVSeries>> GetFeaturedSeriesAsync()
         {
-            return await _dbSet.Where(s => s.IsFeatured).ToListAsync();
+            return await _dbSet
+                .Include(s => s.TVSeriesActors)
+                    .ThenInclude(tsa => tsa.Actor)
+                .Where(s => s.IsFeatured)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<TVSeries>> SearchSeriesAsync(string? searchTerm, string? genre)
         {
-            var query = _dbSet.AsQueryable();
+            var query = _dbSet
+                .Include(s => s.TVSeriesActors)
+                    .ThenInclude(tsa => tsa.Actor)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

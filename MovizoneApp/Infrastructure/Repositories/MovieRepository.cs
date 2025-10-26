@@ -14,14 +14,38 @@ namespace MovizoneApp.Infrastructure.Repositories
         {
         }
 
+        // Override to include MovieActors and Actor navigation properties
+        public override async Task<Movie?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public override async Task<IEnumerable<Movie>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Movie>> GetFeaturedMoviesAsync()
         {
-            return await _dbSet.Where(m => m.IsFeatured).ToListAsync();
+            return await _dbSet
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .Where(m => m.IsFeatured)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Movie>> SearchMoviesAsync(string? searchTerm, string? genre)
         {
-            var query = _dbSet.AsQueryable();
+            var query = _dbSet
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
