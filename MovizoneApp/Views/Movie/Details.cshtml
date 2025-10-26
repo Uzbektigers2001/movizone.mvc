@@ -31,7 +31,7 @@
 										<form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
 											<input type="hidden" name="movieId" value="@Model.Id" />
 											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-											<button class="item__favorite item__favorite--static item__favorite--active" type="submit" title="Remove from watchlist">
+											<button class="item__favorite item__favorite--static item__favorite--active" type="submit" title="@Localizer.GetString("Movie", "RemoveFromWatchlist")">
 												<i class="ti ti-bookmark-filled"></i>
 											</button>
 										</form>
@@ -41,7 +41,7 @@
 										<form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
 											<input type="hidden" name="movieId" value="@Model.Id" />
 											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-											<button class="item__favorite item__favorite--static" type="submit" title="Add to watchlist">
+											<button class="item__favorite item__favorite--static" type="submit" title="@Localizer.GetString("Movie", "AddToWatchlist")">
 												<i class="ti ti-bookmark"></i>
 											</button>
 										</form>
@@ -52,7 +52,7 @@
 									@* Anonymous users: use client-side JavaScript *@
 									<button class="item__favorite item__favorite--static"
 									        type="button"
-									        title="Add to watchlist"
+									        title="@Localizer.GetString("Movie", "AddToWatchlist")"
 									        data-id="@Model.Id"
 									        data-type="movie"
 									        data-title="@Model.Title"
@@ -71,11 +71,11 @@
 						<div class="col-12 col-md-7 col-lg-8 col-xl-6 col-xxl-7">
 							<div class="item__content">
 								<ul class="item__meta">
-									<li><span>Director:</span> @Model.Director</li>
+									<li><span>@Localizer.GetString("Movie", "Director"):</span> @Model.Director</li>
 									@if (Model.Actors.Any())
 									{
 										<li>
-											<span>Cast:</span>
+											<span>@Localizer.GetString("Movie", "Cast"):</span>
 											@foreach (var actor in Model.Actors.Take(5))
 											{
 												<a href="#">@actor</a>
@@ -86,11 +86,11 @@
 											}
 										</li>
 									}
-									<li><span>Genre:</span> <a href="#">@Model.Genre</a></li>
-									<li><span>Release Year:</span> @Model.Year</li>
-									<li><span>Running time:</span> @Model.Duration min</li>
-									<li><span>Country:</span> <a href="#">@Model.Country</a></li>
-									<li><span>Release Date:</span> @Model.ReleaseDate.ToString("MMMM dd, yyyy")</li>
+									<li><span>@Localizer.GetString("Movie", "Genre"):</span> <a href="#">@Model.Genre</a></li>
+									<li><span>@Localizer.GetString("Movie", "ReleaseYear"):</span> @Model.Year</li>
+									<li><span>@Localizer.GetString("Movie", "Duration"):</span> @Model.Duration min</li>
+									<li><span>@Localizer.GetString("Movie", "Country"):</span> <a href="#">@Model.Country</a></li>
+									<li><span>@Localizer.GetString("Movie", "ReleaseDate"):</span> @Model.ReleaseDate.ToString("MMMM dd, yyyy")</li>
 								</ul>
 
 								<div class="item__description">
@@ -141,7 +141,7 @@
 			<div class="row">
 				<div class="col-12">
 					<!-- content title -->
-					<h2 class="content__title">Discover</h2>
+					<h2 class="content__title">@Localizer.GetString("Home", "Discover")</h2>
 					<!-- end content title -->
 
 					<!-- content tabs nav -->
@@ -157,7 +157,7 @@
 						</li>
 
 						<li class="nav-item" role="presentation">
-							<button id="info-tab" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab" aria-controls="tab-info" aria-selected="false">Information</button>
+							<button id="info-tab" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab" aria-controls="tab-info" aria-selected="false">@Localizer.GetString("Movie", "Information")</button>
 						</li>
 					</ul>
 					<!-- end content tabs nav -->
@@ -189,28 +189,28 @@
 								<form asp-action="AddReview" method="post" class="review-form">
 									<input type="hidden" name="movieId" value="@Model.Id" />
 									<div class="review-form__group">
-										<label for="userName" class="review-form__label">Your Name</label>
-										<input type="text" class="review-form__input" id="userName" name="userName" placeholder="Enter your name" required>
+										<label for="userName" class="review-form__label">@Localizer.GetString("Movie", "YourName")</label>
+										<input type="text" class="review-form__input" id="userName" name="userName" placeholder="@Localizer.GetString("Movie", "EnterYourName")" required>
 									</div>
 									<div class="review-form__group">
-										<label for="rating" class="review-form__label">Rating</label>
+										<label for="rating" class="review-form__label">@Localizer.GetString("Rating")</label>
 										<select class="review-form__select" id="rating" name="rating" required>
-											<option value="">Select rating...</option>
-											<option value="10">10 - Masterpiece</option>
-											<option value="9">9 - Excellent</option>
-											<option value="8">8 - Very Good</option>
-											<option value="7">7 - Good</option>
-											<option value="6">6 - Above Average</option>
-											<option value="5">5 - Average</option>
-											<option value="4">4 - Below Average</option>
-											<option value="3">3 - Poor</option>
-											<option value="2">2 - Very Poor</option>
-											<option value="1">1 - Terrible</option>
+											<option value="">@Localizer.GetString("Movie", "SelectRating")</option>
+											<option value="10">10 - @Localizer.GetString("Movie", "Masterpiece")</option>
+											<option value="9">9 - @Localizer.GetString("Movie", "Excellent")</option>
+											<option value="8">8 - @Localizer.GetString("Movie", "VeryGood")</option>
+											<option value="7">7 - @Localizer.GetString("Movie", "Good")</option>
+											<option value="6">6 - @Localizer.GetString("Movie", "AboveAverage")</option>
+											<option value="5">5 - @Localizer.GetString("Movie", "Average")</option>
+											<option value="4">4 - @Localizer.GetString("Movie", "BelowAverage")</option>
+											<option value="3">3 - @Localizer.GetString("Movie", "Poor")</option>
+											<option value="2">2 - @Localizer.GetString("Movie", "VeryPoor")</option>
+											<option value="1">1 - @Localizer.GetString("Movie", "Terrible")</option>
 										</select>
 									</div>
 									<div class="review-form__group">
-										<label for="comment" class="review-form__label">Your Review</label>
-										<textarea class="review-form__textarea" id="comment" name="comment" rows="5" placeholder="Write your review..." required></textarea>
+										<label for="comment" class="review-form__label">@Localizer.GetString("Movie", "YourReview")</label>
+										<textarea class="review-form__textarea" id="comment" name="comment" rows="5" placeholder="@Localizer.GetString("Movie", "WriteYourReview")" required></textarea>
 									</div>
 									<button type="submit" class="review-form__btn">
 										<i class="ti ti-send"></i> Submit Review
@@ -222,9 +222,9 @@
 									@if (ViewBag.ReviewCount > 0)
 									{
 										<div class="reviews__header">
-											<h3 class="reviews__title">User Reviews</h3>
+											<h3 class="reviews__title">@Localizer.GetString("Movie", "UserReviews")</h3>
 											<span class="reviews__stats">
-												Average Rating: <span class="item__rate item__rate--small @(ViewBag.AverageRating >= 8 ? "item__rate--green" : ViewBag.AverageRating >= 6 ? "item__rate--yellow" : "item__rate--red")">
+												@Localizer.GetString("Movie", "AverageRating"): <span class="item__rate item__rate--small @(ViewBag.AverageRating >= 8 ? "item__rate--green" : ViewBag.AverageRating >= 6 ? "item__rate--yellow" : "item__rate--red")">
 													@ViewBag.AverageRating.ToString("0.0")
 												</span>
 											</span>
@@ -256,7 +256,7 @@
 									{
 										<div class="reviews__empty">
 											<i class="ti ti-message-off"></i>
-											<p>No reviews yet. Be the first to review this movie!</p>
+											<p>@Localizer.GetString("Movie", "NoReviewsYet")</p>
 										</div>
 									}
 								</div>
@@ -272,35 +272,35 @@
 							<div class="col-12">
 								<div class="info-list">
 									<div class="info-list__item">
-										<span class="info-list__label">Title:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Title"):</span>
 										<span class="info-list__value">@Model.Title</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Director:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Director"):</span>
 										<span class="info-list__value">@Model.Director</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Genre:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Genre"):</span>
 										<span class="info-list__value">@Model.Genre</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Release Year:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "ReleaseYear"):</span>
 										<span class="info-list__value">@Model.Year</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Duration:</span>
-										<span class="info-list__value">@Model.Duration minutes</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Duration"):</span>
+										<span class="info-list__value">@Model.Duration @Localizer.GetString("Movie", "Minutes")</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Country:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Country"):</span>
 										<span class="info-list__value">@Model.Country</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Release Date:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "ReleaseDate"):</span>
 										<span class="info-list__value">@Model.ReleaseDate.ToString("MMMM dd, yyyy")</span>
 									</div>
 									<div class="info-list__item">
-										<span class="info-list__label">Rating:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Rating"):</span>
 										<span class="info-list__value">
 											<span class="item__rate @(Model.Rating >= 8 ? "item__rate--green" : Model.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">
 												@Model.Rating
@@ -310,12 +310,12 @@
 									@if (Model.Actors.Any())
 									{
 										<div class="info-list__item">
-											<span class="info-list__label">Cast:</span>
+											<span class="info-list__label">@Localizer.GetString("Movie", "Cast"):</span>
 											<span class="info-list__value">@string.Join(", ", Model.Actors)</span>
 										</div>
 									}
 									<div class="info-list__item info-list__item--full">
-										<span class="info-list__label">Description:</span>
+										<span class="info-list__label">@Localizer.GetString("Movie", "Description"):</span>
 										<span class="info-list__value">@Model.Description</span>
 									</div>
 								</div>
@@ -331,10 +331,10 @@
 			<div class="col-12 col-lg-4">
 				<div class="sidebar">
 					<div class="sidebar__item">
-						<h3 class="sidebar__title">Movie Details</h3>
+						<h3 class="sidebar__title">@Localizer.GetString("Movie", "MovieDetails")</h3>
 						<div class="sidebar__content">
 							<div class="sidebar__stat">
-								<span class="sidebar__stat-label">Rating:</span>
+								<span class="sidebar__stat-label">@Localizer.GetString("Movie", "Rating"):</span>
 								<span class="sidebar__stat-value">
 									<span class="item__rate @(Model.Rating >= 8 ? "item__rate--green" : Model.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">
 										@Model.Rating
@@ -344,7 +344,7 @@
 							@if (ViewBag.ReviewCount > 0)
 							{
 								<div class="sidebar__stat">
-									<span class="sidebar__stat-label">User Rating:</span>
+									<span class="sidebar__stat-label">User @Localizer.GetString("Movie", "Rating"):</span>
 									<span class="sidebar__stat-value">
 										<span class="item__rate @(ViewBag.AverageRating >= 8 ? "item__rate--green" : ViewBag.AverageRating >= 6 ? "item__rate--yellow" : "item__rate--red")">
 											@ViewBag.AverageRating.ToString("0.0")
@@ -354,7 +354,7 @@
 								</div>
 							}
 							<div class="sidebar__stat">
-								<span class="sidebar__stat-label">Duration:</span>
+								<span class="sidebar__stat-label">@Localizer.GetString("Movie", "Duration"):</span>
 								<span class="sidebar__stat-value">@Model.Duration min</span>
 							</div>
 							<div class="sidebar__stat">
@@ -366,7 +366,7 @@
 
 					<!-- You may also like -->
 					<div class="sidebar__item">
-						<h3 class="sidebar__title">You may also like...</h3>
+						<h3 class="sidebar__title">@Localizer.GetString("Movie", "YouMayAlsoLike")</h3>
 						<div class="row">
 							@{
 								var similarMovies = ViewBag.SimilarMovies as List<MovizoneApp.Models.Movie>;
@@ -384,7 +384,7 @@
 													<span class="item__rate @(similarMovie.Rating >= 8 ? "item__rate--green" : similarMovie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarMovie.Rating</span>
 													<button class="item__favorite"
 													        type="button"
-													        title="Add to watchlist"
+													        title="@Localizer.GetString("Movie", "AddToWatchlist")"
 													        data-id="@similarMovie.Id"
 													        data-type="movie"
 													        data-title="@similarMovie.Title"
