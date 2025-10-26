@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using MovizoneApp.Application.Interfaces;
+using MovizoneApp.Application.Services;
 using MovizoneApp.Core.Interfaces;
 using MovizoneApp.Data;
 using MovizoneApp.Infrastructure.Repositories;
@@ -78,7 +80,7 @@ try
         options.Cookie.IsEssential = true;
     });
 
-    // Register Repositories
+    // Register Repositories (Infrastructure Layer)
     builder.Services.AddScoped<IMovieRepository, MovieRepository>();
     builder.Services.AddScoped<ITVSeriesRepository, TVSeriesRepository>();
     builder.Services.AddScoped<IActorRepository, ActorRepository>();
@@ -87,10 +89,19 @@ try
     builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
     builder.Services.AddScoped<IPricingPlanRepository, PricingPlanRepository>();
 
-    // Register Services
+    // Register Infrastructure Services
     builder.Services.AddScoped<IJwtService, JwtService>();
 
-    // Keep old services for backward compatibility (but they will be migrated)
+    // Register Application Services (Business Logic Layer)
+    builder.Services.AddScoped<IMovieApplicationService, MovieApplicationService>();
+    builder.Services.AddScoped<ITVSeriesApplicationService, TVSeriesApplicationService>();
+    builder.Services.AddScoped<IActorApplicationService, ActorApplicationService>();
+    builder.Services.AddScoped<IUserApplicationService, UserApplicationService>();
+    builder.Services.AddScoped<IReviewApplicationService, ReviewApplicationService>();
+    builder.Services.AddScoped<IWatchlistApplicationService, WatchlistApplicationService>();
+    builder.Services.AddScoped<IPricingApplicationService, PricingApplicationService>();
+
+    // Keep old services for backward compatibility (will be removed after migration)
     builder.Services.AddSingleton<IMovieService, MovieService>();
     builder.Services.AddSingleton<ITVSeriesService, TVSeriesService>();
     builder.Services.AddSingleton<IActorService, ActorService>();

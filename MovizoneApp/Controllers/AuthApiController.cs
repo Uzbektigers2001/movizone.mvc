@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Core.Exceptions;
-using MovizoneApp.Core.Interfaces;
 using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
@@ -17,17 +17,14 @@ namespace MovizoneApp.Controllers
     [Route("api/[controller]")]
     public class AuthApiController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtService _jwtService;
+        private readonly IUserApplicationService _userService;
         private readonly ILogger<AuthApiController> _logger;
 
         public AuthApiController(
-            IUserRepository userRepository,
-            IJwtService jwtService,
+            IUserApplicationService userService,
             ILogger<AuthApiController> logger)
         {
-            _userRepository = userRepository;
-            _jwtService = jwtService;
+            _userService = userService;
             _logger = logger;
         }
 
@@ -44,34 +41,8 @@ namespace MovizoneApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            _logger.LogInformation("Login attempt for email: {Email}", loginDto.Email);
-
-            var user = await _userRepository.GetByEmailAsync(loginDto.Email);
-            if (user == null || !user.VerifyPassword(loginDto.Password))
-            {
-                _logger.LogWarning("Failed login attempt for email: {Email}", loginDto.Email);
-                throw new UnauthorizedException("Invalid email or password");
-            }
-
-            if (!user.IsActive)
-            {
-                _logger.LogWarning("Login attempt for inactive user: {Email}", loginDto.Email);
-                throw new UnauthorizedException("Account is inactive");
-            }
-
-            var token = _jwtService.GenerateToken(user);
-
-            _logger.LogInformation("User {Email} logged in successfully", loginDto.Email);
-
-            return Ok(new AuthResponseDto
-            {
-                UserId = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Role = user.Role,
-                Token = token,
-                ExpiresAt = DateTime.UtcNow.AddHours(2)
-            });
+            var response = await _userService.LoginAsync(loginDto);
+            return Ok(response);
         }
 
         /// <summary>
@@ -87,42 +58,8 @@ namespace MovizoneApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            _logger.LogInformation("Registration attempt for email: {Email}", registerDto.Email);
-
-            // Check if email already exists
-            if (await _userRepository.EmailExistsAsync(registerDto.Email))
-            {
-                _logger.LogWarning("Registration failed - email already exists: {Email}", registerDto.Email);
-                throw new BadRequestException("Email already registered");
-            }
-
-            // Create new user
-            var user = new User
-            {
-                Name = registerDto.Name,
-                Email = registerDto.Email,
-                Role = "User",
-                IsActive = true,
-                Avatar = "/img/user.svg"
-            };
-
-            user.SetPassword(registerDto.Password);
-
-            await _userRepository.AddAsync(user);
-
-            var token = _jwtService.GenerateToken(user);
-
-            _logger.LogInformation("User {Email} registered successfully", registerDto.Email);
-
-            return Ok(new AuthResponseDto
-            {
-                UserId = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Role = user.Role,
-                Token = token,
-                ExpiresAt = DateTime.UtcNow.AddHours(2)
-            });
+            var response = await _userService.RegisterAsync(registerDto);
+            return Ok(response);
         }
 
         /// <summary>
@@ -140,7 +77,7 @@ namespace MovizoneApp.Controllers
             }
 
             var userId = int.Parse(userIdClaim.Value);
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
 
             if (user == null)
             {
