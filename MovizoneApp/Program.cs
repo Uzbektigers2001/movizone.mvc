@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.Application.Mappings;
 using MovizoneApp.Application.Services;
 using MovizoneApp.Core.Interfaces;
 using MovizoneApp.Data;
@@ -76,6 +77,9 @@ try
     });
 
     builder.Services.AddAuthorization();
+
+    // Add AutoMapper
+    builder.Services.AddAutoMapper(typeof(MappingProfile));
 
     // Add session support (for backward compatibility with existing views)
     builder.Services.AddSession(options =>

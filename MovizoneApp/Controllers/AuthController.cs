@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Models;
+using MovizoneApp.DTOs;
 
 namespace MovizoneApp.Controllers
 {
@@ -9,11 +11,13 @@ namespace MovizoneApp.Controllers
     {
         private readonly IUserApplicationService _userService;
         private readonly ILogger<AuthController> _logger;
+        private readonly IMapper _mapper;
 
-        public AuthController(IUserApplicationService userService, ILogger<AuthController> logger)
+        public AuthController(IUserApplicationService userService, ILogger<AuthController> logger, IMapper mapper)
         {
             _userService = userService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public IActionResult SignIn()
@@ -93,19 +97,19 @@ namespace MovizoneApp.Controllers
                 return View();
             }
 
-            // Create new user
-            var newUser = new User
+            // Create new user DTO
+            var createUserDto = new CreateUserDto
             {
                 Name = name,
                 Email = email,
                 Password = password,
                 Role = "User",
-                CreatedAt = DateTime.UtcNow
+                SubscriptionType = "Free"
             };
 
             try
             {
-                await _userService.CreateUserAsync(newUser, password);
+                await _userService.CreateUserAsync(createUserDto);
                 _logger.LogInformation("User registered successfully: {Email}", email);
                 TempData["Success"] = "Registration successful! Please sign in.";
                 return RedirectToAction("SignIn");
@@ -126,13 +130,15 @@ namespace MovizoneApp.Controllers
                 return RedirectToAction("SignIn");
             }
 
-            var user = await _userService.GetUserByIdAsync(userId.Value);
-            if (user == null)
+            var userDto = await _userService.GetUserByIdAsync(userId.Value);
+            if (userDto == null)
             {
                 _logger.LogWarning("User not found for profile: {UserId}", userId.Value);
                 return RedirectToAction("SignIn");
             }
 
+            // Map UserDto to User for the view
+            var user = _mapper.Map<User>(userDto);
             return View(user);
         }
 

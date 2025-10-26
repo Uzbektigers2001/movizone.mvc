@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Helpers;
 using MovizoneApp.Models;
 
@@ -13,24 +15,28 @@ namespace MovizoneApp.Controllers
         private readonly IReviewApplicationService _reviewService;
         private readonly IWatchlistApplicationService _watchlistService;
         private readonly ILogger<MovieController> _logger;
+        private readonly IMapper _mapper;
 
         public MovieController(
             IMovieApplicationService movieService,
             IReviewApplicationService reviewService,
             IWatchlistApplicationService watchlistService,
-            ILogger<MovieController> logger)
+            ILogger<MovieController> logger,
+            IMapper mapper)
         {
             _movieService = movieService;
             _reviewService = reviewService;
             _watchlistService = watchlistService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Catalog(string search = "", string genre = "", int page = 1)
         {
             _logger.LogInformation("Accessing movie catalog. Search: {Search}, Genre: {Genre}, Page: {Page}", search, genre, page);
 
-            var allMovies = await _movieService.SearchMoviesAsync(search, genre);
+            var allMoviesDto = await _movieService.SearchMoviesAsync(search, genre);
+            var allMovies = _mapper.Map<IEnumerable<Movie>>(allMoviesDto);
             var genres = await _movieService.GetAllGenresAsync();
 
             // Create paginated list
@@ -48,14 +54,17 @@ namespace MovizoneApp.Controllers
         {
             _logger.LogInformation("Accessing movie details for ID: {MovieId}", id);
 
-            var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
+            var movieDto = await _movieService.GetMovieByIdAsync(id);
+            if (movieDto == null)
             {
                 _logger.LogWarning("Movie not found: {MovieId}", id);
                 return NotFound();
             }
 
-            var reviews = await _reviewService.GetReviewsByMovieIdAsync(id);
+            var movie = _mapper.Map<Movie>(movieDto);
+
+            var reviewsDto = await _reviewService.GetReviewsByMovieIdAsync(id);
+            var reviews = _mapper.Map<IEnumerable<Review>>(reviewsDto);
             var averageRating = await _reviewService.GetAverageRatingAsync(id);
             var reviewCount = await _reviewService.GetReviewCountAsync(id);
             var isInWatchlist = await _watchlistService.IsInWatchlistAsync(1, id); // userId = 1 for demo
@@ -66,7 +75,8 @@ namespace MovizoneApp.Controllers
             ViewBag.IsInWatchlist = isInWatchlist;
 
             // Get similar movies based on genre (exclude current movie)
-            var allMovies = await _movieService.GetAllMoviesAsync();
+            var allMoviesDto = await _movieService.GetAllMoviesAsync();
+            var allMovies = _mapper.Map<IEnumerable<Movie>>(allMoviesDto);
             var similarMovies = allMovies
                 .Where(m => m.Id != id && m.Genre == movie.Genre)
                 .OrderByDescending(m => m.Rating)
@@ -90,16 +100,15 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                var review = new Review
+                var createReviewDto = new CreateReviewDto
                 {
                     MovieId = movieId,
                     UserId = 1, // In real app, get from authenticated user
-                    UserName = userName,
                     Comment = comment,
                     Rating = rating
                 };
 
-                await _reviewService.AddReviewAsync(review);
+                await _reviewService.AddReviewAsync(createReviewDto);
                 TempData["Success"] = "Review added successfully!";
             }
             catch (Exception ex)

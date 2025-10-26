@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
@@ -10,15 +12,18 @@ namespace MovizoneApp.Controllers
         private readonly IMovieApplicationService _movieService;
         private readonly ITVSeriesApplicationService _tvSeriesService;
         private readonly ILogger<SearchController> _logger;
+        private readonly IMapper _mapper;
 
         public SearchController(
             IMovieApplicationService movieService,
             ITVSeriesApplicationService tvSeriesService,
-            ILogger<SearchController> logger)
+            ILogger<SearchController> logger,
+            IMapper mapper)
         {
             _movieService = movieService;
             _tvSeriesService = tvSeriesService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index(
@@ -38,7 +43,8 @@ namespace MovizoneApp.Controllers
 
             if (type == "all" || type == "movies")
             {
-                var allMovies = await _movieService.GetAllMoviesAsync();
+                var allMoviesDto = await _movieService.GetAllMoviesAsync();
+                var allMovies = _mapper.Map<IEnumerable<Movie>>(allMoviesDto);
                 movies = allMovies.ToList();
 
                 // Apply filters
@@ -84,7 +90,8 @@ namespace MovizoneApp.Controllers
 
             if (type == "all" || type == "series")
             {
-                var allSeries = await _tvSeriesService.GetAllSeriesAsync();
+                var allSeriesDto = await _tvSeriesService.GetAllSeriesAsync();
+                var allSeries = _mapper.Map<IEnumerable<TVSeries>>(allSeriesDto);
                 series = allSeries.ToList();
 
                 // Apply filters

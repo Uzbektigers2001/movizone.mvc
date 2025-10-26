@@ -1,20 +1,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MovizoneApp.Models;
+using MovizoneApp.DTOs;
 
 namespace MovizoneApp.Application.Interfaces
 {
     /// <summary>
     /// Application service for TV series-related business logic
+    /// Now uses DTOs instead of exposing database models
     /// </summary>
     public interface ITVSeriesApplicationService
     {
-        Task<IEnumerable<TVSeries>> GetAllSeriesAsync();
-        Task<IEnumerable<TVSeries>> GetFeaturedSeriesAsync();
-        Task<IEnumerable<TVSeries>> SearchSeriesAsync(string? searchTerm, string? genre);
-        Task<TVSeries?> GetSeriesByIdAsync(int id);
-        Task<TVSeries> CreateSeriesAsync(TVSeries series);
-        Task UpdateSeriesAsync(TVSeries series);
+        Task<IEnumerable<TVSeriesDto>> GetAllSeriesAsync();
+        Task<IEnumerable<TVSeriesDto>> GetFeaturedSeriesAsync();
+        Task<IEnumerable<TVSeriesDto>> SearchSeriesAsync(string? searchTerm, string? genre);
+        Task<TVSeriesDto?> GetSeriesByIdAsync(int id);
+        Task<TVSeriesDto> CreateSeriesAsync(CreateTVSeriesDto createSeriesDto);
+        Task UpdateSeriesAsync(UpdateTVSeriesDto updateSeriesDto);
         Task DeleteSeriesAsync(int id);
         Task<IEnumerable<string>> GetAllGenresAsync();
         Task<bool> ExistsAsync(int id);
