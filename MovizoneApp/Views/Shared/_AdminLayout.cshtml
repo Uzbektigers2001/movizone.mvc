@@ -80,6 +80,9 @@
             <a asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
                 <i class="ti ti-user me-2"></i> Users
             </a>
+            <a asp-action="Settings" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" ? "active" : "")">
+                <i class="ti ti-settings me-2"></i> Settings
+            </a>
             <hr class="my-2" style="border-color: rgba(255,255,255,0.1);">
             <a asp-controller="Home" asp-action="Index" class="nav-link">
                 <i class="ti ti-world me-2"></i> View Site

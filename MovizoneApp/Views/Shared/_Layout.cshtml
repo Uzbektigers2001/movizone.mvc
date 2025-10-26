@@ -21,6 +21,11 @@
 	<title>@ViewData["Title"] - HotFlix</title>
 </head>
 
+@inject MovizoneApp.Services.ISiteSettingsService SettingsService
+@{
+	var navSettings = SettingsService.GetSettings();
+}
+
 <body>
 	<!-- header -->
 	<header class="header">
@@ -48,17 +53,26 @@
 							<!-- end dropdown -->
 
 							<!-- Catalog Items -->
-							<li class="header__nav-item">
-								<a asp-controller="Movie" asp-action="Catalog" class="header__nav-link">Movies</a>
-							</li>
+							@if (navSettings.ShowMoviesInNav)
+							{
+								<li class="header__nav-item">
+									<a asp-controller="Movie" asp-action="Catalog" class="header__nav-link">Movies</a>
+								</li>
+							}
 
-							<li class="header__nav-item">
-								<a asp-controller="TVSeries" asp-action="Catalog" class="header__nav-link">TV Series</a>
-							</li>
+							@if (navSettings.ShowTVSeriesInNav)
+							{
+								<li class="header__nav-item">
+									<a asp-controller="TVSeries" asp-action="Catalog" class="header__nav-link">TV Series</a>
+								</li>
+							}
 
-							<li class="header__nav-item">
-								<a asp-controller="Actor" asp-action="Index" class="header__nav-link">Actors</a>
-							</li>
+							@if (navSettings.ShowActorsInNav)
+							{
+								<li class="header__nav-item">
+									<a asp-controller="Actor" asp-action="Index" class="header__nav-link">Actors</a>
+								</li>
+							}
 							<!-- end Catalog Items -->
 
 							<li class="header__nav-item">
