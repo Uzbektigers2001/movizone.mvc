@@ -16,7 +16,7 @@ namespace MovizoneApp.Services
 
         public List<WatchlistItem> GetUserWatchlist(int userId)
         {
-            return _watchlist.Where(w => w.UserId == userId).OrderByDescending(w => w.AddedAt).ToList();
+            return _watchlist.Where(w => w.UserId == userId).OrderByDescending(w => w.CreatedAt).ToList();
         }
 
         public void AddToWatchlist(int userId, int movieId)
@@ -28,7 +28,7 @@ namespace MovizoneApp.Services
                     Id = _watchlist.Any() ? _watchlist.Max(w => w.Id) + 1 : 1,
                     UserId = userId,
                     MovieId = movieId,
-                    AddedAt = DateTime.Now
+                    CreatedAt = DateTime.Now
                 });
             }
         }
