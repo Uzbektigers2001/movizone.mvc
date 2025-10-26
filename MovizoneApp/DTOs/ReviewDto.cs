@@ -9,8 +9,14 @@ namespace MovizoneApp.DTOs
     public class ReviewDto
     {
         public int Id { get; set; }
-        public int MovieId { get; set; }
-        public string MovieTitle { get; set; } = string.Empty;
+
+        // Either MovieId OR TVSeriesId will be set
+        public int? MovieId { get; set; }
+        public int? TVSeriesId { get; set; }
+
+        public string ContentTitle { get; set; } = string.Empty; // Movie or Series title
+        public string ContentType { get; set; } = string.Empty; // "Movie" or "TVSeries"
+
         public int UserId { get; set; }
         public string UserName { get; set; } = string.Empty;
         public int Rating { get; set; }
@@ -30,11 +36,12 @@ namespace MovizoneApp.DTOs
 
     /// <summary>
     /// DTO for creating a new Review (POST operations)
+    /// Either MovieId OR TVSeriesId must be set, not both
     /// </summary>
     public class CreateReviewDto
     {
-        [Required]
-        public int MovieId { get; set; }
+        public int? MovieId { get; set; }
+        public int? TVSeriesId { get; set; }
 
         [Required]
         public int UserId { get; set; }

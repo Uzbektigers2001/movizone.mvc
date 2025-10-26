@@ -27,6 +27,10 @@ namespace MovizoneApp.Data
         public DbSet<Episode> Episodes { get; set; } = null!;
         public DbSet<SiteSettings> SiteSettings { get; set; } = null!;
 
+        // Many-to-many join entities
+        public DbSet<MovieActor> MovieActors { get; set; } = null!;
+        public DbSet<TVSeriesActor> TVSeriesActors { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -74,6 +78,61 @@ namespace MovizoneApp.Data
 
             modelBuilder.Entity<Episode>().HasIndex(e => e.TVSeriesId);
             modelBuilder.Entity<Episode>().HasIndex(e => e.IsDeleted);
+
+            // Configure MovieActor many-to-many relationship
+            modelBuilder.Entity<MovieActor>()
+                .HasKey(ma => new { ma.MovieId, ma.ActorId }); // Composite primary key
+
+            modelBuilder.Entity<MovieActor>()
+                .HasOne(ma => ma.Movie)
+                .WithMany(m => m.MovieActors)
+                .HasForeignKey(ma => ma.MovieId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MovieActor>()
+                .HasOne(ma => ma.Actor)
+                .WithMany(a => a.MovieActors)
+                .HasForeignKey(ma => ma.ActorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MovieActor>().HasIndex(ma => ma.DisplayOrder);
+
+            // Configure TVSeriesActor many-to-many relationship
+            modelBuilder.Entity<TVSeriesActor>()
+                .HasKey(tsa => new { tsa.TVSeriesId, tsa.ActorId }); // Composite primary key
+
+            modelBuilder.Entity<TVSeriesActor>()
+                .HasOne(tsa => tsa.TVSeries)
+                .WithMany(ts => ts.TVSeriesActors)
+                .HasForeignKey(tsa => tsa.TVSeriesId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TVSeriesActor>()
+                .HasOne(tsa => tsa.Actor)
+                .WithMany(a => a.TVSeriesActors)
+                .HasForeignKey(tsa => tsa.ActorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TVSeriesActor>().HasIndex(tsa => tsa.DisplayOrder);
+
+            // Configure Review to support both Movie and TVSeries
+            // Review must have either MovieId OR TVSeriesId, not both
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => r.TVSeriesId); // Add index for TVSeriesId
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Movie)
+                .WithMany()
+                .HasForeignKey(r => r.MovieId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false); // Optional relationship
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.TVSeries)
+                .WithMany()
+                .HasForeignKey(r => r.TVSeriesId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false); // Optional relationship
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

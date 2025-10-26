@@ -24,8 +24,11 @@ namespace MovizoneApp.Models
         [MaxLength(500)]
         public string Photo { get; set; } = string.Empty;
 
-        public List<string> Movies { get; set; } = new List<string>();
-        public List<string> TVSeries { get; set; } = new List<string>();
+        // Many-to-many relationship with Movie through MovieActor join entity
+        public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
+
+        // Many-to-many relationship with TVSeries through TVSeriesActor join entity
+        public ICollection<TVSeriesActor> TVSeriesActors { get; set; } = new List<TVSeriesActor>();
 
         [NotMapped]
         public int Age => DateTime.UtcNow.Year - BirthDate.Year;
