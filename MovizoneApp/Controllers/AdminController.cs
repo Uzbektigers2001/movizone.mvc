@@ -89,12 +89,25 @@ namespace MovizoneApp.Controllers
         }
 
         // Movies Management
-        public IActionResult Movies()
+        public IActionResult Movies(string search = "", int page = 1)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             var movies = _movieService.GetAllMovies();
-            return View(movies);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                movies = movies.Where(m => m.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                          m.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            ViewBag.SearchQuery = search;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = 15;
+            ViewBag.TotalPages = (int)Math.Ceiling(movies.Count() / 15.0);
+
+            var paginatedMovies = movies.Skip((page - 1) * 15).Take(15).ToList();
+            return View(paginatedMovies);
         }
 
         public IActionResult CreateMovie()
@@ -286,12 +299,25 @@ namespace MovizoneApp.Controllers
         }
 
         // TV Series Management
-        public IActionResult Series()
+        public IActionResult Series(string search = "", int page = 1)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             var series = _seriesService.GetAllSeries();
-            return View(series);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                series = series.Where(s => s.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                          s.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            ViewBag.SearchQuery = search;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = 15;
+            ViewBag.TotalPages = (int)Math.Ceiling(series.Count() / 15.0);
+
+            var paginatedSeries = series.Skip((page - 1) * 15).Take(15).ToList();
+            return View(paginatedSeries);
         }
 
         public IActionResult CreateSeries()
@@ -597,7 +623,7 @@ namespace MovizoneApp.Controllers
         }
 
         // Episodes Management
-        public IActionResult Episodes(int? seriesId)
+        public IActionResult Episodes(int? seriesId, int page = 1)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -617,7 +643,12 @@ namespace MovizoneApp.Controllers
                 episodes = _episodeService.GetAllEpisodes();
             }
 
-            return View(episodes);
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = 15;
+            ViewBag.TotalPages = (int)Math.Ceiling(episodes.Count() / 15.0);
+
+            var paginatedEpisodes = episodes.Skip((page - 1) * 15).Take(15).ToList();
+            return View(paginatedEpisodes);
         }
 
         public IActionResult CreateEpisode(int? seriesId)
