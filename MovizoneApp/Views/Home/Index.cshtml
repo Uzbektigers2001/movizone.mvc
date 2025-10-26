@@ -167,7 +167,7 @@
                         <span class="item__rate @ratingClass">@movie.Rating</span>
                         <button class="item__favorite"
                                 type="button"
-                                title="Add to watchlist"
+                                title="@Localizer.GetString("Movie", "AddToWatchlist")"
                                 data-id="@movie.Id"
                                 data-type="movie"
                                 data-title="@movie.Title"
@@ -260,7 +260,7 @@
                         <span class="item__rate @ratingClass">@movie.Rating</span>
                         <button class="item__favorite"
                                 type="button"
-                                title="Add to watchlist"
+                                title="@Localizer.GetString("Movie", "AddToWatchlist")"
                                 data-id="@movie.Id"
                                 data-type="movie"
                                 data-title="@movie.Title"
@@ -296,7 +296,7 @@
             <div class="row">
                 <div class="col-12">
                     <!-- content title -->
-                    <h2 class="content__title">Recently updated</h2>
+                    <h2 class="content__title">@Localizer.GetString("Home", "RecentlyUpdated")</h2>
                     <!-- end content title -->
 
                     <!-- content tabs nav -->
@@ -340,7 +340,7 @@
                                 <span class="item__rate @ratingClass">@item.Rating.ToString("0.0")</span>
                                 <button class="item__favorite"
                                         type="button"
-                                        title="Add to watchlist"
+                                        title="@Localizer.GetString("Movie", "AddToWatchlist")"
                                         data-id="@item.Id"
                                         data-type="@item.Type"
                                         data-title="@item.Title"
@@ -425,7 +425,7 @@
                                 <span class="item__rate @ratingClass">@series.Rating.ToString("0.0")</span>
                                 <button class="item__favorite"
                                         type="button"
-                                        title="Add to watchlist"
+                                        title="@Localizer.GetString("Movie", "AddToWatchlist")"
                                         data-id="@series.Id"
                                         data-type="series"
                                         data-title="@series.Title"

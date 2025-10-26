@@ -14,17 +14,17 @@
                             <div class="mb-3">
                                 <label for="name" class="form-label">Full Name</label>
                                 <input type="text" class="form-control" id="name" name="name"
-                                       placeholder="Enter your name" required>
+                                       placeholder="@Localizer.GetString("Auth", "EnterYourName")" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
+                                <label for="email" class="form-label">@Localizer.GetString("Email")</label>
                                 <input type="email" class="form-control" id="email" name="email"
-                                       placeholder="Enter your email" required>
+                                       placeholder="@Localizer.GetString("Auth", "EnterYourEmail")" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label">@Localizer.GetString("Auth", "Password")</label>
                                 <input type="password" class="form-control" id="password" name="password"
                                        placeholder="Create a password" required>
                             </div>
@@ -44,7 +44,7 @@
                         <div class="text-center">
                             <p class="mb-0">
                                 Already have an account?
-                                <a asp-action="SignIn" class="text-decoration-none">Sign in</a>
+                                <a asp-action="SignIn" class="text-decoration-none">@Localizer.GetString("SignIn")</a>
                             </p>
                         </div>
                     </div>
