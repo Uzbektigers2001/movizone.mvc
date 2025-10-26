@@ -29,10 +29,12 @@ namespace MovizoneApp.Application.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync()
         {
             _logger.LogInformation("Fetching all users");
-            return await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllAsync();
+
+            return users.ToList();
         }
 
         public async Task<User?> GetUserByIdAsync(int id)

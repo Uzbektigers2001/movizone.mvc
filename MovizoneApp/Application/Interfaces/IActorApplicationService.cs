@@ -9,7 +9,7 @@ namespace MovizoneApp.Application.Interfaces
     /// </summary>
     public interface IActorApplicationService
     {
-        Task<IEnumerable<Actor>> GetAllActorsAsync();
+        Task<List<Actor>> GetAllActorsAsync();
         Task<Actor?> GetActorByIdAsync(int id);
         Task<Actor?> GetActorWithDetailsAsync(int id);
         Task<Actor> CreateActorAsync(Actor actor);

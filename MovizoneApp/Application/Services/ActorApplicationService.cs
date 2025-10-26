@@ -25,10 +25,12 @@ namespace MovizoneApp.Application.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Actor>> GetAllActorsAsync()
+        public async Task<List<Actor>> GetAllActorsAsync()
         {
             _logger.LogInformation("Fetching all actors");
-            return await _actorRepository.GetAllAsync();
+            var actors = await _actorRepository.GetAllAsync();
+
+            return actors.ToList();
         }
 
         public async Task<Actor?> GetActorByIdAsync(int id)

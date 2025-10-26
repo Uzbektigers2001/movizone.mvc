@@ -10,7 +10,7 @@ namespace MovizoneApp.Application.Interfaces
     /// </summary>
     public interface IUserApplicationService
     {
-        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(int id);
         Task<User?> GetUserByEmailAsync(string email);
         Task<User> CreateUserAsync(User user, string plainPassword);
