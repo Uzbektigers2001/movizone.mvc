@@ -30,5 +30,22 @@ namespace MovizoneApp.Infrastructure.Repositories
 
             return reviews.Average(r => r.Rating);
         }
+
+        public async Task<IEnumerable<Review>> GetReviewsByTVSeriesIdAsync(int tvSeriesId)
+        {
+            return await _dbSet
+                .Where(r => r.TVSeriesId == tvSeriesId)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<double> GetAverageRatingByTVSeriesIdAsync(int tvSeriesId)
+        {
+            var reviews = await _dbSet.Where(r => r.TVSeriesId == tvSeriesId).ToListAsync();
+            if (!reviews.Any())
+                return 0;
+
+            return reviews.Average(r => r.Rating);
+        }
     }
 }
