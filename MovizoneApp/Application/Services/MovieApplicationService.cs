@@ -34,133 +34,205 @@ namespace MovizoneApp.Application.Services
 
         public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
         {
-            _logger.LogInformation("Fetching all movies");
-            var movies = await _movieRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            try
+            {
+                _logger.LogInformation("Fetching all movies");
+                var movies = await _movieRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all movies");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<MovieDto>> GetFeaturedMoviesAsync()
         {
-            _logger.LogInformation("Fetching featured movies");
-            var movies = await _movieRepository.GetFeaturedMoviesAsync();
-            return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            try
+            {
+                _logger.LogInformation("Fetching featured movies");
+                var movies = await _movieRepository.GetFeaturedMoviesAsync();
+                return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching featured movies");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<MovieDto>> SearchMoviesAsync(string? searchTerm, string? genre)
         {
-            _logger.LogInformation("Searching movies with term: {SearchTerm}, genre: {Genre}", searchTerm, genre);
-            var movies = await _movieRepository.SearchMoviesAsync(searchTerm, genre);
-            return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            try
+            {
+                _logger.LogInformation("Searching movies with term: {SearchTerm}, genre: {Genre}", searchTerm, genre);
+                var movies = await _movieRepository.SearchMoviesAsync(searchTerm, genre);
+                return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching movies with term: {SearchTerm}, genre: {Genre}", searchTerm, genre);
+                throw;
+            }
         }
 
         public async Task<MovieDto?> GetMovieByIdAsync(int id)
         {
-            _logger.LogInformation("Fetching movie with ID: {MovieId}", id);
-            var movie = await _movieRepository.GetByIdAsync(id);
-
-            if (movie == null)
+            try
             {
-                _logger.LogWarning("Movie with ID {MovieId} not found", id);
-                return null;
-            }
+                _logger.LogInformation("Fetching movie with ID: {MovieId}", id);
+                var movie = await _movieRepository.GetByIdAsync(id);
 
-            return _mapper.Map<MovieDto>(movie);
+                if (movie == null)
+                {
+                    _logger.LogWarning("Movie with ID {MovieId} not found", id);
+                    return null;
+                }
+
+                return _mapper.Map<MovieDto>(movie);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching movie with ID: {MovieId}", id);
+                throw;
+            }
         }
 
         public async Task<MovieDto> CreateMovieAsync(CreateMovieDto createMovieDto)
         {
-            _logger.LogInformation("Creating new movie: {MovieTitle}", createMovieDto.Title);
-
-            // Map DTO to Model
-            var movie = _mapper.Map<Movie>(createMovieDto);
-
-            // Business validation (additional to DTO validation)
-            if (movie.Year < 1900 || movie.Year > DateTime.UtcNow.Year + 5)
+            try
             {
-                throw new BadRequestException($"Invalid year: {movie.Year}");
-            }
+                _logger.LogInformation("Creating new movie: {MovieTitle}", createMovieDto.Title);
 
-            if (movie.Rating < 0 || movie.Rating > 10)
+                // Map DTO to Model
+                var movie = _mapper.Map<Movie>(createMovieDto);
+
+                // Business validation (additional to DTO validation)
+                if (movie.Year < 1900 || movie.Year > DateTime.UtcNow.Year + 5)
+                {
+                    throw new BadRequestException($"Invalid year: {movie.Year}");
+                }
+
+                if (movie.Rating < 0 || movie.Rating > 10)
+                {
+                    throw new BadRequestException("Rating must be between 0 and 10");
+                }
+
+                // Set timestamps
+                movie.CreatedAt = DateTime.UtcNow;
+
+                // Save to repository
+                var created = await _movieRepository.AddAsync(movie);
+
+                _logger.LogInformation("Movie created successfully with ID: {MovieId}", created.Id);
+
+                // Map back to DTO and return
+                return _mapper.Map<MovieDto>(created);
+            }
+            catch (Exception ex)
             {
-                throw new BadRequestException("Rating must be between 0 and 10");
+                _logger.LogError(ex, "Error creating movie: {MovieTitle}", createMovieDto.Title);
+                throw;
             }
-
-            // Set timestamps
-            movie.CreatedAt = DateTime.UtcNow;
-
-            // Save to repository
-            var created = await _movieRepository.AddAsync(movie);
-
-            _logger.LogInformation("Movie created successfully with ID: {MovieId}", created.Id);
-
-            // Map back to DTO and return
-            return _mapper.Map<MovieDto>(created);
         }
 
         public async Task UpdateMovieAsync(UpdateMovieDto updateMovieDto)
         {
-            _logger.LogInformation("Updating movie with ID: {MovieId}", updateMovieDto.Id);
-
-            // Check if movie exists
-            var existing = await _movieRepository.GetByIdAsync(updateMovieDto.Id);
-            if (existing == null)
+            try
             {
-                throw new NotFoundException("Movie", updateMovieDto.Id);
+                _logger.LogInformation("Updating movie with ID: {MovieId}", updateMovieDto.Id);
+
+                // Check if movie exists
+                var existing = await _movieRepository.GetByIdAsync(updateMovieDto.Id);
+                if (existing == null)
+                {
+                    throw new NotFoundException("Movie", updateMovieDto.Id);
+                }
+
+                // Map DTO properties to existing tracked entity
+                _mapper.Map(updateMovieDto, existing);
+
+                // Business validation
+                if (existing.Year < 1900 || existing.Year > DateTime.UtcNow.Year + 5)
+                {
+                    throw new BadRequestException($"Invalid year: {existing.Year}");
+                }
+
+                if (existing.Rating < 0 || existing.Rating > 10)
+                {
+                    throw new BadRequestException("Rating must be between 0 and 10");
+                }
+
+                // Set update time (CreatedAt already preserved in existing entity)
+                existing.UpdatedAt = DateTime.UtcNow;
+
+                // Update in repository
+                await _movieRepository.UpdateAsync(existing);
+                _logger.LogInformation("Movie updated successfully: {MovieId}", existing.Id);
             }
-
-            // Map DTO properties to existing tracked entity
-            _mapper.Map(updateMovieDto, existing);
-
-            // Business validation
-            if (existing.Year < 1900 || existing.Year > DateTime.UtcNow.Year + 5)
+            catch (Exception ex)
             {
-                throw new BadRequestException($"Invalid year: {existing.Year}");
+                _logger.LogError(ex, "Error updating movie with ID: {MovieId}", updateMovieDto.Id);
+                throw;
             }
-
-            if (existing.Rating < 0 || existing.Rating > 10)
-            {
-                throw new BadRequestException("Rating must be between 0 and 10");
-            }
-
-            // Set update time (CreatedAt already preserved in existing entity)
-            existing.UpdatedAt = DateTime.UtcNow;
-
-            // Update in repository
-            await _movieRepository.UpdateAsync(existing);
-            _logger.LogInformation("Movie updated successfully: {MovieId}", existing.Id);
         }
 
         public async Task DeleteMovieAsync(int id)
         {
-            _logger.LogInformation("Deleting movie with ID: {MovieId}", id);
-
-            var movie = await _movieRepository.GetByIdAsync(id);
-            if (movie == null)
+            try
             {
-                throw new NotFoundException("Movie", id);
+                _logger.LogInformation("Deleting movie with ID: {MovieId}", id);
+
+                var movie = await _movieRepository.GetByIdAsync(id);
+                if (movie == null)
+                {
+                    throw new NotFoundException("Movie", id);
+                }
+
+                // Soft delete
+                movie.IsDeleted = true;
+                movie.DeletedAt = DateTime.UtcNow;
+                // TODO: Set DeletedBy from current user context when authentication is available
+                // entity.DeletedBy = currentUserId;
+                movie.UpdatedAt = DateTime.UtcNow;
+                await _movieRepository.UpdateAsync(movie);
+
+                _logger.LogInformation("Movie soft-deleted successfully: {MovieId}", id);
             }
-
-            // Soft delete
-            movie.IsDeleted = true;
-            movie.DeletedAt = DateTime.UtcNow;
-            // TODO: Set DeletedBy from current user context when authentication is available
-            // entity.DeletedBy = currentUserId;
-            movie.UpdatedAt = DateTime.UtcNow;
-            await _movieRepository.UpdateAsync(movie);
-
-            _logger.LogInformation("Movie soft-deleted successfully: {MovieId}", id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting movie with ID: {MovieId}", id);
+                throw;
+            }
         }
 
         public async Task<IEnumerable<string>> GetAllGenresAsync()
         {
-            _logger.LogInformation("Fetching all movie genres");
-            var movies = await _movieRepository.GetAllAsync();
-            return movies.Select(m => m.Genre).Distinct().OrderBy(g => g).ToList();
+            try
+            {
+                _logger.LogInformation("Fetching all movie genres");
+                var movies = await _movieRepository.GetAllAsync();
+                return movies.Select(m => m.Genre).Distinct().OrderBy(g => g).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all movie genres");
+                throw;
+            }
         }
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _movieRepository.ExistsAsync(m => m.Id == id);
+            try
+            {
+                return await _movieRepository.ExistsAsync(m => m.Id == id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if movie exists with ID: {MovieId}", id);
+                throw;
+            }
         }
     }
 }
