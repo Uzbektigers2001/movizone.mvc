@@ -34,63 +34,95 @@ namespace MovizoneApp.Application.Services
 
         public async Task<IEnumerable<PricingPlanDto>> GetAllPlansAsync()
         {
-            _logger.LogInformation("Fetching all pricing plans");
-            var plans = await _pricingRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<PricingPlanDto>>(plans);
+            try
+            {
+                _logger.LogInformation("Fetching all pricing plans");
+                var plans = await _pricingRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<PricingPlanDto>>(plans);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all pricing plans");
+                throw;
+            }
         }
 
         public async Task<PricingPlanDto?> GetPlanByIdAsync(int id)
         {
-            _logger.LogInformation("Fetching pricing plan with ID: {PlanId}", id);
-            var plan = await _pricingRepository.GetByIdAsync(id);
-
-            if (plan == null)
+            try
             {
-                _logger.LogWarning("Pricing plan with ID {PlanId} not found", id);
-                return null;
-            }
+                _logger.LogInformation("Fetching pricing plan with ID: {PlanId}", id);
+                var plan = await _pricingRepository.GetByIdAsync(id);
 
-            return _mapper.Map<PricingPlanDto>(plan);
+                if (plan == null)
+                {
+                    _logger.LogWarning("Pricing plan with ID {PlanId} not found", id);
+                    return null;
+                }
+
+                return _mapper.Map<PricingPlanDto>(plan);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching pricing plan with ID: {PlanId}", id);
+                throw;
+            }
         }
 
         public async Task<PricingPlanDto?> GetPopularPlanAsync()
         {
-            _logger.LogInformation("Fetching popular pricing plan");
-            var plans = await _pricingRepository.GetAllAsync();
-            var popularPlan = plans.FirstOrDefault(p => p.IsPopular);
-
-            if (popularPlan == null)
+            try
             {
-                _logger.LogWarning("No popular pricing plan found");
-                return null;
-            }
+                _logger.LogInformation("Fetching popular pricing plan");
+                var plans = await _pricingRepository.GetAllAsync();
+                var popularPlan = plans.FirstOrDefault(p => p.IsPopular);
 
-            return _mapper.Map<PricingPlanDto>(popularPlan);
+                if (popularPlan == null)
+                {
+                    _logger.LogWarning("No popular pricing plan found");
+                    return null;
+                }
+
+                return _mapper.Map<PricingPlanDto>(popularPlan);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching popular pricing plan");
+                throw;
+            }
         }
 
         public async Task<PricingPlanDto> CreatePlanAsync(CreatePricingPlanDto createPlanDto)
         {
-            _logger.LogInformation("Creating new pricing plan: {PlanName}", createPlanDto.Name);
-
-            // Map DTO to Model
-            var pricingPlan = _mapper.Map<PricingPlan>(createPlanDto);
-
-            // Business validation (additional to DTO validation)
-            if (pricingPlan.Price < 0)
+            try
             {
-                throw new BadRequestException("Price must be non-negative");
+                _logger.LogInformation("Creating new pricing plan: {PlanName}", createPlanDto.Name);
+
+                // Map DTO to Model
+                var pricingPlan = _mapper.Map<PricingPlan>(createPlanDto);
+
+                // Business validation (additional to DTO validation)
+                if (pricingPlan.Price < 0)
+                {
+                    throw new BadRequestException("Price must be non-negative");
+                }
+
+                // Set timestamps
+                pricingPlan.CreatedAt = DateTime.UtcNow;
+
+                // Save to repository
+                var created = await _pricingRepository.AddAsync(pricingPlan);
+
+                _logger.LogInformation("Pricing plan created successfully with ID: {PlanId}", created.Id);
+
+                // Map back to DTO and return
+                return _mapper.Map<PricingPlanDto>(created);
             }
-
-            // Set timestamps
-            pricingPlan.CreatedAt = DateTime.UtcNow;
-
-            // Save to repository
-            var created = await _pricingRepository.AddAsync(pricingPlan);
-
-            _logger.LogInformation("Pricing plan created successfully with ID: {PlanId}", created.Id);
-
-            // Map back to DTO and return
-            return _mapper.Map<PricingPlanDto>(created);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating pricing plan: {PlanName}", createPlanDto.Name);
+                throw;
+            }
         }
 
         public async Task UpdatePlanAsync(UpdatePricingPlanDto updatePlanDto)
@@ -131,23 +163,31 @@ namespace MovizoneApp.Application.Services
 
         public async Task DeletePlanAsync(int id)
         {
-            _logger.LogInformation("Deleting pricing plan with ID: {PlanId}", id);
-
-            var pricingPlan = await _pricingRepository.GetByIdAsync(id);
-            if (pricingPlan == null)
+            try
             {
-                throw new NotFoundException("PricingPlan", id);
+                _logger.LogInformation("Deleting pricing plan with ID: {PlanId}", id);
+
+                var pricingPlan = await _pricingRepository.GetByIdAsync(id);
+                if (pricingPlan == null)
+                {
+                    throw new NotFoundException("PricingPlan", id);
+                }
+
+                // Soft delete
+                pricingPlan.IsDeleted = true;
+                pricingPlan.DeletedAt = DateTime.UtcNow;
+                // TODO: Set DeletedBy from current user context when authentication is available
+                // entity.DeletedBy = currentUserId;
+                pricingPlan.UpdatedAt = DateTime.UtcNow;
+                await _pricingRepository.UpdateAsync(pricingPlan);
+
+                _logger.LogInformation("Pricing plan soft-deleted successfully: {PlanId}", id);
             }
-
-            // Soft delete
-            pricingPlan.IsDeleted = true;
-            pricingPlan.DeletedAt = DateTime.UtcNow;
-            // TODO: Set DeletedBy from current user context when authentication is available
-            // entity.DeletedBy = currentUserId;
-            pricingPlan.UpdatedAt = DateTime.UtcNow;
-            await _pricingRepository.UpdateAsync(pricingPlan);
-
-            _logger.LogInformation("Pricing plan soft-deleted successfully: {PlanId}", id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting pricing plan with ID: {PlanId}", id);
+                throw;
+            }
         }
     }
 }

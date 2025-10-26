@@ -37,51 +37,67 @@ namespace MovizoneApp.Application.Services
 
         public async Task<IEnumerable<ReviewDto>> GetReviewsByMovieIdAsync(int movieId)
         {
-            _logger.LogInformation("Fetching reviews for movie ID: {MovieId}", movieId);
-            var reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
-            return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+            try
+            {
+                _logger.LogInformation("Fetching reviews for movie ID: {MovieId}", movieId);
+                var reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
+                return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching reviews for movie ID: {MovieId}", movieId);
+                throw;
+            }
         }
 
         public async Task<ReviewDto> AddReviewAsync(CreateReviewDto createReviewDto)
         {
-            _logger.LogInformation("Adding review for movie ID: {MovieId}", createReviewDto.MovieId);
-
-            // Map DTO to Model
-            var review = _mapper.Map<Review>(createReviewDto);
-
-            // Business validation (additional to DTO validation)
-            if (string.IsNullOrWhiteSpace(review.Comment))
+            try
             {
-                throw new BadRequestException("Review comment is required");
-            }
+                _logger.LogInformation("Adding review for movie ID: {MovieId}", createReviewDto.MovieId);
 
-            if (string.IsNullOrWhiteSpace(review.UserName))
+                // Map DTO to Model
+                var review = _mapper.Map<Review>(createReviewDto);
+
+                // Business validation (additional to DTO validation)
+                if (string.IsNullOrWhiteSpace(review.Comment))
+                {
+                    throw new BadRequestException("Review comment is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(review.UserName))
+                {
+                    throw new BadRequestException("User name is required");
+                }
+
+                if (review.Rating < 1 || review.Rating > 10)
+                {
+                    throw new BadRequestException("Rating must be between 1 and 10");
+                }
+
+                // Check if movie exists
+                var movieExists = await _movieRepository.ExistsAsync(m => m.Id == review.MovieId);
+                if (!movieExists)
+                {
+                    throw new NotFoundException("Movie", review.MovieId);
+                }
+
+                // Set timestamps
+                review.CreatedAt = DateTime.UtcNow;
+
+                // Save to repository
+                var created = await _reviewRepository.AddAsync(review);
+
+                _logger.LogInformation("Review added successfully with ID: {ReviewId}", created.Id);
+
+                // Map back to DTO and return
+                return _mapper.Map<ReviewDto>(created);
+            }
+            catch (Exception ex)
             {
-                throw new BadRequestException("User name is required");
+                _logger.LogError(ex, "Error adding review for movie ID: {MovieId}", createReviewDto.MovieId);
+                throw;
             }
-
-            if (review.Rating < 1 || review.Rating > 10)
-            {
-                throw new BadRequestException("Rating must be between 1 and 10");
-            }
-
-            // Check if movie exists
-            var movieExists = await _movieRepository.ExistsAsync(m => m.Id == review.MovieId);
-            if (!movieExists)
-            {
-                throw new NotFoundException("Movie", review.MovieId);
-            }
-
-            // Set timestamps
-            review.CreatedAt = DateTime.UtcNow;
-
-            // Save to repository
-            var created = await _reviewRepository.AddAsync(review);
-
-            _logger.LogInformation("Review added successfully with ID: {ReviewId}", created.Id);
-
-            // Map back to DTO and return
-            return _mapper.Map<ReviewDto>(created);
         }
 
         public async Task UpdateReviewAsync(UpdateReviewDto updateReviewDto)
@@ -127,36 +143,60 @@ namespace MovizoneApp.Application.Services
 
         public async Task DeleteReviewAsync(int id)
         {
-            _logger.LogInformation("Deleting review with ID: {ReviewId}", id);
-
-            var review = await _reviewRepository.GetByIdAsync(id);
-            if (review == null)
+            try
             {
-                throw new NotFoundException("Review", id);
+                _logger.LogInformation("Deleting review with ID: {ReviewId}", id);
+
+                var review = await _reviewRepository.GetByIdAsync(id);
+                if (review == null)
+                {
+                    throw new NotFoundException("Review", id);
+                }
+
+                // Soft delete
+                review.IsDeleted = true;
+                review.DeletedAt = DateTime.UtcNow;
+                // TODO: Set DeletedBy from current user context when authentication is available
+                // entity.DeletedBy = currentUserId;
+                review.UpdatedAt = DateTime.UtcNow;
+                await _reviewRepository.UpdateAsync(review);
+
+                _logger.LogInformation("Review soft-deleted successfully: {ReviewId}", id);
             }
-
-            // Soft delete
-            review.IsDeleted = true;
-            review.DeletedAt = DateTime.UtcNow;
-            // TODO: Set DeletedBy from current user context when authentication is available
-            // entity.DeletedBy = currentUserId;
-            review.UpdatedAt = DateTime.UtcNow;
-            await _reviewRepository.UpdateAsync(review);
-
-            _logger.LogInformation("Review soft-deleted successfully: {ReviewId}", id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting review with ID: {ReviewId}", id);
+                throw;
+            }
         }
 
         public async Task<double> GetAverageRatingAsync(int movieId)
         {
-            _logger.LogInformation("Calculating average rating for movie ID: {MovieId}", movieId);
-            return await _reviewRepository.GetAverageRatingAsync(movieId);
+            try
+            {
+                _logger.LogInformation("Calculating average rating for movie ID: {MovieId}", movieId);
+                return await _reviewRepository.GetAverageRatingAsync(movieId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculating average rating for movie ID: {MovieId}", movieId);
+                throw;
+            }
         }
 
         public async Task<int> GetReviewCountAsync(int movieId)
         {
-            _logger.LogInformation("Counting reviews for movie ID: {MovieId}", movieId);
-            var reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
-            return reviews.Count();
+            try
+            {
+                _logger.LogInformation("Counting reviews for movie ID: {MovieId}", movieId);
+                var reviews = await _reviewRepository.GetReviewsByMovieIdAsync(movieId);
+                return reviews.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting reviews for movie ID: {MovieId}", movieId);
+                throw;
+            }
         }
     }
 }

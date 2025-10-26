@@ -33,120 +33,176 @@ namespace MovizoneApp.Application.Services
 
         public async Task<IEnumerable<ActorDto>> GetAllActorsAsync()
         {
-            _logger.LogInformation("Fetching all actors");
-            var actors = await _actorRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<ActorDto>>(actors);
+            try
+            {
+                _logger.LogInformation("Fetching all actors");
+                var actors = await _actorRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<ActorDto>>(actors);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all actors");
+                throw;
+            }
         }
 
         public async Task<ActorDto?> GetActorByIdAsync(int id)
         {
-            _logger.LogInformation("Fetching actor with ID: {ActorId}", id);
-            var actor = await _actorRepository.GetByIdAsync(id);
-
-            if (actor == null)
+            try
             {
-                _logger.LogWarning("Actor with ID {ActorId} not found", id);
-                return null;
-            }
+                _logger.LogInformation("Fetching actor with ID: {ActorId}", id);
+                var actor = await _actorRepository.GetByIdAsync(id);
 
-            return _mapper.Map<ActorDto>(actor);
+                if (actor == null)
+                {
+                    _logger.LogWarning("Actor with ID {ActorId} not found", id);
+                    return null;
+                }
+
+                return _mapper.Map<ActorDto>(actor);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching actor with ID: {ActorId}", id);
+                throw;
+            }
         }
 
         public async Task<ActorDto?> GetActorWithDetailsAsync(int id)
         {
-            _logger.LogInformation("Fetching actor with details, ID: {ActorId}", id);
-            var actor = await _actorRepository.GetActorWithDetailsAsync(id);
-            return actor == null ? null : _mapper.Map<ActorDto>(actor);
+            try
+            {
+                _logger.LogInformation("Fetching actor with details, ID: {ActorId}", id);
+                var actor = await _actorRepository.GetActorWithDetailsAsync(id);
+                return actor == null ? null : _mapper.Map<ActorDto>(actor);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching actor with details, ID: {ActorId}", id);
+                throw;
+            }
         }
 
         public async Task<ActorDto> CreateActorAsync(CreateActorDto createActorDto)
         {
-            _logger.LogInformation("Creating new actor: {ActorName}", createActorDto.Name);
-
-            // Map DTO to Model
-            var actor = _mapper.Map<Actor>(createActorDto);
-
-            // Business validation (additional to DTO validation)
-            if (string.IsNullOrWhiteSpace(actor.Name))
+            try
             {
-                throw new BadRequestException("Actor name is required");
-            }
+                _logger.LogInformation("Creating new actor: {ActorName}", createActorDto.Name);
 
-            if (actor.BirthDate > DateTime.UtcNow)
+                // Map DTO to Model
+                var actor = _mapper.Map<Actor>(createActorDto);
+
+                // Business validation (additional to DTO validation)
+                if (string.IsNullOrWhiteSpace(actor.Name))
+                {
+                    throw new BadRequestException("Actor name is required");
+                }
+
+                if (actor.BirthDate > DateTime.UtcNow)
+                {
+                    throw new BadRequestException("Birth date cannot be in the future");
+                }
+
+                var age = DateTime.UtcNow.Year - actor.BirthDate.Year;
+                if (age > 150)
+                {
+                    throw new BadRequestException("Invalid birth date");
+                }
+
+                // Set timestamps
+                actor.CreatedAt = DateTime.UtcNow;
+
+                // Save to repository
+                var created = await _actorRepository.AddAsync(actor);
+
+                _logger.LogInformation("Actor created successfully with ID: {ActorId}", created.Id);
+
+                // Map back to DTO and return
+                return _mapper.Map<ActorDto>(created);
+            }
+            catch (Exception ex)
             {
-                throw new BadRequestException("Birth date cannot be in the future");
+                _logger.LogError(ex, "Error creating actor: {ActorName}", createActorDto.Name);
+                throw;
             }
-
-            var age = DateTime.UtcNow.Year - actor.BirthDate.Year;
-            if (age > 150)
-            {
-                throw new BadRequestException("Invalid birth date");
-            }
-
-            // Set timestamps
-            actor.CreatedAt = DateTime.UtcNow;
-
-            // Save to repository
-            var created = await _actorRepository.AddAsync(actor);
-
-            _logger.LogInformation("Actor created successfully with ID: {ActorId}", created.Id);
-
-            // Map back to DTO and return
-            return _mapper.Map<ActorDto>(created);
         }
 
         public async Task UpdateActorAsync(UpdateActorDto updateActorDto)
         {
-            _logger.LogInformation("Updating actor with ID: {ActorId}", updateActorDto.Id);
-
-            // Check if actor exists
-            var existing = await _actorRepository.GetByIdAsync(updateActorDto.Id);
-            if (existing == null)
+            try
             {
-                throw new NotFoundException("Actor", updateActorDto.Id);
+                _logger.LogInformation("Updating actor with ID: {ActorId}", updateActorDto.Id);
+
+                // Check if actor exists
+                var existing = await _actorRepository.GetByIdAsync(updateActorDto.Id);
+                if (existing == null)
+                {
+                    throw new NotFoundException("Actor", updateActorDto.Id);
+                }
+
+                // Map DTO properties to existing tracked entity
+                _mapper.Map(updateActorDto, existing);
+
+                // Business validation
+                if (string.IsNullOrWhiteSpace(existing.Name))
+                {
+                    throw new BadRequestException("Actor name is required");
+                }
+
+                // Set update time (CreatedAt already preserved in existing entity)
+                existing.UpdatedAt = DateTime.UtcNow;
+
+                // Update in repository
+                await _actorRepository.UpdateAsync(existing);
+                _logger.LogInformation("Actor updated successfully: {ActorId}", existing.Id);
             }
-
-            // Map DTO properties to existing tracked entity
-            _mapper.Map(updateActorDto, existing);
-
-            // Business validation
-            if (string.IsNullOrWhiteSpace(existing.Name))
+            catch (Exception ex)
             {
-                throw new BadRequestException("Actor name is required");
+                _logger.LogError(ex, "Error updating actor with ID: {ActorId}", updateActorDto.Id);
+                throw;
             }
-
-            // Set update time (CreatedAt already preserved in existing entity)
-            existing.UpdatedAt = DateTime.UtcNow;
-
-            // Update in repository
-            await _actorRepository.UpdateAsync(existing);
-            _logger.LogInformation("Actor updated successfully: {ActorId}", existing.Id);
         }
 
         public async Task DeleteActorAsync(int id)
         {
-            _logger.LogInformation("Deleting actor with ID: {ActorId}", id);
-
-            var actor = await _actorRepository.GetByIdAsync(id);
-            if (actor == null)
+            try
             {
-                throw new NotFoundException("Actor", id);
+                _logger.LogInformation("Deleting actor with ID: {ActorId}", id);
+
+                var actor = await _actorRepository.GetByIdAsync(id);
+                if (actor == null)
+                {
+                    throw new NotFoundException("Actor", id);
+                }
+
+                // Soft delete
+                actor.IsDeleted = true;
+                actor.DeletedAt = DateTime.UtcNow;
+                // TODO: Set DeletedBy from current user context when authentication is available
+                // entity.DeletedBy = currentUserId;
+                actor.UpdatedAt = DateTime.UtcNow;
+                await _actorRepository.UpdateAsync(actor);
+
+                _logger.LogInformation("Actor soft-deleted successfully: {ActorId}", id);
             }
-
-            // Soft delete
-            actor.IsDeleted = true;
-            actor.DeletedAt = DateTime.UtcNow;
-            // TODO: Set DeletedBy from current user context when authentication is available
-            // entity.DeletedBy = currentUserId;
-            actor.UpdatedAt = DateTime.UtcNow;
-            await _actorRepository.UpdateAsync(actor);
-
-            _logger.LogInformation("Actor soft-deleted successfully: {ActorId}", id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting actor with ID: {ActorId}", id);
+                throw;
+            }
         }
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _actorRepository.ExistsAsync(a => a.Id == id);
+            try
+            {
+                return await _actorRepository.ExistsAsync(a => a.Id == id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if actor exists with ID: {ActorId}", id);
+                throw;
+            }
         }
     }
 }
