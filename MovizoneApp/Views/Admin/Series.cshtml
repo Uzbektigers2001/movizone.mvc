@@ -11,6 +11,22 @@
     </a>
 </div>
 
+<!-- Search Form -->
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+        <form asp-action="Series" method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" name="search" class="form-control" placeholder="Search series by title or description..." value="@ViewBag.SearchQuery">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="ti ti-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm">
     <div class="card-body">
         <div class="table-responsive">
@@ -79,5 +95,37 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        @{
+            var currentPage = ViewBag.CurrentPage ?? 1;
+            var totalPages = ViewBag.TotalPages ?? 1;
+            var searchQuery = ViewBag.SearchQuery ?? "";
+        }
+        @if (totalPages > 1)
+        {
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Series" asp-route-page="@(currentPage - 1)" asp-route-search="@searchQuery">
+                            <i class="ti ti-chevron-left"></i> Previous
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" asp-action="Series" asp-route-page="@i" asp-route-search="@searchQuery">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Series" asp-route-page="@(currentPage + 1)" asp-route-search="@searchQuery">
+                            Next <i class="ti ti-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
     </div>
 </div>
