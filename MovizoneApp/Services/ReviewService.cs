@@ -41,6 +41,11 @@ namespace MovizoneApp.Services
             return _reviews.Where(r => r.MovieId == movieId).OrderByDescending(r => r.CreatedAt).ToList();
         }
 
+        public List<Review> GetReviewsByUserId(int userId)
+        {
+            return _reviews.Where(r => r.UserId == userId).OrderByDescending(r => r.CreatedAt).ToList();
+        }
+
         public void AddReview(Review review)
         {
             review.Id = _reviews.Any() ? _reviews.Max(r => r.Id) + 1 : 1;

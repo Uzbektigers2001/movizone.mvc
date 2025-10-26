@@ -42,7 +42,10 @@ namespace MovizoneApp.Models
         public string CoverImage { get; set; } = string.Empty;
 
         public List<string> Actors { get; set; } = new List<string>();
+        public List<Episode> Episodes { get; set; } = new List<Episode>();
         public bool IsFeatured { get; set; }
+        public bool IsHidden { get; set; } // Hide from public listings
+        public bool ShowInBanner { get; set; } // Show in home page banner carousel
         public DateTime FirstAired { get; set; }
 
         [MaxLength(50)]

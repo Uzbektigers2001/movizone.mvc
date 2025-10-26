@@ -43,6 +43,8 @@ namespace MovizoneApp.Models
 
         public List<string> Actors { get; set; } = new List<string>();
         public bool IsFeatured { get; set; }
+        public bool IsHidden { get; set; } // Hide from public listings
+        public bool ShowInBanner { get; set; } // Show in home page banner carousel
         public DateTime ReleaseDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }

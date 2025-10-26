@@ -1,124 +1,522 @@
-﻿@using MovizoneApp.Models
+@using MovizoneApp.Models
 @{
-    ViewData["Title"] = "Home";
-    var featuredMovies = ViewBag.FeaturedMovies as List<Movie>;
-    var featuredSeries = ViewBag.FeaturedSeries as List<TVSeries>;
+    ViewData["Title"] = "Home - HotFlix";
+    var bannerMovies = ViewBag.BannerMovies as List<Movie> ?? new List<Movie>();
+    var bannerSeries = ViewBag.BannerSeries as List<TVSeries> ?? new List<TVSeries>();
+    var featuredMovies = ViewBag.FeaturedMovies as List<Movie> ?? new List<Movie>();
+    var topRatedMovies = ViewBag.TopRatedMovies as List<Movie> ?? new List<Movie>();
+    var recentMovies = ViewBag.RecentMovies as List<Movie> ?? new List<Movie>();
+    var allGenres = (ViewBag.Genres as List<string> ?? new List<string>()).Distinct().OrderBy(g => g).ToList();
+    var settings = ViewBag.SiteSettings as SiteSettings ?? new SiteSettings();
+
+    // Combine movies and series for banner using tuples
+    var bannerItems = new List<(string Title, double Rating, string Description, string Genre, string BannerImage, string Type, int Id)>();
+
+    foreach (var movie in bannerMovies)
+    {
+        bannerItems.Add((movie.Title, movie.Rating, movie.Description, movie.Genre, movie.BannerImage, "movie", movie.Id));
+    }
+
+    foreach (var series in bannerSeries)
+    {
+        bannerItems.Add((series.Title, series.Rating, series.Description, series.Genre, series.BannerImage, "series", series.Id));
+    }
+
+    bannerItems = bannerItems.OrderByDescending(x => x.Rating).Take(5).ToList();
 }
 
-<!-- Hero Section -->
-<section class="home py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-5">
-                <h1 class="display-4 fw-bold mb-3">
-                    <span class="text-white">NEW ITEMS</span>
-                    <span style="color: #ff55a5;">OF THIS SEASON</span>
-                </h1>
-                <p class="lead">Discover the latest movies and TV shows</p>
+<!-- Hero Carousel -->
+@if (settings.ShowHeroBanner)
+{
+<section class="home home--hero" style="padding: 0; margin-top: -2rem;">
+    <div class="container-fluid px-0">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+                @{
+                    var heroItems = bannerItems.Any() ? bannerItems.Take(5).ToList() : featuredMovies.Take(3).Select(m => (m.Title, m.Rating, m.Description, m.Genre, m.BannerImage, Type: "movie", m.Id)).ToList();
+                    var backgrounds = new[] { "slide__bg-1.jpg", "slide__bg-2.jpg", "slide__bg-3.jpg" };
+
+                    for (int i = 0; i < Math.Max(heroItems.Count, 3); i++)
+                    {
+                        var hasItem = i < heroItems.Count;
+                        var item = hasItem ? heroItems[i] : default;
+                        var isActive = i == 0 ? "active" : "";
+                        var bg = backgrounds[i % backgrounds.Length];
+                        // Use BannerImage if available, otherwise use default bg
+                        var bannerBg = hasItem && !string.IsNullOrEmpty(item.BannerImage) ? item.BannerImage : $"/img/bg/{bg}";
+                        var ratingColor = hasItem && item.Rating >= 8 ? "success" : hasItem && item.Rating >= 6 ? "warning" : "danger";
+                        var title = hasItem ? item.Title : (i == 0 ? "Savage Beauty" : i == 1 ? "From the Other Side" : "Endless Horizon");
+                        var rating = hasItem ? item.Rating.ToString("0.0") : (i == 0 ? "9.8" : i == 1 ? "6.9" : "6.2");
+                        var desc = hasItem ? item.Description : (i == 0 ? "A brilliant scientist discovers a way to harness the power of the ocean's currents to create a new, renewable energy source. But when her groundbreaking technology falls into the wrong hands, she must race against time to stop it from being used for evil." : i == 1 ? "In a world where magic is outlawed and hunted, a young witch must use her powers to fight back against the corrupt authorities who seek to destroy her kind." : "When a renowned archaeologist goes missing, his daughter sets out on a perilous journey to the heart of the Amazon rainforest to find him. Along the way, she discovers a hidden city and a dangerous conspiracy that threatens the very balance of power in the world.");
+                <div class="carousel-item @isActive" style="height: 600px; position: relative;">
+                    <img src="@bannerBg" class="d-block w-100" alt="@title" style="height: 100%; object-fit: cover; filter: brightness(0.4);">
+                    <div class="carousel-caption" style="bottom: 20%; left: 10%; right: 10%; text-align: left;">
+                        <h2 class="display-4 fw-bold" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+                            @title <span class="badge bg-@ratingColor ms-3" style="font-size: 1.5rem;">@rating</span>
+                        </h2>
+                        <p class="lead mb-3" style="max-width: 700px; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">
+                            @desc
+                        </p>
+                        <p class="mb-4">
+                            @if (hasItem)
+                            {
+                                foreach (var genre in item.Genre.Split(',').Take(2))
+                                {
+                                    <a href="#" class="badge bg-secondary text-decoration-none me-2" style="font-size: 1rem;">@genre.Trim()</a>
+                                }
+                            }
+                            else
+                            {
+                                <a href="#" class="badge bg-secondary text-decoration-none me-2" style="font-size: 1rem;">Action</a>
+                                <a href="#" class="badge bg-secondary text-decoration-none me-2" style="font-size: 1rem;">Drama</a>
+                            }
+                        </p>
+                        <a href="@(hasItem ? Url.Action("Details", item.Type == "movie" ? "Movie" : "TVSeries", new { id = item.Id }) : "#")" class="btn btn-primary btn-lg px-5 py-3" style="box-shadow: 0 4px 12px rgba(255, 85, 165, 0.3);">
+                            <i class="ti ti-player-play-filled me-2"></i> Watch Now
+                        </a>
+                    </div>
+                </div>
+                    }
+                }
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <i class="ti ti-chevron-left" style="font-size: 2rem;"></i>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <i class="ti ti-chevron-right" style="font-size: 2rem;"></i>
+            </button>
         </div>
     </div>
 </section>
+}
 
-<!-- Featured Movies -->
-<section class="py-5">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-12">
-                <h2 class="h3 mb-4">Featured Movies</h2>
+<!-- Filter & Catalog -->
+@if (settings.ShowCatalogSection)
+{
+<div style="background-color: #0f0f1e; padding-top: 3rem;">
+    <!-- Filter -->
+    <div class="container mb-4">
+        <div class="card bg-dark border-secondary" style="box-shadow: none;">
+            <div class="card-body">
+                <form asp-controller="Home" asp-action="Index" method="get" class="row g-3 align-items-end">
+                    <div class="col-6 col-md-3">
+                        <label class="form-label text-white"><i class="ti ti-filter me-1"></i> Genre</label>
+                        <select name="genre" class="form-select bg-dark text-white border-secondary">
+                            <option value="">All genres</option>
+                            @foreach (var genre in allGenres)
+                            {
+                                <option value="@genre" selected="@(ViewBag.SelectedGenre == genre)">@genre</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label text-white">Rating</label>
+                        <select name="ratingFrom" class="form-select bg-dark text-white border-secondary">
+                            <option value="">Any rating</option>
+                            <option value="3" selected="@(ViewBag.SelectedRatingFrom == "3")">from 3.0</option>
+                            <option value="5" selected="@(ViewBag.SelectedRatingFrom == "5")">from 5.0</option>
+                            <option value="7" selected="@(ViewBag.SelectedRatingFrom == "7")">from 7.0</option>
+                            <option value="9" selected="@(ViewBag.SelectedRatingFrom == "9")">from 9.0</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label text-white">Year</label>
+                        <select name="yearFrom" class="form-select bg-dark text-white border-secondary">
+                            <option value="">Any year</option>
+                            <option value="2024" selected="@(ViewBag.SelectedYearFrom == "2024")">2024</option>
+                            <option value="2023" selected="@(ViewBag.SelectedYearFrom == "2023")">2023</option>
+                            <option value="2022" selected="@(ViewBag.SelectedYearFrom == "2022")">2022</option>
+                            <option value="2020" selected="@(ViewBag.SelectedYearFrom == "2020")">2020+</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label text-white">Sort</label>
+                        <select name="sort" class="form-select bg-dark text-white border-secondary">
+                            <option value="newest" selected="@(ViewBag.SelectedSort == "newest")">Newest</option>
+                            <option value="rating" selected="@(ViewBag.SelectedSort == "rating")">Rating</option>
+                            <option value="title" selected="@(ViewBag.SelectedSort == "title")">Title</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="ti ti-search me-1"></i> Apply
+                        </button>
+                        <small class="text-muted d-block mt-2">Showing @featuredMovies.Count movies</small>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="row g-4">
-            @if (featuredMovies != null && featuredMovies.Any())
+    </div>
+
+    <!-- Catalog Grid -->
+    <div class="container">
+        <div class="row g-3 g-md-4 mb-4">
+            @foreach (var movie in featuredMovies)
             {
-                foreach (var movie in featuredMovies)
-                {
-                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card bg-dark text-white h-100">
-                            <div class="position-relative">
-                                <img src="@movie.CoverImage"
-                                     class="card-img-top" alt="@movie.Title" style="height: 350px; object-fit: cover;">
-                                <span class="position-absolute top-0 end-0 m-2 item__rate--green">
-                                    @movie.Rating
-                                </span>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id"
-                                       class="text-white text-decoration-none">
-                                        @movie.Title
-                                    </a>
-                                </h5>
-                                <p class="card-text">
-                                    <small class="text-muted">@movie.Genre</small>
-                                </p>
-                                <p class="card-text">
-                                    <small class="text-muted">@movie.Year • @movie.Duration min</small>
-                                </p>
-                            </div>
-                        </div>
+                var ratingClass = movie.Rating >= 8 ? "item__rate--green" : movie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="item">
+                    <div class="item__cover">
+                        <img src="@movie.CoverImage" alt="@movie.Title">
+                        <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id" class="item__play">
+                            <i class="ti ti-player-play-filled"></i>
+                        </a>
+                        <span class="item__rate @ratingClass">@movie.Rating</span>
+                        <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title">
+                            <i class="ti ti-bookmark"></i>
+                        </button>
                     </div>
-                }
+                    <div class="item__content">
+                        <h3 class="item__title">
+                            <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id">@movie.Title</a>
+                        </h3>
+                        <span class="item__category">
+                            <a href="#">@movie.Genre</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        @{
+            var currentPage = ViewBag.CurrentPage ?? 1;
+            var totalPages = ViewBag.TotalPages ?? 1;
+        }
+        @if (totalPages > 1)
+        {
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="paginator">
+                        <ul class="paginator__list">
+                            @if (currentPage > 1)
+                            {
+                                <li class="paginator__item">
+                                    <a asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage - 1)">
+                                        <i class="ti ti-chevron-left"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="paginator__item @(i == currentPage ? "paginator__item--active" : "")">
+                                    <a asp-controller="Home" asp-action="Index" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPages)
+                            {
+                                <li class="paginator__item">
+                                    <a asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage + 1)">
+                                        <i class="ti ti-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+}
+
+<!-- Expected Premiere -->
+@if (settings.ShowExpectedPremiere)
+{
+<section class="py-5" style="background-color: #0b0b17; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h2 class="h3 mb-0"><i class="ti ti-star me-2"></i> Expected Premiere</h2>
+                <a asp-controller="Movie" asp-action="Catalog" class="btn btn-link text-primary">View All <i class="ti ti-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="row g-3 g-md-4">
+            @foreach (var movie in recentMovies.Take(6))
+            {
+                var ratingClass = movie.Rating >= 8 ? "item__rate--green" : movie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="item">
+                    <div class="item__cover">
+                        <img src="@movie.CoverImage" alt="@movie.Title">
+                        <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id" class="item__play">
+                            <i class="ti ti-player-play-filled"></i>
+                        </a>
+                        <span class="item__rate @ratingClass">@movie.Rating</span>
+                        <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title">
+                            <i class="ti ti-bookmark"></i>
+                        </button>
+                    </div>
+                    <div class="item__content">
+                        <h3 class="item__title">
+                            <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id">@movie.Title</a>
+                        </h3>
+                        <span class="item__category">
+                            <a href="#">@movie.Genre</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
             }
         </div>
     </div>
 </section>
+}
 
-<!-- Featured TV Series -->
-<section class="py-5">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-12">
-                <h2 class="h3 mb-4">Featured TV Series</h2>
+<!-- Recently Updated -->
+@if (settings.ShowRecentlyUpdated)
+{
+<section class="content py-5" style="background-color: #0f0f1e;">
+    <div class="content__head" style="background-color: transparent;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- content title -->
+                    <h2 class="content__title">Recently updated</h2>
+                    <!-- end content title -->
+
+                    <!-- content tabs nav -->
+                    <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button id="1-tab" class="active" data-bs-toggle="tab" data-bs-target="#tab-1" type="button" role="tab" aria-controls="tab-1" aria-selected="true">New items</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button id="2-tab" data-bs-toggle="tab" data-bs-target="#tab-2" type="button" role="tab" aria-controls="tab-2" aria-selected="false">Movies</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button id="3-tab" data-bs-toggle="tab" data-bs-target="#tab-3" type="button" role="tab" aria-controls="tab-3" aria-selected="false">TV Series</button>
+                        </li>
+                    </ul>
+                    <!-- end content tabs nav -->
+                </div>
             </div>
         </div>
-        <div class="row g-4">
-            @if (featuredSeries != null && featuredSeries.Any())
-            {
-                foreach (var series in featuredSeries)
-                {
-                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card bg-dark text-white h-100">
-                            <div class="position-relative">
-                                <img src="@series.CoverImage"
-                                     class="card-img-top" alt="@series.Title" style="height: 350px; object-fit: cover;">
-                                <span class="position-absolute top-0 end-0 m-2 item__rate--green">
-                                    @series.Rating
-                                </span>
+    </div>
+
+    <div class="container">
+        <!-- content tabs -->
+        <div class="tab-content">
+            <!-- New items tab -->
+            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab" tabindex="0">
+                <div class="row g-3 g-md-4">
+                    @{
+                        var recentlyUpdatedAll = ViewBag.RecentlyUpdatedAll as List<(string Title, double Rating, string Genre, string CoverImage, string Type, int Id, DateTime Date)> ?? new List<(string, double, string, string, string, int, DateTime)>();
+                        foreach (var item in recentlyUpdatedAll)
+                        {
+                            var ratingClass = item.Rating >= 8 ? "item__rate--green" : item.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="@item.CoverImage" alt="@item.Title">
+                                <a asp-controller="@(item.Type == "movie" ? "Movie" : "TVSeries")" asp-action="Details" asp-route-id="@item.Id" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <span class="item__rate @ratingClass">@item.Rating.ToString("0.0")</span>
+                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@item.Id" data-type="@item.Type" data-title="@item.Title"><i class="ti ti-bookmark"></i></button>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id"
-                                       class="text-white text-decoration-none">
-                                        @series.Title
-                                    </a>
-                                </h5>
-                                <p class="card-text">
-                                    <small class="text-muted">@series.Genre</small>
-                                </p>
-                                <p class="card-text">
-                                    <small class="text-muted">@series.Seasons Seasons • @series.Status</small>
-                                </p>
+                            <div class="item__content">
+                                <h3 class="item__title">
+                                    <a asp-controller="@(item.Type == "movie" ? "Movie" : "TVSeries")" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                                </h3>
+                                <span class="item__category">
+                                    @foreach (var genre in item.Genre.Split(',').Take(2))
+                                    {
+                                        <a href="#">@genre.Trim()</a>
+                                    }
+                                </span>
                             </div>
                         </div>
                     </div>
-                }
-            }
+                        }
+                    }
+                </div>
+            </div>
+            <!-- end New items tab -->
+
+            <!-- Movies tab -->
+            <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab" tabindex="0">
+                <div class="row g-3 g-md-4">
+                    @{
+                        var recentlyUpdatedMovies = ViewBag.RecentlyUpdatedMovies as List<Movie> ?? new List<Movie>();
+                        foreach (var movie in recentlyUpdatedMovies)
+                        {
+                            var ratingClass = movie.Rating >= 8 ? "item__rate--green" : movie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="@movie.CoverImage" alt="@movie.Title">
+                                <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <span class="item__rate @ratingClass">@movie.Rating.ToString("0.0")</span>
+                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title"><i class="ti ti-bookmark"></i></button>
+                            </div>
+                            <div class="item__content">
+                                <h3 class="item__title">
+                                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id">@movie.Title</a>
+                                </h3>
+                                <span class="item__category">
+                                    @foreach (var genre in movie.Genre.Split(',').Take(2))
+                                    {
+                                        <a href="#">@genre.Trim()</a>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!-- end Movies tab -->
+
+            <!-- TV Series tab -->
+            <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab" tabindex="0">
+                <div class="row g-3 g-md-4">
+                    @{
+                        var recentlyUpdatedSeries = ViewBag.RecentlyUpdatedSeries as List<TVSeries> ?? new List<TVSeries>();
+                        foreach (var series in recentlyUpdatedSeries)
+                        {
+                            var ratingClass = series.Rating >= 8 ? "item__rate--green" : series.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="@series.CoverImage" alt="@series.Title">
+                                <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <span class="item__rate @ratingClass">@series.Rating.ToString("0.0")</span>
+                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@series.Id" data-type="series" data-title="@series.Title"><i class="ti ti-bookmark"></i></button>
+                            </div>
+                            <div class="item__content">
+                                <h3 class="item__title">
+                                    <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id">@series.Title</a>
+                                </h3>
+                                <span class="item__category">
+                                    @foreach (var genre in series.Genre.Split(',').Take(2))
+                                    {
+                                        <a href="#">@genre.Trim()</a>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!-- end TV Series tab -->
         </div>
+        <!-- end content tabs -->
     </div>
 </section>
+}
+<!-- end Recently Updated -->
 
-<!-- Call to Action -->
-<section class="py-5 text-center">
+<!-- Pricing Plans -->
+@if (settings.ShowPricingPlans)
+{
+<section class="py-5" style="background-color: #0f0f1e; border-top: 1px solid rgba(255, 255, 255, 0.1);">
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="h3 mb-4">Ready to watch?</h2>
-                <p class="lead mb-4">Choose your plan and start streaming today</p>
-                <a asp-controller="Pricing" asp-action="Index" class="btn btn-primary btn-lg">
-                    View Pricing Plans
-                </a>
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="h2">Select Your Plan</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card bg-dark text-white h-100 border-secondary">
+                    <div class="card-body text-center p-4">
+                        <h3 class="h4 mb-3">Basic</h3>
+                        <p class="display-5 fw-bold mb-4">Free</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="ti ti-circle-check text-success me-2"></i> 7 days</li>
+                            <li class="mb-2"><i class="ti ti-circle-check text-success me-2"></i> 720p Resolution</li>
+                            <li class="mb-2 text-muted"><i class="ti ti-circle-minus me-2"></i> Limited Availability</li>
+                            <li class="mb-2 text-muted"><i class="ti ti-circle-minus me-2"></i> Desktop Only</li>
+                            <li class="mb-2 text-muted"><i class="ti ti-circle-minus me-2"></i> Limited Support</li>
+                        </ul>
+                        <a asp-controller="Auth" asp-action="SignUp" class="btn btn-outline-primary w-100 py-2">Register</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-4">
+                <div class="card text-white h-100 border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transform: scale(1.03); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
+                    <div class="card-body text-center p-4">
+                        <span class="badge bg-warning mb-2">Most Popular</span>
+                        <h3 class="h4 mb-3">Premium</h3>
+                        <p class="display-5 fw-bold mb-1">$34.99</p>
+                        <p class="text-white-50 mb-4"><small>/ month</small></p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> 1 Month</li>
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> Full HD</li>
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> Limited Availability</li>
+                            <li class="mb-2 text-white-50"><i class="ti ti-circle-minus me-2"></i> TV & Desktop</li>
+                            <li class="mb-2 text-white-50"><i class="ti ti-circle-minus me-2"></i> 24/7 Support</li>
+                        </ul>
+                        <button class="btn btn-light w-100 py-2" type="button">Choose Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card text-white h-100 border-0" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="card-body text-center p-4">
+                        <h3 class="h4 mb-3">Cinematic</h3>
+                        <p class="display-5 fw-bold mb-1">$49.99</p>
+                        <p class="text-white-50 mb-4"><small>/ month</small></p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> 2 Months</li>
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> Ultra HD</li>
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> Limited Availability</li>
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> Any Device</li>
+                            <li class="mb-2"><i class="ti ti-circle-check me-2"></i> 24/7 Support</li>
+                        </ul>
+                        <button class="btn btn-light w-100 py-2" type="button">Choose Plan</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+}
+
+<style>
+    .carousel-item {
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .carousel-caption {
+        animation: fadeInUp 0.8s ease-in-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 8px 24px rgba(255, 85, 165, 0.3);
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(1);
+    }
+</style>

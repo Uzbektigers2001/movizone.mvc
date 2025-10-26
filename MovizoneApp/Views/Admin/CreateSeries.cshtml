@@ -81,6 +81,31 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Poster Image Path (for video player)</label>
+                    <input asp-for="PosterImage" class="form-control" placeholder="/img/posters/poster10.jpg">
+                    <small class="text-muted">Or upload below. Falls back to cover image if not set.</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Upload Poster Image</label>
+                    <input type="file" name="posterFile" class="form-control" accept="image/*">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Banner Image Path (for homepage carousel)</label>
+                    <input asp-for="BannerImage" class="form-control" placeholder="/img/banners/banner10.jpg">
+                    <small class="text-muted">Or upload below. Used when showing in homepage banner.</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Upload Banner Image</label>
+                    <input type="file" name="bannerFile" class="form-control" accept="image/*">
+                    <small class="text-muted">Recommended: 1920x800px or wider</small>
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Actors (comma separated)</label>
                 <input type="text" name="actorsList" class="form-control" placeholder="Bryan Cranston, Aaron Paul">
@@ -91,11 +116,25 @@
                 <input asp-for="FirstAired" type="date" class="form-control">
             </div>
 
-            <div class="mb-3 form-check">
-                <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured">
-                <label class="form-check-label" for="featured">
-                    Featured Series (show on homepage)
-                </label>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured">
+                    <label class="form-check-label" for="featured">
+                        Featured Series (show in featured sections)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="ShowInBanner" type="checkbox" class="form-check-input" id="showInBanner">
+                    <label class="form-check-label" for="showInBanner">
+                        Show in Homepage Banner Carousel
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="IsHidden" type="checkbox" class="form-check-input" id="hidden">
+                    <label class="form-check-label" for="hidden">
+                        Hide from Public (draft mode)
+                    </label>
+                </div>
             </div>
 
             <div class="d-flex gap-2">

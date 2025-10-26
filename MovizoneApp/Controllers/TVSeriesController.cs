@@ -61,6 +61,14 @@ namespace MovizoneApp.Controllers
             ViewBag.ReviewCount = reviewCount;
             ViewBag.IsInWatchlist = isInWatchlist;
 
+            // Get similar series based on genre (exclude current series and hidden series)
+            var similarSeries = _tvSeriesService.GetAllSeries()
+                .Where(s => s.Id != id && !s.IsHidden && s.Genre == series.Genre)
+                .OrderByDescending(s => s.Rating)
+                .Take(6)
+                .ToList();
+            ViewBag.SimilarSeries = similarSeries;
+
             return View(series);
         }
 

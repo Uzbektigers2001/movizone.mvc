@@ -86,3 +86,12 @@ StyleCopReport.xml
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Uploaded media files
+MovizoneApp/wwwroot/videos/
+MovizoneApp/wwwroot/img/covers/video_*
+MovizoneApp/wwwroot/img/covers/cover_*
+
+# Temporary extraction folder
+temp_extract/
+temp_extract_full/

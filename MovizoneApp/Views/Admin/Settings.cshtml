@@ -1,0 +1,125 @@
+@model MovizoneApp.Models.SiteSettings
+@{
+    ViewData["Title"] = "Site Settings";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="ti ti-settings"></i> Site Settings</h2>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="ti ti-check"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form asp-action="Settings" method="post">
+    <div class="row">
+        <!-- Banner & Hero Section -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="ti ti-photo"></i> Banner & Hero Section</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowHeroBanner" class="form-check-input" type="checkbox" id="showHeroBanner">
+                        <label class="form-check-label" for="showHeroBanner">
+                            <strong>Show Hero Banner</strong><br>
+                            <small class="text-muted">Display the main banner/carousel on the home page</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page Sections -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="ti ti-layout"></i> Home Page Sections</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowCatalogSection" class="form-check-input" type="checkbox" id="showCatalog">
+                        <label class="form-check-label" for="showCatalog">
+                            <strong>Show Catalog Section</strong><br>
+                            <small class="text-muted">Display the main catalog grid on home page</small>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowExpectedPremiere" class="form-check-input" type="checkbox" id="showPremiere">
+                        <label class="form-check-label" for="showPremiere">
+                            <strong>Show Expected Premiere</strong><br>
+                            <small class="text-muted">Display expected premiere section</small>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowRecentlyUpdated" class="form-check-input" type="checkbox" id="showRecent">
+                        <label class="form-check-label" for="showRecent">
+                            <strong>Show Recently Updated</strong><br>
+                            <small class="text-muted">Display recently updated section with tabs</small>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input asp-for="ShowPricingPlans" class="form-check-input" type="checkbox" id="showPricing">
+                        <label class="form-check-label" for="showPricing">
+                            <strong>Show Pricing Plans</strong><br>
+                            <small class="text-muted">Display pricing plans section</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Settings -->
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="ti ti-menu"></i> Navigation Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowMoviesInNav" class="form-check-input" type="checkbox" id="showMoviesNav">
+                                <label class="form-check-label" for="showMoviesNav">
+                                    <strong>Show Movies in Navigation</strong>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowTVSeriesInNav" class="form-check-input" type="checkbox" id="showSeriesNav">
+                                <label class="form-check-label" for="showSeriesNav">
+                                    <strong>Show TV Series in Navigation</strong>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowActorsInNav" class="form-check-input" type="checkbox" id="showActorsNav">
+                                <label class="form-check-label" for="showActorsNav">
+                                    <strong>Show Actors in Navigation</strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="ti ti-device-floppy"></i> Save Settings
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">Cancel</a>
+    </div>
+</form>
