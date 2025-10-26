@@ -39,8 +39,8 @@
                                     <strong>@actor.Name</strong>
                                 </div>
                             </td>
-                            <td>@(actor.BirthDate.HasValue ? actor.BirthDate.Value.ToString("MMM dd, yyyy") : "N/A")</td>
-                            <td>@(actor.Age.HasValue ? $"{actor.Age} years" : "N/A")</td>
+                            <td>@(actor.BirthDate.ToString("MMM dd, yyyy"))</td>
+                            <td>@($"{actor.Age} years")</td>
                             <td>@actor.Country</td>
                             <td>
                                 <span class="badge bg-primary">@actor.Movies.Count</span>

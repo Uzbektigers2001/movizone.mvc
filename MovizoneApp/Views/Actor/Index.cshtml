@@ -34,10 +34,7 @@
                                 }
                                 <div class="card-body text-center">
                                     <h6 class="card-title text-white mb-1">@actor.Name</h6>
-                                    @if (actor.BirthDate.HasValue)
-                                    {
-                                        <small class="text-muted">Born @actor.BirthDate.Value.Year</small>
-                                    }
+                                    <small class="text-muted">Born @actor.BirthDate.Year</small>
                                 </div>
                             </a>
                         </div>

@@ -20,14 +20,11 @@
             </div>
             <div class="col-12 col-md-9">
                 <h1 class="h2 mb-3">@Model.Name</h1>
-
-                @if (Model.BirthDate.HasValue)
-                {
-                    <div class="mb-3">
-                        <h6 class="text-muted">Born</h6>
-                        <p>@Model.BirthDate.Value.ToString("MMMM dd, yyyy")</p>
-                    </div>
-                }
+                
+                <div class="mb-3">
+                    <h6 class="text-muted">Born</h6>
+                    <p>@Model.BirthDate.ToString("MMMM dd, yyyy")</p>
+                </div>
 
                 @if (!string.IsNullOrEmpty(Model.Bio))
                 {
