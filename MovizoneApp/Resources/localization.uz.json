@@ -73,7 +73,14 @@
     "UploadVideoFile": "Yangi video faylni yuklash",
     "SelectSeries": "Serialni tanlang...",
     "LeaveEmptyToKeep": "joriy holatda qoldirish uchun bo'sh qoldiring",
-    "NewPassword": "Yangi parol"
+    "NewPassword": "Yangi parol",
+    "Genre": "Janr",
+    "AllGenres": "Barcha janrlar",
+    "AnyRating": "Istalgan reyting",
+    "Apply": "Qo'llash",
+    "Sort": "Saralash",
+    "Catalog": "Katalog",
+    "Born": "Tug'ilgan"
   },
   "Home": {
     "Welcome": "HotFlix'ga xush kelibsiz",
@@ -102,7 +109,16 @@
     "AboutTitle": "HotFlix haqida",
     "AboutDescription": "Filmlar va seriallar uchun eng yaxshi joyingiz",
     "SelectPerfectPlan": "O'zingiz uchun eng mos rejani tanlang",
-    "NewContentRegularly": "Yangi kontent muntazam qo'shiladi"
+    "NewContentRegularly": "Yangi kontent muntazam qo'shiladi",
+    "WatchNow": "Hozir tomosha qiling",
+    "ShowingMovies": "{0} ta film ko'rsatilmoqda",
+    "From30": "3.0 dan",
+    "From50": "5.0 dan",
+    "From70": "7.0 dan",
+    "From90": "9.0 dan",
+    "AnyYear": "Istalgan yil",
+    "ActionGenre": "Akshn",
+    "DramaGenre": "Drama"
   },
   "Movie": {
     "Title": "Sarlavha",
@@ -149,7 +165,11 @@
     "Poor": "Yomon",
     "VeryPoor": "Juda yomon",
     "Terrible": "Dahshatli",
-    "SampleVideoNote": "Namuna video - Ishlab chiqarishda bu haqiqiy film bo'ladi."
+    "SampleVideoNote": "Namuna video - Ishlab chiqarishda bu haqiqiy film bo'ladi.",
+    "SearchMovies": "Filmlarni qidirish...",
+    "ShowingOf": "{1} tadan {0} ta ko'rsatilmoqda",
+    "NoMoviesFound": "Film topilmadi. Boshqa filtrlarni sinab ko'ring.",
+    "AddToFavorites": "Sevimlilar ro'yxatiga qo'shish"
   },
   "TVSeries": {
     "Creator": "Yaratuvchi",
@@ -167,7 +187,9 @@
     "Ongoing": "Davom etayotgan",
     "NoSeriesYet": "Hali seriallar yo'q. Birinchi bo'lib sharh qoldiring!",
     "EpisodeNumber": "Epizod",
-    "AirDate": "Efir sanasi"
+    "AirDate": "Efir sanasi",
+    "SearchTVSeries": "Seriallarni qidirish...",
+    "NoTVSeriesFound": "Serial topilmadi. Boshqa filtrlarni sinab ko'ring."
   },
   "Actor": {
     "ActorDetails": "Aktyor ma'lumotlari",
@@ -178,7 +200,8 @@
     "Filmography": "Filmografiya",
     "AllActors": "Barcha aktyorlar",
     "ActorsCatalog": "Aktyorlar katalogi",
-    "BrowseTalentedCast": "Iqtidorli aktyorlarimizni ko'ring"
+    "BrowseTalentedCast": "Iqtidorli aktyorlarimizni ko'ring",
+    "NoActorsFound": "Ma'lumotlar bazasida aktyor topilmadi."
   },
   "Pricing": {
     "ChooseYourPlan": "Rejangizni tanlang",
@@ -195,7 +218,24 @@
     "CurrentPlan": "Joriy reja",
     "PopularPlan": "Eng mashhur",
     "SelectPlan": "Rejani tanlash",
-    "SelectYourPlan": "Rejangizni tanlang"
+    "SelectYourPlan": "Rejangizni tanlang",
+    "ChoosePlan": "Rejani tanlang",
+    "MoneyBackGuarantee": "Barcha rejalar 30 kunlik pul qaytarish kafolatini o'z ichiga oladi",
+    "Free": "Bepul",
+    "Days7": "7 kun",
+    "Resolution720p": "720p sifat",
+    "LimitedAvailability": "Cheklangan mavjudlik",
+    "DesktopOnly": "Faqat kompyuter",
+    "LimitedSupport": "Cheklangan yordam",
+    "Register": "Ro'yxatdan o'tish",
+    "SlashMonth": "/ oyiga",
+    "Month1": "1 oy",
+    "FullHD": "Full HD",
+    "TVAndDesktop": "TV va kompyuter",
+    "Support247": "24/7 yordam",
+    "Months2": "2 oy",
+    "UltraHD": "Ultra HD",
+    "AnyDevice": "Istalgan qurilma"
   },
   "Watchlist": {
     "MyWatchlist": "Mening ro'yxatim",

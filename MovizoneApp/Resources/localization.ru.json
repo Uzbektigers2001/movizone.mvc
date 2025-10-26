@@ -73,7 +73,14 @@
     "UploadVideoFile": "Загрузить новый видеофайл",
     "SelectSeries": "Выберите сериал...",
     "LeaveEmptyToKeep": "оставьте пустым, чтобы сохранить текущий",
-    "NewPassword": "Новый пароль"
+    "NewPassword": "Новый пароль",
+    "Genre": "Жанр",
+    "AllGenres": "Все жанры",
+    "AnyRating": "Любой рейтинг",
+    "Apply": "Применить",
+    "Sort": "Сортировка",
+    "Catalog": "Каталог",
+    "Born": "Родился"
   },
   "Home": {
     "Welcome": "Добро пожаловать в HotFlix",
@@ -102,7 +109,16 @@
     "AboutTitle": "О HotFlix",
     "AboutDescription": "Ваше главное место для фильмов и сериалов",
     "SelectPerfectPlan": "Выберите идеальный план для ваших потребностей",
-    "NewContentRegularly": "Новый контент добавляется регулярно"
+    "NewContentRegularly": "Новый контент добавляется регулярно",
+    "WatchNow": "Смотреть сейчас",
+    "ShowingMovies": "Показано {0} фильмов",
+    "From30": "от 3.0",
+    "From50": "от 5.0",
+    "From70": "от 7.0",
+    "From90": "от 9.0",
+    "AnyYear": "Любой год",
+    "ActionGenre": "Боевик",
+    "DramaGenre": "Драма"
   },
   "Movie": {
     "Title": "Название",
@@ -149,7 +165,11 @@
     "Poor": "Плохо",
     "VeryPoor": "Очень плохо",
     "Terrible": "Ужасно",
-    "SampleVideoNote": "Пример видео - В продакшене это будет настоящий фильм."
+    "SampleVideoNote": "Пример видео - В продакшене это будет настоящий фильм.",
+    "SearchMovies": "Поиск фильмов...",
+    "ShowingOf": "Показано {0} из {1}",
+    "NoMoviesFound": "Фильмы не найдены. Попробуйте другие фильтры.",
+    "AddToFavorites": "Добавить в избранное"
   },
   "TVSeries": {
     "Creator": "Создатель",
@@ -167,7 +187,9 @@
     "Ongoing": "Продолжается",
     "NoSeriesYet": "Отзывов пока нет. Будьте первым!",
     "EpisodeNumber": "Эпизод",
-    "AirDate": "Дата выхода"
+    "AirDate": "Дата выхода",
+    "SearchTVSeries": "Поиск сериалов...",
+    "NoTVSeriesFound": "Сериалы не найдены. Попробуйте другие фильтры."
   },
   "Actor": {
     "ActorDetails": "Информация об актёре",
@@ -178,7 +200,8 @@
     "Filmography": "Фильмография",
     "AllActors": "Все актёры",
     "ActorsCatalog": "Каталог актёров",
-    "BrowseTalentedCast": "Просмотрите наших талантливых актёров"
+    "BrowseTalentedCast": "Просмотрите наших талантливых актёров",
+    "NoActorsFound": "Актеры не найдены в базе данных."
   },
   "Pricing": {
     "ChooseYourPlan": "Выберите ваш план",
@@ -195,7 +218,24 @@
     "CurrentPlan": "Текущий план",
     "PopularPlan": "Самый популярный",
     "SelectPlan": "Выбрать план",
-    "SelectYourPlan": "Выберите ваш план"
+    "SelectYourPlan": "Выберите ваш план",
+    "ChoosePlan": "Выбрать план",
+    "MoneyBackGuarantee": "Все планы включают 30-дневную гарантию возврата денег",
+    "Free": "Бесплатно",
+    "Days7": "7 дней",
+    "Resolution720p": "720p качество",
+    "LimitedAvailability": "Ограниченная доступность",
+    "DesktopOnly": "Только компьютер",
+    "LimitedSupport": "Ограниченная поддержка",
+    "Register": "Регистрация",
+    "SlashMonth": "/ месяц",
+    "Month1": "1 месяц",
+    "FullHD": "Full HD",
+    "TVAndDesktop": "ТВ и компьютер",
+    "Support247": "24/7 поддержка",
+    "Months2": "2 месяца",
+    "UltraHD": "Ultra HD",
+    "AnyDevice": "Любое устройство"
   },
   "Watchlist": {
     "MyWatchlist": "Мой список",

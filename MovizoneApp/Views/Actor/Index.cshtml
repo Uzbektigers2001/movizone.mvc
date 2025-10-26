@@ -8,7 +8,7 @@
         <div class="row mb-4">
             <div class="col-12">
                 <h1 class="h2">
-                    <i class="ti ti-users"></i> All Actors
+                    <i class="ti ti-users"></i> @Localizer.GetString("Actor", "AllActors")
                 </h1>
                 <p class="text-muted">@Localizer.GetString("Actor", "BrowseTalentedCast")</p>
             </div>
@@ -34,7 +34,7 @@
                                 }
                                 <div class="card-body text-center">
                                     <h6 class="card-title text-white mb-1">@actor.Name</h6>
-                                    <small class="text-muted">Born @actor.BirthDate.Year</small>
+                                    <small class="text-muted">@Localizer.GetString("Common", "Born") @actor.BirthDate.Year</small>
                                 </div>
                             </a>
                         </div>
@@ -44,7 +44,7 @@
             else
             {
                 <div class="col-12">
-                    <div class="alert alert-info">No actors found in the database.</div>
+                    <div class="alert alert-info">@Localizer.GetString("Actor", "NoActorsFound")</div>
                 </div>
             }
         </div>
