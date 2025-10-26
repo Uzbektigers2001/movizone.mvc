@@ -351,6 +351,44 @@
 							</div>
 						</div>
 					</div>
+
+					<!-- You may also like -->
+					<div class="sidebar__item">
+						<h3 class="sidebar__title">You may also like...</h3>
+						<div class="row">
+							@{
+								var similarMovies = ViewBag.SimilarMovies as List<MovizoneApp.Models.Movie>;
+								if (similarMovies != null && similarMovies.Any())
+								{
+									foreach (var similarMovie in similarMovies.Take(6))
+									{
+										<div class="col-6 col-sm-4 col-lg-6">
+											<div class="item">
+												<div class="item__cover">
+													<img src="@similarMovie.CoverImage" alt="@similarMovie.Title">
+													<a asp-action="Details" asp-route-id="@similarMovie.Id" class="item__play">
+														<i class="ti ti-player-play-filled"></i>
+													</a>
+													<span class="item__rate @(similarMovie.Rating >= 8 ? "item__rate--green" : similarMovie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarMovie.Rating</span>
+													<button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+												</div>
+												<div class="item__content">
+													<h3 class="item__title"><a asp-action="Details" asp-route-id="@similarMovie.Id">@similarMovie.Title</a></h3>
+													<span class="item__category">
+														@foreach (var genre in similarMovie.Genre.Split(',').Take(2))
+														{
+															<a href="#">@genre.Trim()</a>
+														}
+													</span>
+												</div>
+											</div>
+										</div>
+									}
+								}
+							}
+						</div>
+					</div>
+					<!-- end You may also like -->
 				</div>
 			</div>
 			<!-- end sidebar -->
@@ -383,56 +421,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- You may also like... -->
-@{
-	var similarMovies = ViewBag.SimilarMovies as List<MovizoneApp.Models.Movie>;
-}
-@if (similarMovies != null && similarMovies.Any())
-{
-	<section class="content">
-		<div class="content__head">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<h2 class="content__title">You may also like...</h2>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="container">
-			<div class="row row--grid">
-				@foreach (var similarMovie in similarMovies)
-				{
-					<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-						<div class="item">
-							<div class="item__cover">
-								<img src="@similarMovie.CoverImage" alt="@similarMovie.Title">
-								<a asp-action="Details" asp-route-id="@similarMovie.Id" class="item__play">
-									<i class="ti ti-player-play-filled"></i>
-								</a>
-								<span class="item__rate @(similarMovie.Rating >= 8 ? "item__rate--green" : similarMovie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarMovie.Rating</span>
-								<button class="item__favorite" type="button">
-									<i class="ti ti-bookmark"></i>
-								</button>
-							</div>
-							<div class="item__content">
-								<h3 class="item__title">
-									<a asp-action="Details" asp-route-id="@similarMovie.Id">@similarMovie.Title</a>
-								</h3>
-								<span class="item__category">
-									<a href="#">@similarMovie.Genre</a>
-								</span>
-							</div>
-						</div>
-					</div>
-				}
-			</div>
-		</div>
-	</section>
-}
-<!-- end You may also like... -->
 
 @section Scripts {
 	<script>
