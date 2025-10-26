@@ -601,7 +601,7 @@ namespace MovizoneApp.Controllers
             _logger.LogInformation("Admin viewing users list");
 
             var users = await _userService.GetAllUsersAsync();
-            return View(users);
+            return View(users.ToList());
         }
 
         public async Task<IActionResult> EditUser(int id)
@@ -671,7 +671,7 @@ namespace MovizoneApp.Controllers
             _logger.LogInformation("Admin viewing actors list");
 
             var actors = await _actorService.GetAllActorsAsync();
-            return View(actors);
+            return View(actors.ToList());
         }
 
         public IActionResult CreateActor()

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.Helpers;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
@@ -26,18 +27,22 @@ namespace MovizoneApp.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Catalog(string search = "", string genre = "")
+        public async Task<IActionResult> Catalog(string search = "", string genre = "", int page = 1)
         {
-            _logger.LogInformation("Accessing TV series catalog. Search: {Search}, Genre: {Genre}", search, genre);
+            _logger.LogInformation("Accessing TV series catalog. Search: {Search}, Genre: {Genre}, Page: {Page}", search, genre, page);
 
-            var series = await _tvSeriesService.SearchSeriesAsync(search, genre);
+            var allSeries = await _tvSeriesService.SearchSeriesAsync(search, genre);
             var genres = await _tvSeriesService.GetAllGenresAsync();
+
+            // Create paginated list
+            const int pageSize = 12;
+            var paginatedSeries = PaginatedList<TVSeries>.Create(allSeries, page, pageSize);
 
             ViewBag.SearchQuery = search;
             ViewBag.SelectedGenre = genre;
             ViewBag.Genres = genres;
 
-            return View(series);
+            return View(paginatedSeries);
         }
 
         public async Task<IActionResult> Details(int id)
