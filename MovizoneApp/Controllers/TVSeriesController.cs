@@ -37,12 +37,11 @@ namespace MovizoneApp.Controllers
             _logger.LogInformation("Accessing TV series catalog. Search: {Search}, Genre: {Genre}, Page: {Page}", search, genre, page);
 
             var allSeriesDto = await _tvSeriesService.SearchSeriesAsync(search, genre);
-            var allSeries = _mapper.Map<IEnumerable<TVSeries>>(allSeriesDto);
             var genres = await _tvSeriesService.GetAllGenresAsync();
 
             // Create paginated list
             const int pageSize = 12;
-            var paginatedSeries = PaginatedList<TVSeries>.Create(allSeries, page, pageSize);
+            var paginatedSeries = PaginatedList<TVSeriesDto>.Create(allSeriesDto, page, pageSize);
 
             ViewBag.SearchQuery = search;
             ViewBag.SelectedGenre = genre;
@@ -62,12 +61,10 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var series = _mapper.Map<TVSeries>(seriesDto);
-
-            var reviewsDto = await _reviewService.GetReviewsByMovieIdAsync(id);
+            var reviewsDto = await _reviewService.GetReviewsByTVSeriesIdAsync(id);
             var reviews = _mapper.Map<IEnumerable<Review>>(reviewsDto);
-            var averageRating = await _reviewService.GetAverageRatingAsync(id);
-            var reviewCount = await _reviewService.GetReviewCountAsync(id);
+            var averageRating = await _reviewService.GetAverageRatingByTVSeriesIdAsync(id);
+            var reviewCount = await _reviewService.GetReviewCountByTVSeriesIdAsync(id);
             var isInWatchlist = await _watchlistService.IsInWatchlistAsync(1, id); // userId = 1 for demo
 
             ViewBag.Reviews = reviews;
@@ -77,15 +74,14 @@ namespace MovizoneApp.Controllers
 
             // Get similar series based on genre (exclude current series)
             var allSeriesDto = await _tvSeriesService.GetAllSeriesAsync();
-            var allSeries = _mapper.Map<IEnumerable<TVSeries>>(allSeriesDto);
-            var similarSeries = allSeries
-                .Where(s => s.Id != id && s.Genre == series.Genre)
+            var similarSeries = allSeriesDto
+                .Where(s => s.Id != id && s.Genre == seriesDto.Genre)
                 .OrderByDescending(s => s.Rating)
                 .Take(6)
                 .ToList();
             ViewBag.SimilarSeries = similarSeries;
 
-            return View(series);
+            return View(seriesDto);
         }
 
         [HttpPost]
@@ -103,7 +99,7 @@ namespace MovizoneApp.Controllers
             {
                 var createReviewDto = new CreateReviewDto
                 {
-                    MovieId = seriesId, // Using MovieId field for SeriesId
+                    TVSeriesId = seriesId, // Use TVSeriesId for series reviews
                     UserId = 1,
                     Comment = comment,
                     Rating = rating
