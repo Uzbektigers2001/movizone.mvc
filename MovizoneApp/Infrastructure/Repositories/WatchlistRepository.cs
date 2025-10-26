@@ -18,7 +18,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         {
             return await _dbSet
                 .Where(w => w.UserId == userId)
-                .OrderByDescending(w => w.AddedAt)
+                .OrderByDescending(w => w.CreatedAt)
                 .ToListAsync();
         }
 

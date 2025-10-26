@@ -7,6 +7,5 @@ namespace MovizoneApp.Models
     {
         public int UserId { get; set; }
         public int MovieId { get; set; }
-        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
     }
 }
