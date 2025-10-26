@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MovizoneApp.Models;
 
 namespace MovizoneApp.Core.Interfaces
 {
@@ -23,42 +24,42 @@ namespace MovizoneApp.Core.Interfaces
         Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
     }
 
-    public interface IMovieRepository : IRepository<Models.Movie>
+    public interface IMovieRepository : IRepository<Movie>
     {
-        Task<IEnumerable<Models.Movie>> GetFeaturedMoviesAsync();
-        Task<IEnumerable<Models.Movie>> SearchMoviesAsync(string? searchTerm, string? genre);
+        Task<IEnumerable<Movie>> GetFeaturedMoviesAsync();
+        Task<IEnumerable<Movie>> SearchMoviesAsync(string? searchTerm, string? genre);
     }
 
-    public interface ITVSeriesRepository : IRepository<Models.TVSeries>
+    public interface ITVSeriesRepository : IRepository<TVSeries>
     {
-        Task<IEnumerable<Models.TVSeries>> GetFeaturedSeriesAsync();
-        Task<IEnumerable<Models.TVSeries>> SearchSeriesAsync(string? searchTerm, string? genre);
+        Task<IEnumerable<TVSeries>> GetFeaturedSeriesAsync();
+        Task<IEnumerable<TVSeries>> SearchSeriesAsync(string? searchTerm, string? genre);
     }
 
-    public interface IActorRepository : IRepository<Models.Actor>
+    public interface IActorRepository : IRepository<Actor>
     {
-        Task<Models.Actor?> GetActorWithDetailsAsync(int id);
+        Task<Actor?> GetActorWithDetailsAsync(int id);
     }
 
-    public interface IUserRepository : IRepository<Models.User>
+    public interface IUserRepository : IRepository<User>
     {
-        Task<Models.User?> GetByEmailAsync(string email);
+        Task<User?> GetByEmailAsync(string email);
         Task<bool> EmailExistsAsync(string email);
     }
 
-    public interface IReviewRepository : IRepository<Models.Review>
+    public interface IReviewRepository : IRepository<Review>
     {
-        Task<IEnumerable<Models.Review>> GetReviewsByMovieIdAsync(int movieId);
+        Task<IEnumerable<Review>> GetReviewsByMovieIdAsync(int movieId);
         Task<double> GetAverageRatingAsync(int movieId);
     }
 
-    public interface IWatchlistRepository : IRepository<Models.WatchlistItem>
+    public interface IWatchlistRepository : IRepository<WatchlistItem>
     {
-        Task<IEnumerable<Models.WatchlistItem>> GetUserWatchlistAsync(int userId);
+        Task<IEnumerable<WatchlistItem>> GetUserWatchlistAsync(int userId);
         Task<bool> IsInWatchlistAsync(int userId, int movieId);
     }
 
-    public interface IPricingPlanRepository : IRepository<Models.PricingPlan>
+    public interface IPricingPlanRepository : IRepository<PricingPlan>
     {
     }
 }
