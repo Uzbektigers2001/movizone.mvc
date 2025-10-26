@@ -36,12 +36,11 @@ namespace MovizoneApp.Controllers
             _logger.LogInformation("Accessing movie catalog. Search: {Search}, Genre: {Genre}, Page: {Page}", search, genre, page);
 
             var allMoviesDto = await _movieService.SearchMoviesAsync(search, genre);
-            var allMovies = _mapper.Map<IEnumerable<Movie>>(allMoviesDto);
             var genres = await _movieService.GetAllGenresAsync();
 
             // Create paginated list
             const int pageSize = 12;
-            var paginatedMovies = PaginatedList<Movie>.Create(allMovies, page, pageSize);
+            var paginatedMovies = PaginatedList<MovieDto>.Create(allMoviesDto, page, pageSize);
 
             ViewBag.SearchQuery = search;
             ViewBag.SelectedGenre = genre;
@@ -61,8 +60,6 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var movie = _mapper.Map<Movie>(movieDto);
-
             var reviewsDto = await _reviewService.GetReviewsByMovieIdAsync(id);
             var reviews = _mapper.Map<IEnumerable<Review>>(reviewsDto);
             var averageRating = await _reviewService.GetAverageRatingAsync(id);
@@ -76,15 +73,14 @@ namespace MovizoneApp.Controllers
 
             // Get similar movies based on genre (exclude current movie)
             var allMoviesDto = await _movieService.GetAllMoviesAsync();
-            var allMovies = _mapper.Map<IEnumerable<Movie>>(allMoviesDto);
-            var similarMovies = allMovies
-                .Where(m => m.Id != id && m.Genre == movie.Genre)
+            var similarMovies = allMoviesDto
+                .Where(m => m.Id != id && m.Genre == movieDto.Genre)
                 .OrderByDescending(m => m.Rating)
                 .Take(6)
                 .ToList();
             ViewBag.SimilarMovies = similarMovies;
 
-            return View(movie);
+            return View(movieDto);
         }
 
         [HttpPost]

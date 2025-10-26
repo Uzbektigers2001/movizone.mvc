@@ -48,7 +48,8 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.TotalSeasons, opt => opt.MapFrom(src => src.Seasons))
                 .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator))
                 .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
-                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.Actor.Name).ToList()));
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.Actor.Name).ToList()))
+                .ForMember(dest => dest.Episodes, opt => opt.MapFrom(src => src.Episodes));
             CreateMap<TVSeriesDto, TVSeries>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Seasons, opt => opt.MapFrom(src => src.TotalSeasons))

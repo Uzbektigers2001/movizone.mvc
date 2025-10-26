@@ -24,6 +24,7 @@ namespace MovizoneApp.DTOs
         public int TotalSeasons { get; set; }
         public int Seasons { get; set; } // Alias for TotalSeasons
         public int TotalEpisodes { get; set; }
+        public List<EpisodeDto> Episodes { get; set; } = new List<EpisodeDto>();
         public string Status { get; set; } = string.Empty;
         public string Creator { get; set; } = string.Empty;
         public DateTime? FirstAired { get; set; }

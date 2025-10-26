@@ -1,7 +1,7 @@
-@model MovizoneApp.Models.TVSeries
+@model MovizoneApp.DTOs.TVSeriesDto
 @{
     ViewData["Title"] = Model.Title;
-    var seasons = Model.Episodes.GroupBy(e => e.SeasonNumber).OrderBy(g => g.Key).ToList();
+    // Episodes are not included in DTO for performance, will need to fetch separately if needed
 }
 
 <!-- details -->
