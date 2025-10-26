@@ -150,6 +150,14 @@ namespace MovizoneApp.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
+            // Validate required fields
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Movie creation failed - ModelState invalid");
+                TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(movie);
+            }
+
             // Handle cover image upload
             if (coverFile != null && coverFile.Length > 0)
             {
@@ -268,6 +276,14 @@ namespace MovizoneApp.Controllers
         public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
+
+            // Validate required fields
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Movie update failed - ModelState invalid for ID: {MovieId}", movie.Id);
+                TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(movie);
+            }
 
             // Handle cover file upload
             if (coverFile != null && coverFile.Length > 0)
@@ -402,6 +418,14 @@ namespace MovizoneApp.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
+            // Validate required fields
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("TV series creation failed - ModelState invalid");
+                TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(series);
+            }
+
             if (coverFile != null && coverFile.Length > 0)
             {
                 var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
@@ -497,6 +521,14 @@ namespace MovizoneApp.Controllers
         public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
+
+            // Validate required fields
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("TV series update failed - ModelState invalid for ID: {SeriesId}", series.Id);
+                TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(series);
+            }
 
             if (coverFile != null && coverFile.Length > 0)
             {
