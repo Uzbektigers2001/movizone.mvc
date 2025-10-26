@@ -73,6 +73,10 @@ namespace MovizoneApp.DTOs
         [MaxLength(200)]
         public string Email { get; set; } = string.Empty;
 
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+        [MaxLength(100)]
+        public string Password { get; set; } = string.Empty; // Optional - only if changing password
+
         [MaxLength(50)]
         public string Role { get; set; } = "User";
 
@@ -80,6 +84,13 @@ namespace MovizoneApp.DTOs
         public string SubscriptionType { get; set; } = "Free";
 
         public DateTime? SubscriptionExpiry { get; set; }
+
+        [MaxLength(500)]
+        public string Avatar { get; set; } = string.Empty;
+
+        public bool IsActive { get; set; } = true;
+
+        public DateTime CreatedAt { get; set; }
     }
 
     /// <summary>

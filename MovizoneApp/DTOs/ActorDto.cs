@@ -42,10 +42,16 @@ namespace MovizoneApp.DTOs
         [MaxLength(2000)]
         public string Biography { get; set; } = string.Empty;
 
+        [MaxLength(2000)]
+        public string Bio { get; set; } = string.Empty; // Alias for Biography
+
         public DateTime? BirthDate { get; set; }
 
         [MaxLength(100)]
         public string Nationality { get; set; } = string.Empty;
+
+        [MaxLength(100)]
+        public string Country { get; set; } = string.Empty; // Alias for Nationality
 
         [MaxLength(500)]
         public string Photo { get; set; } = string.Empty;
@@ -69,10 +75,16 @@ namespace MovizoneApp.DTOs
         [MaxLength(2000)]
         public string Biography { get; set; } = string.Empty;
 
+        [MaxLength(2000)]
+        public string Bio { get; set; } = string.Empty; // Alias for Biography
+
         public DateTime? BirthDate { get; set; }
 
         [MaxLength(100)]
         public string Nationality { get; set; } = string.Empty;
+
+        [MaxLength(100)]
+        public string Country { get; set; } = string.Empty; // Alias for Nationality
 
         [MaxLength(500)]
         public string Photo { get; set; } = string.Empty;
