@@ -1,6 +1,8 @@
+using MovizoneApp.Core.Models;
+
 namespace MovizoneApp.Models
 {
-    public class SiteSettings
+    public class SiteSettings : BaseAuditableEntity
     {
         // Banner/Hero Section
         public bool ShowHeroBanner { get; set; } = true;

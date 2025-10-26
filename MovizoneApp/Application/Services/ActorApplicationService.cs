@@ -136,6 +136,9 @@ namespace MovizoneApp.Application.Services
 
             // Soft delete
             actor.IsDeleted = true;
+            actor.DeletedAt = DateTime.UtcNow;
+            // TODO: Set DeletedBy from current user context when authentication is available
+            // entity.DeletedBy = currentUserId;
             actor.UpdatedAt = DateTime.UtcNow;
             await _actorRepository.UpdateAsync(actor);
 

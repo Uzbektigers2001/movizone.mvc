@@ -143,6 +143,9 @@ namespace MovizoneApp.Application.Services
 
             // Soft delete
             series.IsDeleted = true;
+            series.DeletedAt = DateTime.UtcNow;
+            // TODO: Set DeletedBy from current user context when authentication is available
+            // entity.DeletedBy = currentUserId;
             series.UpdatedAt = DateTime.UtcNow;
             await _seriesRepository.UpdateAsync(series);
 

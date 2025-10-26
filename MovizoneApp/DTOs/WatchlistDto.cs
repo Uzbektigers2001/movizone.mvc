@@ -16,6 +16,17 @@ namespace MovizoneApp.DTOs
         public string MovieGenre { get; set; } = string.Empty;
         public double MovieRating { get; set; }
         public DateTime AddedAt { get; set; }
+
+        // Audit fields
+        public DateTime CreatedAt { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+
+        // Soft delete fields (for admin visibility)
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public int? DeletedBy { get; set; }
     }
 
     /// <summary>

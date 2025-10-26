@@ -1,8 +1,10 @@
+using System;
+using MovizoneApp.Core.Models;
+
 namespace MovizoneApp.Models
 {
-    public class Episode
+    public class Episode : BaseAuditableEntity
     {
-        public int Id { get; set; }
         public int TVSeriesId { get; set; }
         public int SeasonNumber { get; set; }
         public int EpisodeNumber { get; set; }
