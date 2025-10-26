@@ -11,12 +11,14 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IMovieService _movieService;
     private readonly ITVSeriesService _tvSeriesService;
+    private readonly ISiteSettingsService _settingsService;
 
-    public HomeController(ILogger<HomeController> logger, IMovieService movieService, ITVSeriesService tvSeriesService)
+    public HomeController(ILogger<HomeController> logger, IMovieService movieService, ITVSeriesService tvSeriesService, ISiteSettingsService settingsService)
     {
         _logger = logger;
         _movieService = movieService;
         _tvSeriesService = tvSeriesService;
+        _settingsService = settingsService;
     }
 
     public IActionResult Index(int page = 1)
@@ -113,6 +115,9 @@ public class HomeController : Controller
         ViewBag.RecentlyUpdatedAll = recentlyUpdatedAll;
         ViewBag.RecentlyUpdatedMovies = recentlyUpdatedMovies;
         ViewBag.RecentlyUpdatedSeries = recentlyUpdatedSeries;
+
+        // Site Settings
+        ViewBag.SiteSettings = _settingsService.GetSettings();
 
         return View();
     }

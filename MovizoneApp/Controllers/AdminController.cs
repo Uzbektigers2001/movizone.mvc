@@ -17,19 +17,22 @@ namespace MovizoneApp.Controllers
         private readonly IEpisodeService _episodeService;
         private readonly IUserService _userService;
         private readonly IActorService _actorService;
+        private readonly ISiteSettingsService _settingsService;
 
         public AdminController(
             IMovieService movieService,
             ITVSeriesService seriesService,
             IEpisodeService episodeService,
             IUserService userService,
-            IActorService actorService)
+            IActorService actorService,
+            ISiteSettingsService settingsService)
         {
             _movieService = movieService;
             _seriesService = seriesService;
             _episodeService = episodeService;
             _userService = userService;
             _actorService = actorService;
+            _settingsService = settingsService;
         }
 
         private bool IsAdmin()
@@ -786,6 +789,25 @@ namespace MovizoneApp.Controllers
 
             _episodeService.DeleteEpisode(id);
             return RedirectToAction("Episodes", new { seriesId = seriesId });
+        }
+
+        // Site Settings Management
+        public IActionResult Settings()
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            var settings = _settingsService.GetSettings();
+            return View(settings);
+        }
+
+        [HttpPost]
+        public IActionResult Settings(SiteSettings settings)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            _settingsService.UpdateSettings(settings);
+            TempData["Success"] = "Settings updated successfully!";
+            return RedirectToAction("Settings");
         }
     }
 }

@@ -26,6 +26,7 @@ builder.Services.AddSingleton<IPricingService, PricingService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IReviewService, ReviewService>();
 builder.Services.AddSingleton<IWatchlistService, WatchlistService>();
+builder.Services.AddSingleton<ISiteSettingsService, SiteSettingsService>();
 
 var app = builder.Build();
 
