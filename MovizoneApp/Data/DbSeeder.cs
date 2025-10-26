@@ -65,6 +65,24 @@ namespace MovizoneApp.Data
                     await _context.SaveChangesAsync();
                 }
 
+                // Seed MovieActors relationships
+                if (!await _context.MovieActors.AnyAsync())
+                {
+                    _logger.LogInformation("Seeding movie-actor relationships...");
+                    var movieActors = GetSeedMovieActors();
+                    await _context.MovieActors.AddRangeAsync(movieActors);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Seed TVSeriesActors relationships
+                if (!await _context.TVSeriesActors.AnyAsync())
+                {
+                    _logger.LogInformation("Seeding series-actor relationships...");
+                    var seriesActors = GetSeedTVSeriesActors();
+                    await _context.TVSeriesActors.AddRangeAsync(seriesActors);
+                    await _context.SaveChangesAsync();
+                }
+
                 // Seed Pricing Plans
                 if (!await _context.PricingPlans.AnyAsync())
                 {
@@ -124,7 +142,6 @@ namespace MovizoneApp.Data
                     Director = "Frank Darabont",
                     CoverImage = "/img/covers/cover1.jpg",
                     VideoUrl = "https://example.com/video1.mp4",
-                    Actors = new List<string> { "Tim Robbins", "Morgan Freeman" },
                     IsFeatured = true,
                     ReleaseDate = new DateTime(1994, 9, 23)
                 },
@@ -140,7 +157,6 @@ namespace MovizoneApp.Data
                     Director = "Francis Ford Coppola",
                     CoverImage = "/img/covers/cover2.jpg",
                     VideoUrl = "https://example.com/video2.mp4",
-                    Actors = new List<string> { "Marlon Brando", "Al Pacino" },
                     IsFeatured = true,
                     ReleaseDate = new DateTime(1972, 3, 24)
                 },
@@ -156,7 +172,6 @@ namespace MovizoneApp.Data
                     Director = "Christopher Nolan",
                     CoverImage = "/img/covers/cover3.jpg",
                     VideoUrl = "https://example.com/video3.mp4",
-                    Actors = new List<string> { "Christian Bale", "Heath Ledger" },
                     IsFeatured = true,
                     ReleaseDate = new DateTime(2008, 7, 18)
                 },
@@ -172,7 +187,6 @@ namespace MovizoneApp.Data
                     Director = "Christopher Nolan",
                     CoverImage = "/img/covers/cover4.jpg",
                     VideoUrl = "https://example.com/video4.mp4",
-                    Actors = new List<string> { "Leonardo DiCaprio", "Marion Cotillard" },
                     IsFeatured = false,
                     ReleaseDate = new DateTime(2010, 7, 16)
                 }
@@ -195,7 +209,6 @@ namespace MovizoneApp.Data
                     Country = "USA",
                     Creator = "Vince Gilligan",
                     CoverImage = "/img/covers/cover5.jpg",
-                    Actors = new List<string> { "Bryan Cranston", "Aaron Paul" },
                     IsFeatured = true,
                     FirstAired = new DateTime(2008, 1, 20),
                     Status = "Completed"
@@ -212,7 +225,6 @@ namespace MovizoneApp.Data
                     Country = "USA",
                     Creator = "David Benioff, D.B. Weiss",
                     CoverImage = "/img/covers/cover6.jpg",
-                    Actors = new List<string> { "Emilia Clarke", "Kit Harington" },
                     IsFeatured = true,
                     FirstAired = new DateTime(2011, 4, 17),
                     Status = "Completed"
@@ -230,9 +242,7 @@ namespace MovizoneApp.Data
                     Bio = "American actor and film producer known for his work in biographical and period films.",
                     BirthDate = new DateTime(1974, 11, 11),
                     Country = "USA",
-                    Photo = "/img/covers/actor.jpg",
-                    Movies = new List<string> { "Inception", "Titanic", "The Wolf of Wall Street" },
-                    TVSeries = new List<string>()
+                    Photo = "/img/covers/actor.jpg"
                 },
                 new Actor
                 {
@@ -240,9 +250,39 @@ namespace MovizoneApp.Data
                     Bio = "American actor, director, and producer best known for portraying Walter White in Breaking Bad.",
                     BirthDate = new DateTime(1956, 3, 7),
                     Country = "USA",
-                    Photo = "/img/covers/actor.jpg",
-                    Movies = new List<string> { "Trumbo", "Argo" },
-                    TVSeries = new List<string> { "Breaking Bad", "Malcolm in the Middle" }
+                    Photo = "/img/covers/actor.jpg"
+                },
+                new Actor
+                {
+                    Name = "Christian Bale",
+                    Bio = "English actor known for his versatility and intensive method acting.",
+                    BirthDate = new DateTime(1974, 1, 30),
+                    Country = "UK",
+                    Photo = "/img/covers/actor.jpg"
+                },
+                new Actor
+                {
+                    Name = "Tim Robbins",
+                    Bio = "American actor, screenwriter, director, and producer.",
+                    BirthDate = new DateTime(1958, 10, 16),
+                    Country = "USA",
+                    Photo = "/img/covers/actor.jpg"
+                },
+                new Actor
+                {
+                    Name = "Morgan Freeman",
+                    Bio = "American actor and film narrator known for his distinctive deep voice.",
+                    BirthDate = new DateTime(1937, 6, 1),
+                    Country = "USA",
+                    Photo = "/img/covers/actor.jpg"
+                },
+                new Actor
+                {
+                    Name = "Aaron Paul",
+                    Bio = "American actor best known for his role as Jesse Pinkman in Breaking Bad.",
+                    BirthDate = new DateTime(1979, 8, 27),
+                    Country = "USA",
+                    Photo = "/img/covers/actor.jpg"
                 }
             };
         }
@@ -275,6 +315,36 @@ namespace MovizoneApp.Data
                     Features = new List<string> { "4K Ultra HD", "Watch on 4 devices", "Full content library", "Download content", "Priority support" },
                     IsPopular = false
                 }
+            };
+        }
+
+        private List<MovieActor> GetSeedMovieActors()
+        {
+            // Note: These use hardcoded IDs which will match seeded data
+            // In InMemory database, IDs start from 1
+            return new List<MovieActor>
+            {
+                // The Shawshank Redemption (MovieId = 1)
+                new MovieActor { MovieId = 1, ActorId = 4, Role = "Andy Dufresne", DisplayOrder = 1 }, // Tim Robbins
+                new MovieActor { MovieId = 1, ActorId = 5, Role = "Ellis Boyd 'Red' Redding", DisplayOrder = 2 }, // Morgan Freeman
+
+                // Inception (MovieId = 4)
+                new MovieActor { MovieId = 4, ActorId = 1, Role = "Dom Cobb", DisplayOrder = 1 }, // Leonardo DiCaprio
+
+                // The Dark Knight (MovieId = 3)
+                new MovieActor { MovieId = 3, ActorId = 3, Role = "Bruce Wayne / Batman", DisplayOrder = 1 } // Christian Bale
+            };
+        }
+
+        private List<TVSeriesActor> GetSeedTVSeriesActors()
+        {
+            // Note: These use hardcoded IDs which will match seeded data
+            // In InMemory database, IDs start from 1
+            return new List<TVSeriesActor>
+            {
+                // Breaking Bad (TVSeriesId = 1)
+                new TVSeriesActor { TVSeriesId = 1, ActorId = 2, Role = "Walter White", DisplayOrder = 1 }, // Bryan Cranston
+                new TVSeriesActor { TVSeriesId = 1, ActorId = 6, Role = "Jesse Pinkman", DisplayOrder = 2 }  // Aaron Paul
             };
         }
     }
