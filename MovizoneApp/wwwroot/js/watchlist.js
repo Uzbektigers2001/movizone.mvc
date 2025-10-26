@@ -16,7 +16,20 @@
 
     // Save watchlist to localStorage
     function saveWatchlist(watchlist) {
-        localStorage.setItem('movizone_watchlist', JSON.stringify(watchlist));
+        // Filter out invalid entries before saving
+        const validWatchlist = watchlist.filter(item => item.id && !isNaN(item.id));
+        localStorage.setItem('movizone_watchlist', JSON.stringify(validWatchlist));
+    }
+
+    // Clean watchlist - remove invalid entries
+    function cleanWatchlist() {
+        const watchlist = getWatchlist();
+        const validWatchlist = watchlist.filter(item => item.id && !isNaN(item.id));
+        if (validWatchlist.length !== watchlist.length) {
+            saveWatchlist(validWatchlist);
+            console.log(`Cleaned watchlist: removed ${watchlist.length - validWatchlist.length} invalid items`);
+        }
+        return validWatchlist;
     }
 
     // Check if item is in watchlist
@@ -27,10 +40,16 @@
 
     // Add to watchlist
     function addToWatchlist(id, type, title, coverImage, rating, year, genre) {
+        // Validate ID
+        if (!id || id === 'null' || id === 'undefined' || isNaN(id)) {
+            console.warn('Invalid ID for watchlist:', id);
+            return false;
+        }
+
         const watchlist = getWatchlist();
         if (!isInWatchlist(id, type)) {
             watchlist.push({
-                id,
+                id: parseInt(id), // Ensure ID is a number
                 type,
                 title,
                 coverImage,
@@ -75,31 +94,30 @@
             const watchlist = getWatchlist();
             // Get full details from watchlist for favorite items
             items = watchlist.filter(item =>
+                item.id && !isNaN(item.id) && // Filter out null/invalid IDs
                 favorites.some(fav => fav.id === item.id && fav.type === item.type)
             );
         } else {
-            items = getWatchlist();
+            items = getWatchlist().filter(item => item.id && !isNaN(item.id)); // Filter out null/invalid IDs
         }
 
         if (items.length === 0) {
-            const iconClass = isFavoritesPage ? 'ti-heart' : 'ti-bookmark';
+            const iconClass = isFavoritesPage ? 'ti-heart-off' : 'ti-bookmark-off';
             const title = isFavoritesPage ? 'favorites' : 'watchlist';
-            const browseBtns = `
-                <div class="text-center mt-4">
-                    <a href="/Movie/Catalog" class="btn btn-primary me-2">
-                        <i class="ti ti-movie"></i> Browse Movies
-                    </a>
-                    <a href="/TVSeries/Catalog" class="btn btn-primary">
-                        <i class="ti ti-device-tv"></i> Browse TV Series
-                    </a>
-                </div>
-            `;
             container.innerHTML = `
                 <div class="col-12">
-                    <div class="alert alert-info">
-                        <i class="ti ${iconClass}"></i> You haven't added any ${title} yet. Start adding movies and TV series you love!
+                    <div class="reviews__empty">
+                        <i class="${iconClass}"></i>
+                        <p>You haven't added any ${title} yet. Start adding movies and TV series you love!</p>
+                        <div class="mt-4">
+                            <a href="/Movie/Catalog" class="btn btn-primary me-2">
+                                <i class="ti ti-movie"></i> Browse Movies
+                            </a>
+                            <a href="/TVSeries/Catalog" class="btn btn-primary">
+                                <i class="ti ti-device-tv"></i> Browse TV Series
+                            </a>
+                        </div>
                     </div>
-                    ${browseBtns}
                 </div>
             `;
             return;
@@ -110,52 +128,35 @@
                 ? `/Movie/Details/${item.id}`
                 : `/TVSeries/Details/${item.id}`;
 
-            const badgeIcon = isFavoritesPage ? 'ti-heart-filled' : 'ti-bookmark-filled';
-            const badgeText = isFavoritesPage ? 'Favorite' : 'Watchlist';
+            const ratingClass = item.rating >= 8 ? 'item__rate--green' : item.rating >= 6 ? 'item__rate--yellow' : 'item__rate--red';
             const removeIcon = isFavoritesPage ? 'ti-heart-minus' : 'ti-bookmark-minus';
             const removeText = isFavoritesPage ? 'Remove from Favorites' : 'Remove from Watchlist';
 
-            const addedDate = new Date(item.addedAt).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            });
-
             return `
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="card bg-dark h-100 border-secondary">
-                        <div class="position-relative">
-                            <img src="${item.coverImage || '/images/placeholder.jpg'}"
-                                 class="card-img-top"
-                                 alt="${item.title}"
-                                 style="height: 350px; object-fit: cover;">
-                            <span class="position-absolute top-0 end-0 m-2 badge bg-danger">
-                                <i class="ti ${badgeIcon}"></i> ${badgeText}
-                            </span>
+                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                    <div class="item">
+                        <div class="item__cover">
+                            <img src="${item.coverImage || '/images/placeholder.jpg'}" alt="${item.title}">
+                            <a href="${detailsUrl}" class="item__play">
+                                <i class="ti ti-player-play-filled"></i>
+                            </a>
+                            <span class="item__rate ${ratingClass}">${item.rating || 'N/A'}</span>
+                            <button type="button"
+                                    class="item__favorite item__favorite--active remove-item-btn"
+                                    data-id="${item.id}"
+                                    data-type="${item.type}"
+                                    data-is-favorites="${isFavoritesPage}"
+                                    title="${removeText}">
+                                <i class="ti ti-bookmark-filled"></i>
+                            </button>
                         </div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">${item.title}</h5>
-                            <div class="mb-2">
-                                <span class="item__rate--green me-2">${item.rating || 'N/A'}</span>
-                                <span class="text-muted">${item.year || ''}</span>
-                                <span class="badge bg-info ms-2">${item.type === 'movie' ? 'Movie' : 'TV Series'}</span>
-                            </div>
-                            <p class="text-muted mb-2">
-                                <small><i class="ti ti-clock"></i> Added: ${addedDate}</small>
-                            </p>
-                            <p class="text-muted mb-3">${item.genre || ''}</p>
-                            <div class="mt-auto">
-                                <a href="${detailsUrl}" class="btn btn-primary btn-sm w-100 mb-2">
-                                    <i class="ti ti-eye"></i> View Details
-                                </a>
-                                <button type="button"
-                                        class="btn btn-outline-danger btn-sm w-100 remove-item-btn"
-                                        data-id="${item.id}"
-                                        data-type="${item.type}"
-                                        data-is-favorites="${isFavoritesPage}">
-                                    <i class="ti ${removeIcon}"></i> ${removeText}
-                                </button>
-                            </div>
+                        <div class="item__content">
+                            <h3 class="item__title">
+                                <a href="${detailsUrl}">${item.title}</a>
+                            </h3>
+                            <span class="item__category">
+                                <a href="#">${item.genre || 'N/A'}</a>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -279,6 +280,9 @@
 
     // Initialize watchlist page
     function initWatchlistPage() {
+        // Clean up watchlist on initialization
+        cleanWatchlist();
+
         const watchlistContainer = document.querySelector('#watchlist-items-container');
         const favoritesContainer = document.querySelector('#favorites-items-container');
 
@@ -308,6 +312,7 @@
         remove: removeFromWatchlist,
         toggle: toggleWatchlist,
         isInWatchlist: isInWatchlist,
-        render: renderWatchlistItems
+        render: renderWatchlistItems,
+        clean: cleanWatchlist
     };
 })();
