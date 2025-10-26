@@ -165,7 +165,16 @@
                             <i class="ti ti-player-play-filled"></i>
                         </a>
                         <span class="item__rate @ratingClass">@movie.Rating</span>
-                        <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title">
+                        <button class="item__favorite"
+                                type="button"
+                                title="Add to watchlist"
+                                data-id="@movie.Id"
+                                data-type="movie"
+                                data-title="@movie.Title"
+                                data-cover-image="@movie.CoverImage"
+                                data-rating="@movie.Rating"
+                                data-year="@movie.Year"
+                                data-genre="@movie.Genre">
                             <i class="ti ti-bookmark"></i>
                         </button>
                     </div>
@@ -249,7 +258,16 @@
                             <i class="ti ti-player-play-filled"></i>
                         </a>
                         <span class="item__rate @ratingClass">@movie.Rating</span>
-                        <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title">
+                        <button class="item__favorite"
+                                type="button"
+                                title="Add to watchlist"
+                                data-id="@movie.Id"
+                                data-type="movie"
+                                data-title="@movie.Title"
+                                data-cover-image="@movie.CoverImage"
+                                data-rating="@movie.Rating"
+                                data-year="@movie.Year"
+                                data-genre="@movie.Genre">
                             <i class="ti ti-bookmark"></i>
                         </button>
                     </div>
@@ -320,7 +338,18 @@
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <span class="item__rate @ratingClass">@item.Rating.ToString("0.0")</span>
-                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@item.Id" data-type="@item.Type" data-title="@item.Title"><i class="ti ti-bookmark"></i></button>
+                                <button class="item__favorite"
+                                        type="button"
+                                        title="Add to watchlist"
+                                        data-id="@item.Id"
+                                        data-type="@item.Type"
+                                        data-title="@item.Title"
+                                        data-cover-image="@item.CoverImage"
+                                        data-rating="@item.Rating"
+                                        data-year="@item.Date.Year"
+                                        data-genre="@item.Genre">
+                                    <i class="ti ti-bookmark"></i>
+                                </button>
                             </div>
                             <div class="item__content">
                                 <h3 class="item__title">
@@ -394,7 +423,18 @@
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <span class="item__rate @ratingClass">@series.Rating.ToString("0.0")</span>
-                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@series.Id" data-type="series" data-title="@series.Title"><i class="ti ti-bookmark"></i></button>
+                                <button class="item__favorite"
+                                        type="button"
+                                        title="Add to watchlist"
+                                        data-id="@series.Id"
+                                        data-type="series"
+                                        data-title="@series.Title"
+                                        data-cover-image="@series.CoverImage"
+                                        data-rating="@series.Rating"
+                                        data-year="@series.Year"
+                                        data-genre="@series.Genre">
+                                    <i class="ti ti-bookmark"></i>
+                                </button>
                             </div>
                             <div class="item__content">
                                 <h3 class="item__title">

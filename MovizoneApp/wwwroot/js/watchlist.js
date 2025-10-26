@@ -221,6 +221,62 @@
         }, 3000);
     }
 
+    // Update button UI
+    function updateWatchlistButtonUI(button, isInWatchlist) {
+        const icon = button.querySelector('i');
+        if (isInWatchlist) {
+            button.classList.add('item__favorite--active');
+            if (icon) {
+                icon.classList.remove('ti-bookmark');
+                icon.classList.add('ti-bookmark-filled');
+            }
+            button.setAttribute('title', 'Remove from watchlist');
+        } else {
+            button.classList.remove('item__favorite--active');
+            if (icon) {
+                icon.classList.remove('ti-bookmark-filled');
+                icon.classList.add('ti-bookmark');
+            }
+            button.setAttribute('title', 'Add to watchlist');
+        }
+    }
+
+    // Initialize watchlist buttons on catalog and details pages
+    function initWatchlistButtons() {
+        document.querySelectorAll('.item__favorite').forEach(button => {
+            const id = parseInt(button.dataset.id);
+            const type = button.dataset.type || 'movie'; // 'movie' or 'series'
+            const title = button.dataset.title || '';
+            const coverImage = button.dataset.coverImage || button.dataset.cover || '';
+            const rating = button.dataset.rating || 'N/A';
+            const year = button.dataset.year || '';
+            const genre = button.dataset.genre || '';
+
+            if (!id) return; // Skip if no ID
+
+            // Set initial state
+            if (isInWatchlist(id, type)) {
+                updateWatchlistButtonUI(button, true);
+            }
+
+            // Add click handler
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isNowInWatchlist = toggleWatchlist(id, type, title, coverImage, rating, year, genre);
+                updateWatchlistButtonUI(button, isNowInWatchlist);
+
+                // Show toast notification
+                const message = isNowInWatchlist
+                    ? `Added "${title}" to watchlist`
+                    : `Removed "${title}" from watchlist`;
+
+                showToast(message);
+            });
+        });
+    }
+
     // Initialize watchlist page
     function initWatchlistPage() {
         const watchlistContainer = document.querySelector('#watchlist-items-container');
@@ -233,6 +289,9 @@
         if (favoritesContainer) {
             renderWatchlistItems('#favorites-items-container', true);
         }
+
+        // Initialize watchlist buttons on any page
+        initWatchlistButtons();
     }
 
     // Initialize when DOM is ready
