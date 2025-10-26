@@ -28,8 +28,8 @@
                     <div class="form-check form-switch mb-3">
                         <input asp-for="ShowHeroBanner" class="form-check-input" type="checkbox" id="showHeroBanner">
                         <label class="form-check-label" for="showHeroBanner">
-                            <strong>Show Hero Banner</strong><br>
-                            <small class="text-muted">Display the main banner/carousel on the home page</small>
+                            <strong>@Localizer.GetString("Admin", "ShowHeroBanner")</strong><br>
+                            <small class="text-muted">@Localizer.GetString("Admin", "DisplayMainBanner")</small>
                         </label>
                     </div>
                 </div>
@@ -46,32 +46,32 @@
                     <div class="form-check form-switch mb-3">
                         <input asp-for="ShowCatalogSection" class="form-check-input" type="checkbox" id="showCatalog">
                         <label class="form-check-label" for="showCatalog">
-                            <strong>Show Catalog Section</strong><br>
-                            <small class="text-muted">Display the main catalog grid on home page</small>
+                            <strong>@Localizer.GetString("Admin", "ShowCatalogSection")</strong><br>
+                            <small class="text-muted">@Localizer.GetString("Admin", "DisplayCatalogGrid")</small>
                         </label>
                     </div>
 
                     <div class="form-check form-switch mb-3">
                         <input asp-for="ShowExpectedPremiere" class="form-check-input" type="checkbox" id="showPremiere">
                         <label class="form-check-label" for="showPremiere">
-                            <strong>Show Expected Premiere</strong><br>
-                            <small class="text-muted">Display expected premiere section</small>
+                            <strong>@Localizer.GetString("Admin", "ShowExpectedPremiere")</strong><br>
+                            <small class="text-muted">@Localizer.GetString("Admin", "DisplayExpectedPremiere")</small>
                         </label>
                     </div>
 
                     <div class="form-check form-switch mb-3">
                         <input asp-for="ShowRecentlyUpdated" class="form-check-input" type="checkbox" id="showRecent">
                         <label class="form-check-label" for="showRecent">
-                            <strong>Show Recently Updated</strong><br>
-                            <small class="text-muted">Display recently updated section with tabs</small>
+                            <strong>@Localizer.GetString("Admin", "ShowRecentlyUpdated")</strong><br>
+                            <small class="text-muted">@Localizer.GetString("Admin", "DisplayRecentlyUpdated")</small>
                         </label>
                     </div>
 
                     <div class="form-check form-switch">
                         <input asp-for="ShowPricingPlans" class="form-check-input" type="checkbox" id="showPricing">
                         <label class="form-check-label" for="showPricing">
-                            <strong>Show Pricing Plans</strong><br>
-                            <small class="text-muted">Display pricing plans section</small>
+                            <strong>@Localizer.GetString("Admin", "ShowPricingPlans")</strong><br>
+                            <small class="text-muted">@Localizer.GetString("Admin", "DisplayPricingPlans")</small>
                         </label>
                     </div>
                 </div>
@@ -85,14 +85,14 @@
                     <h5 class="mb-0"><i class="ti ti-menu"></i> Navigation Menu Items</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-3">Control which items appear in the main navigation menu</p>
+                    <p class="text-muted mb-3">@Localizer.GetString("Admin", "ControlMenuItems")</p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowHomeInNav" class="form-check-input" type="checkbox" id="showHomeNav">
                                 <label class="form-check-label" for="showHomeNav">
-                                    <strong>Show Home</strong><br>
-                                    <small class="text-muted">Link to home page</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowHome")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "LinkToHomePage")</small>
                                 </label>
                             </div>
                         </div>
@@ -100,8 +100,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowMoviesInNav" class="form-check-input" type="checkbox" id="showMoviesNav">
                                 <label class="form-check-label" for="showMoviesNav">
-                                    <strong>Show Movies</strong><br>
-                                    <small class="text-muted">Movies catalog link</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowMovies")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "MoviesCatalogLink")</small>
                                 </label>
                             </div>
                         </div>
@@ -109,8 +109,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowTVSeriesInNav" class="form-check-input" type="checkbox" id="showSeriesNav">
                                 <label class="form-check-label" for="showSeriesNav">
-                                    <strong>Show TV Series</strong><br>
-                                    <small class="text-muted">TV series catalog link</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowTVSeries")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "TVSeriesCatalogLink")</small>
                                 </label>
                             </div>
                         </div>
@@ -118,8 +118,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowActorsInNav" class="form-check-input" type="checkbox" id="showActorsNav">
                                 <label class="form-check-label" for="showActorsNav">
-                                    <strong>Show Actors</strong><br>
-                                    <small class="text-muted">Actors list link</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowActors")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "ActorsListLink")</small>
                                 </label>
                             </div>
                         </div>
@@ -127,8 +127,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowPricingPlanInNav" class="form-check-input" type="checkbox" id="showPricingNav">
                                 <label class="form-check-label" for="showPricingNav">
-                                    <strong>Show Pricing Plan</strong><br>
-                                    <small class="text-muted">Pricing plans page</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowPricingPlan")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "PricingPlansPage")</small>
                                 </label>
                             </div>
                         </div>
@@ -136,8 +136,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowPagesInNav" class="form-check-input" type="checkbox" id="showPagesNav">
                                 <label class="form-check-label" for="showPagesNav">
-                                    <strong>Show Pages</strong><br>
-                                    <small class="text-muted">Pages dropdown menu</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowPages")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "PagesDropdownMenu")</small>
                                 </label>
                             </div>
                         </div>
@@ -145,8 +145,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowMoreMenuInNav" class="form-check-input" type="checkbox" id="showMoreNav">
                                 <label class="form-check-label" for="showMoreNav">
-                                    <strong>Show More Menu (...)</strong><br>
-                                    <small class="text-muted">Three dots menu (Watchlist, Favorites, Auth)</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowMoreMenu")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "ThreeDotsMenu")</small>
                                 </label>
                             </div>
                         </div>
@@ -162,14 +162,14 @@
                     <h5 class="mb-0"><i class="ti ti-user"></i> Authentication Elements</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-3">Control authentication-related UI elements</p>
+                    <p class="text-muted mb-3">@Localizer.GetString("Admin", "ControlAuthElements")</p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowSignInButton" class="form-check-input" type="checkbox" id="showSignInButton">
                                 <label class="form-check-label" for="showSignInButton">
-                                    <strong>Show Sign In Button</strong><br>
-                                    <small class="text-muted">Display Sign In button in header</small>
+                                    <strong>@Localizer.GetString("Admin", "ShowSignInButton")</strong><br>
+                                    <small class="text-muted">@Localizer.GetString("Admin", "DisplaySignInButton")</small>
                                 </label>
                             </div>
                         </div>
@@ -183,6 +183,6 @@
         <button type="submit" class="btn btn-primary btn-lg">
             <i class="ti ti-device-floppy"></i> Save Settings
         </button>
-        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">Cancel</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">@Localizer.GetString("Cancel")</a>
     </div>
 </form>
