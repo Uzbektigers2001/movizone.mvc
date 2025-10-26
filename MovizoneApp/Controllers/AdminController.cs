@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Services;
 using MovizoneApp.Models;
 using MovizoneApp.Enums;
@@ -13,20 +15,22 @@ namespace MovizoneApp.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IMovieService _movieService;
-        private readonly ITVSeriesService _seriesService;
+        private readonly IMovieApplicationService _movieService;
+        private readonly ITVSeriesApplicationService _seriesService;
         private readonly IEpisodeService _episodeService;
-        private readonly IUserService _userService;
-        private readonly IActorService _actorService;
+        private readonly IUserApplicationService _userService;
+        private readonly IActorApplicationService _actorService;
         private readonly ISiteSettingsService _settingsService;
+        private readonly ILogger<AdminController> _logger;
 
         public AdminController(
-            IMovieService movieService,
-            ITVSeriesService seriesService,
+            IMovieApplicationService movieService,
+            ITVSeriesApplicationService seriesService,
             IEpisodeService episodeService,
-            IUserService userService,
-            IActorService actorService,
-            ISiteSettingsService settingsService)
+            IUserApplicationService userService,
+            IActorApplicationService actorService,
+            ISiteSettingsService settingsService,
+            ILogger<AdminController> logger)
         {
             _movieService = movieService;
             _seriesService = seriesService;
@@ -34,6 +38,7 @@ namespace MovizoneApp.Controllers
             _userService = userService;
             _actorService = actorService;
             _settingsService = settingsService;
+            _logger = logger;
         }
 
         private bool IsAdmin()
@@ -41,17 +46,24 @@ namespace MovizoneApp.Controllers
             return HttpContext.Session.GetString(SessionKeys.UserRole) == UserRole.Admin;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (!IsAdmin())
                 return RedirectToAction("Login");
 
+            _logger.LogInformation("Admin accessing dashboard");
+
+            var movies = await _movieService.GetAllMoviesAsync();
+            var series = await _seriesService.GetAllSeriesAsync();
+            var users = await _userService.GetAllUsersAsync();
+            var actors = await _actorService.GetAllActorsAsync();
+
             var stats = new DashboardStatistics
             {
-                TotalMovies = _movieService.GetAllMovies().Count,
-                TotalSeries = _seriesService.GetAllSeries().Count,
-                TotalUsers = _userService.GetAllUsers().Count,
-                TotalActors = _actorService.GetAllActors().Count,
+                TotalMovies = movies.Count(),
+                TotalSeries = series.Count(),
+                TotalUsers = users.Count(),
+                TotalActors = actors.Count(),
                 TodayViews = 1247,
                 MonthlyViews = 45231,
                 MonthlyRevenue = 12500.50m,
@@ -75,9 +87,11 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            var user = _userService.Authenticate(email, password);
+            _logger.LogInformation("Admin login attempt for email: {Email}", email);
+
+            var user = await _userService.AuthenticateAsync(email, password);
 
             if (user != null && user.Role == UserRole.Admin)
             {
@@ -85,9 +99,11 @@ namespace MovizoneApp.Controllers
                 HttpContext.Session.SetString(SessionKeys.UserName, user.Name);
                 HttpContext.Session.SetString(SessionKeys.UserRole, user.Role);
 
+                _logger.LogInformation("Admin logged in successfully: {Email}", email);
                 return RedirectToAction("Index");
             }
 
+            _logger.LogWarning("Failed admin login attempt for email: {Email}", email);
             ViewBag.Error = "Invalid credentials or insufficient permissions";
             return View();
         }
@@ -99,16 +115,19 @@ namespace MovizoneApp.Controllers
         }
 
         // Movies Management
-        public IActionResult Movies(string search = "", int page = 1)
+        public async Task<IActionResult> Movies(string search = "", int page = 1)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var movies = _movieService.GetAllMovies();
+            _logger.LogInformation("Admin viewing movies list. Search: {Search}, Page: {Page}", search, page);
+
+            var allMovies = await _movieService.GetAllMoviesAsync();
+            var movies = allMovies.AsEnumerable();
 
             if (!string.IsNullOrEmpty(search))
             {
                 movies = movies.Where(m => m.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                          m.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                                          m.Description.Contains(search, StringComparison.OrdinalIgnoreCase));
             }
 
             ViewBag.SearchQuery = search;
@@ -214,16 +233,33 @@ namespace MovizoneApp.Controllers
                 movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
-            _movieService.AddMovie(movie);
+            try
+            {
+                await _movieService.CreateMovieAsync(movie);
+                _logger.LogInformation("Movie created successfully: {Title}", movie.Title);
+                TempData[TempDataKeys.Success] = "Movie created successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating movie: {Title}", movie.Title);
+                TempData[TempDataKeys.Error] = "Failed to create movie. Please try again.";
+            }
+
             return RedirectToAction("Movies");
         }
 
-        public IActionResult EditMovie(int id)
+        public async Task<IActionResult> EditMovie(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var movie = _movieService.GetMovieById(id);
-            if (movie == null) return NotFound();
+            _logger.LogInformation("Admin editing movie ID: {MovieId}", id);
+
+            var movie = await _movieService.GetMovieByIdAsync(id);
+            if (movie == null)
+            {
+                _logger.LogWarning("Movie not found for editing: {MovieId}", id);
+                return NotFound();
+            }
 
             return View(movie);
         }
@@ -295,30 +331,55 @@ namespace MovizoneApp.Controllers
                 movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
-            _movieService.UpdateMovie(movie);
+            try
+            {
+                await _movieService.UpdateMovieAsync(movie);
+                _logger.LogInformation("Movie updated successfully: {MovieId}", movie.Id);
+                TempData[TempDataKeys.Success] = "Movie updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating movie: {MovieId}", movie.Id);
+                TempData[TempDataKeys.Error] = "Failed to update movie. Please try again.";
+            }
+
             return RedirectToAction("Movies");
         }
 
         [HttpPost]
-        public IActionResult DeleteMovie(int id)
+        public async Task<IActionResult> DeleteMovie(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            _movieService.DeleteMovie(id);
+            try
+            {
+                await _movieService.DeleteMovieAsync(id);
+                _logger.LogInformation("Movie deleted successfully: {MovieId}", id);
+                TempData[TempDataKeys.Success] = "Movie deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting movie: {MovieId}", id);
+                TempData[TempDataKeys.Error] = "Failed to delete movie. Please try again.";
+            }
+
             return RedirectToAction("Movies");
         }
 
         // TV Series Management
-        public IActionResult Series(string search = "", int page = 1)
+        public async Task<IActionResult> Series(string search = "", int page = 1)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var series = _seriesService.GetAllSeries();
+            _logger.LogInformation("Admin viewing series list. Search: {Search}, Page: {Page}", search, page);
+
+            var allSeries = await _seriesService.GetAllSeriesAsync();
+            var series = allSeries.AsEnumerable();
 
             if (!string.IsNullOrEmpty(search))
             {
                 series = series.Where(s => s.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                          s.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                                          s.Description.Contains(search, StringComparison.OrdinalIgnoreCase));
             }
 
             ViewBag.SearchQuery = search;
@@ -401,16 +462,33 @@ namespace MovizoneApp.Controllers
                 series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
-            _seriesService.AddSeries(series);
+            try
+            {
+                await _seriesService.CreateSeriesAsync(series);
+                _logger.LogInformation("TV series created successfully: {Title}", series.Title);
+                TempData[TempDataKeys.Success] = "TV series created successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating TV series: {Title}", series.Title);
+                TempData[TempDataKeys.Error] = "Failed to create TV series. Please try again.";
+            }
+
             return RedirectToAction("Series");
         }
 
-        public IActionResult EditSeries(int id)
+        public async Task<IActionResult> EditSeries(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var series = _seriesService.GetSeriesById(id);
-            if (series == null) return NotFound();
+            _logger.LogInformation("Admin editing TV series ID: {SeriesId}", id);
+
+            var series = await _seriesService.GetSeriesByIdAsync(id);
+            if (series == null)
+            {
+                _logger.LogWarning("TV series not found for editing: {SeriesId}", id);
+                return NotFound();
+            }
 
             return View(series);
         }
@@ -480,66 +558,119 @@ namespace MovizoneApp.Controllers
                 series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
-            _seriesService.UpdateSeries(series);
+            try
+            {
+                await _seriesService.UpdateSeriesAsync(series);
+                _logger.LogInformation("TV series updated successfully: {SeriesId}", series.Id);
+                TempData[TempDataKeys.Success] = "TV series updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating TV series: {SeriesId}", series.Id);
+                TempData[TempDataKeys.Error] = "Failed to update TV series. Please try again.";
+            }
+
             return RedirectToAction("Series");
         }
 
         [HttpPost]
-        public IActionResult DeleteSeries(int id)
+        public async Task<IActionResult> DeleteSeries(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            _seriesService.DeleteSeries(id);
+            try
+            {
+                await _seriesService.DeleteSeriesAsync(id);
+                _logger.LogInformation("TV series deleted successfully: {SeriesId}", id);
+                TempData[TempDataKeys.Success] = "TV series deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting TV series: {SeriesId}", id);
+                TempData[TempDataKeys.Error] = "Failed to delete TV series. Please try again.";
+            }
+
             return RedirectToAction("Series");
         }
 
         // Users Management
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var users = _userService.GetAllUsers();
+            _logger.LogInformation("Admin viewing users list");
+
+            var users = await _userService.GetAllUsersAsync();
             return View(users);
         }
 
-        public IActionResult EditUser(int id)
+        public async Task<IActionResult> EditUser(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var user = _userService.GetUserById(id);
-            if (user == null) return NotFound();
+            _logger.LogInformation("Admin editing user ID: {UserId}", id);
+
+            var user = await _userService.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found for editing: {UserId}", id);
+                return NotFound();
+            }
 
             return View(user);
         }
 
         [HttpPost]
-        public IActionResult EditUser(User user)
+        public async Task<IActionResult> EditUser(User user)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             if (ModelState.IsValid)
             {
-                _userService.UpdateUser(user);
-                return RedirectToAction("Users");
+                try
+                {
+                    await _userService.UpdateUserAsync(user);
+                    _logger.LogInformation("User updated successfully: {UserId}", user.Id);
+                    TempData[TempDataKeys.Success] = "User updated successfully!";
+                    return RedirectToAction("Users");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error updating user: {UserId}", user.Id);
+                    TempData[TempDataKeys.Error] = "Failed to update user. Please try again.";
+                }
             }
             return View(user);
         }
 
         [HttpPost]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            _userService.DeleteUser(id);
+            try
+            {
+                await _userService.DeleteUserAsync(id);
+                _logger.LogInformation("User deleted successfully: {UserId}", id);
+                TempData[TempDataKeys.Success] = "User deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting user: {UserId}", id);
+                TempData[TempDataKeys.Error] = "Failed to delete user. Please try again.";
+            }
+
             return RedirectToAction("Users");
         }
 
         // Actors Management
-        public IActionResult Actors()
+        public async Task<IActionResult> Actors()
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var actors = _actorService.GetAllActors();
+            _logger.LogInformation("Admin viewing actors list");
+
+            var actors = await _actorService.GetAllActorsAsync();
             return View(actors);
         }
 
@@ -577,16 +708,33 @@ namespace MovizoneApp.Controllers
                 actor.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
             }
 
-            _actorService.AddActor(actor);
+            try
+            {
+                await _actorService.CreateActorAsync(actor);
+                _logger.LogInformation("Actor created successfully: {Name}", actor.Name);
+                TempData[TempDataKeys.Success] = "Actor created successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating actor: {Name}", actor.Name);
+                TempData[TempDataKeys.Error] = "Failed to create actor. Please try again.";
+            }
+
             return RedirectToAction("Actors");
         }
 
-        public IActionResult EditActor(int id)
+        public async Task<IActionResult> EditActor(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var actor = _actorService.GetActorById(id);
-            if (actor == null) return NotFound();
+            _logger.LogInformation("Admin editing actor ID: {ActorId}", id);
+
+            var actor = await _actorService.GetActorByIdAsync(id);
+            if (actor == null)
+            {
+                _logger.LogWarning("Actor not found for editing: {ActorId}", id);
+                return NotFound();
+            }
 
             return View(actor);
         }
@@ -619,16 +767,38 @@ namespace MovizoneApp.Controllers
                 actor.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
             }
 
-            _actorService.UpdateActor(actor);
+            try
+            {
+                await _actorService.UpdateActorAsync(actor);
+                _logger.LogInformation("Actor updated successfully: {ActorId}", actor.Id);
+                TempData[TempDataKeys.Success] = "Actor updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating actor: {ActorId}", actor.Id);
+                TempData[TempDataKeys.Error] = "Failed to update actor. Please try again.";
+            }
+
             return RedirectToAction("Actors");
         }
 
         [HttpPost]
-        public IActionResult DeleteActor(int id)
+        public async Task<IActionResult> DeleteActor(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            _actorService.DeleteActor(id);
+            try
+            {
+                await _actorService.DeleteActorAsync(id);
+                _logger.LogInformation("Actor deleted successfully: {ActorId}", id);
+                TempData[TempDataKeys.Success] = "Actor deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting actor: {ActorId}", id);
+                TempData[TempDataKeys.Error] = "Failed to delete actor. Please try again.";
+            }
+
             return RedirectToAction("Actors");
         }
 
