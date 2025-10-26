@@ -1,28 +1,34 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Models;
-using MovizoneApp.Services;
 
 namespace MovizoneApp.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly IMovieService _movieService;
-    private readonly ITVSeriesService _tvSeriesService;
+    private readonly IMovieApplicationService _movieService;
+    private readonly ITVSeriesApplicationService _tvSeriesService;
 
-    public HomeController(ILogger<HomeController> logger, IMovieService movieService, ITVSeriesService tvSeriesService)
+    public HomeController(
+        ILogger<HomeController> logger,
+        IMovieApplicationService movieService,
+        ITVSeriesApplicationService tvSeriesService)
     {
         _logger = logger;
         _movieService = movieService;
         _tvSeriesService = tvSeriesService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var featuredMovies = _movieService.GetFeaturedMovies();
-        var featuredSeries = _tvSeriesService.GetFeaturedSeries();
+        _logger.LogInformation("Accessing home page");
+
+        var featuredMovies = await _movieService.GetFeaturedMoviesAsync();
+        var featuredSeries = await _tvSeriesService.GetFeaturedSeriesAsync();
 
         ViewBag.FeaturedMovies = featuredMovies;
         ViewBag.FeaturedSeries = featuredSeries;
