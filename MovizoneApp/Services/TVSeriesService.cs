@@ -27,6 +27,7 @@ namespace MovizoneApp.Services
                     Creator = "Vince Gilligan",
                     CoverImage = "/img/covers/cover10.jpg",
                     PosterImage = "/img/posters/poster10.jpg",
+                    BannerImage = "/img/banners/banner10.jpg",
                     Actors = new List<string> { "Bryan Cranston", "Aaron Paul" },
                     Episodes = new List<Episode>
                     {
@@ -59,6 +60,7 @@ namespace MovizoneApp.Services
                     Creator = "David Benioff, D.B. Weiss",
                     CoverImage = "/img/covers/cover11.jpg",
                     PosterImage = "/img/posters/poster11.jpg",
+                    BannerImage = "/img/banners/banner11.jpg",
                     Actors = new List<string> { "Emilia Clarke", "Kit Harington" },
                     IsFeatured = true,
                     FirstAired = new DateTime(2011, 4, 17),
@@ -77,6 +79,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Creator = "Matt Duffer, Ross Duffer",
                     CoverImage = "/img/covers/cover13.jpg",
+                    PosterImage = "/img/posters/poster13.jpg",
+                    BannerImage = "/img/banners/banner13.jpg",
                     Actors = new List<string> { "Millie Bobby Brown", "Finn Wolfhard" },
                     IsFeatured = true,
                     FirstAired = new DateTime(2016, 7, 15),
@@ -95,6 +99,8 @@ namespace MovizoneApp.Services
                     Country = "UK",
                     Creator = "Peter Morgan",
                     CoverImage = "/img/covers/cover14.jpg",
+                    PosterImage = "/img/posters/poster14.jpg",
+                    BannerImage = "/img/banners/banner14.jpg",
                     Actors = new List<string> { "Claire Foy", "Olivia Colman" },
                     IsFeatured = false,
                     FirstAired = new DateTime(2016, 11, 4),
@@ -130,10 +136,14 @@ namespace MovizoneApp.Services
                 existingSeries.Country = series.Country;
                 existingSeries.Creator = series.Creator;
                 existingSeries.CoverImage = series.CoverImage;
+                existingSeries.PosterImage = series.PosterImage;
+                existingSeries.BannerImage = series.BannerImage;
                 existingSeries.Actors = series.Actors;
                 existingSeries.IsFeatured = series.IsFeatured;
                 existingSeries.FirstAired = series.FirstAired;
                 existingSeries.Status = series.Status;
+                existingSeries.IsHidden = series.IsHidden;
+                existingSeries.ShowInBanner = series.ShowInBanner;
             }
         }
 
