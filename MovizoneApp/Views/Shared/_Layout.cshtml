@@ -119,8 +119,8 @@
 									<a class="header__nav-link header__nav-link--more" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots"></i></a>
 
 									<ul class="dropdown-menu header__dropdown-menu">
-										<li><a asp-controller="Watchlist" asp-action="Index"><i class="ti ti-bookmark"></i> Watchlist</a></li>
-										<li><a asp-controller="Watchlist" asp-action="Favorites"><i class="ti ti-heart"></i> Favorites</a></li>
+										<li><a asp-controller="Watchlist" asp-action="Index"><i class="ti ti-bookmark"></i> @Localizer.GetString("Watchlist")</a></li>
+										<li><a asp-controller="Watchlist" asp-action="Favorites"><i class="ti ti-heart"></i> @Localizer.GetString("Favorites")</a></li>
 										@if (!Context.Session.GetInt32("UserId").HasValue)
 										{
 											<li><hr class="dropdown-divider"></li>
@@ -161,7 +161,7 @@
 							<a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="ti ti-world"></i>
 								@{
-									var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture).Name ?? "EN";
+									var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture)?.Name ?? "EN";
 								}
 								<span>@currentLangName</span>
 							</a>
@@ -169,12 +169,12 @@
 								@foreach (var lang in availableLanguages)
 								{
 									<li>
-										<form asp-controller="Language" asp-action="SetLanguage" method="post" style="display:inline;">
+										<form asp-controller="Language" asp-action="SetLanguage" method="post" class="language-form" data-culture="@lang.Code">
 											<input type="hidden" name="culture" value="@lang.Code" />
 											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-											<button type="submit" class="dropdown-item @(currentCulture == lang.Code ? "active" : "")" style="background:none;border:none;width:100%;text-align:left;padding:8px 16px;cursor:pointer;">
+											<a href="#" class="dropdown-item @(currentCulture == lang.Code ? "active" : "")" onclick="event.preventDefault(); this.closest('form').submit();">
 												@lang.Name
-											</button>
+											</a>
 										</form>
 									</li>
 								}

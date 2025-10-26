@@ -10,13 +10,13 @@
 			<div class="col-12">
 				<div class="section__wrap">
 					<!-- section title -->
-					<h1 class="section__title section__title--head">Catalog</h1>
+					<h1 class="section__title section__title--head">@Localizer.GetString("Common", "Catalog")</h1>
 					<!-- end section title -->
 
 					<!-- breadcrumbs -->
 					<ul class="breadcrumbs">
-						<li class="breadcrumbs__item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-						<li class="breadcrumbs__item breadcrumbs__item--active">Catalog</li>
+						<li class="breadcrumbs__item"><a asp-controller="Home" asp-action="Index">@Localizer.GetString("Home")</a></li>
+						<li class="breadcrumbs__item breadcrumbs__item--active">@Localizer.GetString("Common", "Catalog")</li>
 					</ul>
 					<!-- end breadcrumbs -->
 				</div>
@@ -35,7 +35,7 @@
 					<!-- filter items -->
 					<div class="filter__items">
 						<select class="filter__select" name="genre" id="filter__genre">
-							<option value="">All genres</option>
+							<option value="">@Localizer.GetString("Common", "AllGenres")</option>
 							@if (ViewBag.Genres != null)
 							{
 								foreach (var genre in ViewBag.Genres)
@@ -45,16 +45,16 @@
 							}
 						</select>
 
-						<input type="text" name="search" class="filter__select" placeholder="Search movies..." value="@ViewBag.SearchQuery" style="width: 250px;">
+						<input type="text" name="search" class="filter__select" placeholder="@Localizer.GetString("Movie", "SearchMovies")" value="@ViewBag.SearchQuery" style="width: 250px;">
 					</div>
 					<!-- end filter items -->
 
 					<!-- filter btn -->
-					<button class="filter__btn" type="submit"><i class="ti ti-search"></i> Apply</button>
+					<button class="filter__btn" type="submit"><i class="ti ti-search"></i> @Localizer.GetString("Common", "Apply")</button>
 					<!-- end filter btn -->
 
 					<!-- amount -->
-					<span class="filter__amount">Showing @Model.Count of @Model.TotalCount</span>
+					<span class="filter__amount">@Localizer.GetString("Movie", "ShowingOf").Replace("{0}", Model.Count.ToString()).Replace("{1}", Model.TotalCount.ToString())</span>
 					<!-- end amount -->
 				</form>
 			</div>
@@ -110,7 +110,7 @@
 				<div class="col-12">
 					<div class="reviews__empty">
 						<i class="ti ti-movie-off"></i>
-						<p>No movies found. Try different filters.</p>
+						<p>@Localizer.GetString("Movie", "NoMoviesFound")</p>
 					</div>
 				</div>
 			}

@@ -73,7 +73,14 @@
     "UploadVideoFile": "Upload New Video File",
     "SelectSeries": "Select Series...",
     "LeaveEmptyToKeep": "leave empty to keep current",
-    "NewPassword": "New Password"
+    "NewPassword": "New Password",
+    "Genre": "Genre",
+    "AllGenres": "All genres",
+    "AnyRating": "Any rating",
+    "Apply": "Apply",
+    "Sort": "Sort",
+    "Catalog": "Catalog",
+    "Born": "Born"
   },
   "Home": {
     "Welcome": "Welcome to HotFlix",
@@ -102,7 +109,16 @@
     "AboutTitle": "About HotFlix",
     "AboutDescription": "Your premier destination for movies and TV shows",
     "SelectPerfectPlan": "Select the perfect plan for your streaming needs",
-    "NewContentRegularly": "New content added regularly"
+    "NewContentRegularly": "New content added regularly",
+    "WatchNow": "Watch Now",
+    "ShowingMovies": "Showing {0} movies",
+    "From30": "from 3.0",
+    "From50": "from 5.0",
+    "From70": "from 7.0",
+    "From90": "from 9.0",
+    "AnyYear": "Any year",
+    "ActionGenre": "Action",
+    "DramaGenre": "Drama"
   },
   "Movie": {
     "Title": "Title",
@@ -149,7 +165,11 @@
     "Poor": "Poor",
     "VeryPoor": "Very Poor",
     "Terrible": "Terrible",
-    "SampleVideoNote": "Sample video - In production, this would be the actual movie."
+    "SampleVideoNote": "Sample video - In production, this would be the actual movie.",
+    "SearchMovies": "Search movies...",
+    "ShowingOf": "Showing {0} of {1}",
+    "NoMoviesFound": "No movies found. Try different filters.",
+    "AddToFavorites": "Add to favorites"
   },
   "TVSeries": {
     "Creator": "Creator",
@@ -167,7 +187,9 @@
     "Ongoing": "Ongoing",
     "NoSeriesYet": "No series yet. Be the first to review this series!",
     "EpisodeNumber": "Episode",
-    "AirDate": "Air Date"
+    "AirDate": "Air Date",
+    "SearchTVSeries": "Search TV series...",
+    "NoTVSeriesFound": "No TV series found. Try different filters."
   },
   "Actor": {
     "ActorDetails": "Actor Details",
@@ -178,7 +200,8 @@
     "Filmography": "Filmography",
     "AllActors": "All Actors",
     "ActorsCatalog": "Actors Catalog",
-    "BrowseTalentedCast": "Browse our talented cast"
+    "BrowseTalentedCast": "Browse our talented cast",
+    "NoActorsFound": "No actors found in the database."
   },
   "Pricing": {
     "ChooseYourPlan": "Choose Your Plan",
@@ -195,7 +218,24 @@
     "CurrentPlan": "Current Plan",
     "PopularPlan": "Most Popular",
     "SelectPlan": "Select Plan",
-    "SelectYourPlan": "Select Your Plan"
+    "SelectYourPlan": "Select Your Plan",
+    "ChoosePlan": "Choose Plan",
+    "MoneyBackGuarantee": "All plans include a 30-day money-back guarantee",
+    "Free": "Free",
+    "Days7": "7 days",
+    "Resolution720p": "720p Resolution",
+    "LimitedAvailability": "Limited Availability",
+    "DesktopOnly": "Desktop Only",
+    "LimitedSupport": "Limited Support",
+    "Register": "Register",
+    "SlashMonth": "/ month",
+    "Month1": "1 Month",
+    "FullHD": "Full HD",
+    "TVAndDesktop": "TV & Desktop",
+    "Support247": "24/7 Support",
+    "Months2": "2 Months",
+    "UltraHD": "Ultra HD",
+    "AnyDevice": "Any Device"
   },
   "Watchlist": {
     "MyWatchlist": "My Watchlist",

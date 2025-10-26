@@ -22,7 +22,7 @@
                             @if (plan.IsPopular)
                             {
                                 <div class="card-header bg-primary text-center">
-                                    <strong>Most Popular</strong>
+                                    <strong>@Localizer.GetString("Pricing", "PopularPlan")</strong>
                                 </div>
                             }
                             <div class="card-body p-4 text-center">
@@ -42,7 +42,7 @@
                                 </ul>
 
                                 <button class="btn @(plan.IsPopular ? "btn-primary" : "btn-outline-primary") w-100">
-                                    Choose Plan
+                                    @Localizer.GetString("Pricing", "ChoosePlan")
                                 </button>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
 
         <div class="row mt-5">
             <div class="col-12 text-center">
-                <p class="text-muted">All plans include a 30-day money-back guarantee</p>
+                <p class="text-muted">@Localizer.GetString("Pricing", "MoneyBackGuarantee")</p>
             </div>
         </div>
     </div>
