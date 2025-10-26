@@ -14,7 +14,8 @@ namespace MovizoneApp.Application.Mappings
             // Movie mappings
             CreateMap<Movie, MovieDto>()
                 .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
-                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Actor.Name).ToList()));
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Actor.Name).ToList()))
+                .MaxDepth(2); // Prevent circular reference issues with navigation properties
             CreateMap<MovieDto, Movie>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
             CreateMap<CreateMovieDto, Movie>()
@@ -49,7 +50,8 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator))
                 .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
                     src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.Actor.Name).ToList()))
-                .ForMember(dest => dest.Episodes, opt => opt.MapFrom(src => src.Episodes));
+                .ForMember(dest => dest.Episodes, opt => opt.MapFrom(src => src.Episodes))
+                .MaxDepth(2); // Prevent circular reference issues with navigation properties
             CreateMap<TVSeriesDto, TVSeries>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Seasons, opt => opt.MapFrom(src => src.TotalSeasons))
@@ -97,7 +99,8 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.Movies, opt => opt.MapFrom(src =>
                     src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Movie.Title).ToList()))
                 .ForMember(dest => dest.TVSeries, opt => opt.MapFrom(src =>
-                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.TVSeries.Title).ToList()));
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.TVSeries.Title).ToList()))
+                .MaxDepth(2); // Prevent circular reference issues with navigation properties
             CreateMap<ActorDto, Actor>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
             CreateMap<CreateActorDto, Actor>()
@@ -208,7 +211,8 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
 
             // Episode mappings
-            CreateMap<Episode, EpisodeDto>();
+            CreateMap<Episode, EpisodeDto>()
+                .ForMember(dest => dest.SeriesTitle, opt => opt.Ignore()); // SeriesTitle not available in Episode entity
             CreateMap<CreateEpisodeDto, Episode>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
