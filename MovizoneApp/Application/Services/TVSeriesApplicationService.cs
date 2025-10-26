@@ -2,49 +2,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Core.Exceptions;
 using MovizoneApp.Core.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Application.Services
 {
     /// <summary>
     /// Application service for TV series business logic
+    /// Uses DTOs and AutoMapper for clean separation from database models
     /// </summary>
     public class TVSeriesApplicationService : ITVSeriesApplicationService
     {
         private readonly ITVSeriesRepository _seriesRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<TVSeriesApplicationService> _logger;
 
         public TVSeriesApplicationService(
             ITVSeriesRepository seriesRepository,
+            IMapper mapper,
             ILogger<TVSeriesApplicationService> logger)
         {
             _seriesRepository = seriesRepository;
+            _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<TVSeries>> GetAllSeriesAsync()
+        public async Task<IEnumerable<TVSeriesDto>> GetAllSeriesAsync()
         {
             _logger.LogInformation("Fetching all TV series");
-            return await _seriesRepository.GetAllAsync();
+            var series = await _seriesRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TVSeriesDto>>(series);
         }
 
-        public async Task<IEnumerable<TVSeries>> GetFeaturedSeriesAsync()
+        public async Task<IEnumerable<TVSeriesDto>> GetFeaturedSeriesAsync()
         {
             _logger.LogInformation("Fetching featured TV series");
-            return await _seriesRepository.GetFeaturedSeriesAsync();
+            var series = await _seriesRepository.GetFeaturedSeriesAsync();
+            return _mapper.Map<IEnumerable<TVSeriesDto>>(series);
         }
 
-        public async Task<IEnumerable<TVSeries>> SearchSeriesAsync(string? searchTerm, string? genre)
+        public async Task<IEnumerable<TVSeriesDto>> SearchSeriesAsync(string? searchTerm, string? genre)
         {
             _logger.LogInformation("Searching TV series with term: {SearchTerm}, genre: {Genre}", searchTerm, genre);
-            return await _seriesRepository.SearchSeriesAsync(searchTerm, genre);
+            var series = await _seriesRepository.SearchSeriesAsync(searchTerm, genre);
+            return _mapper.Map<IEnumerable<TVSeriesDto>>(series);
         }
 
-        public async Task<TVSeries?> GetSeriesByIdAsync(int id)
+        public async Task<TVSeriesDto?> GetSeriesByIdAsync(int id)
         {
             _logger.LogInformation("Fetching TV series with ID: {SeriesId}", id);
             var series = await _seriesRepository.GetByIdAsync(id);
@@ -52,16 +61,20 @@ namespace MovizoneApp.Application.Services
             if (series == null)
             {
                 _logger.LogWarning("TV series with ID {SeriesId} not found", id);
+                return null;
             }
 
-            return series;
+            return _mapper.Map<TVSeriesDto>(series);
         }
 
-        public async Task<TVSeries> CreateSeriesAsync(TVSeries series)
+        public async Task<TVSeriesDto> CreateSeriesAsync(CreateTVSeriesDto createSeriesDto)
         {
-            _logger.LogInformation("Creating new TV series: {SeriesTitle}", series.Title);
+            _logger.LogInformation("Creating new TV series: {SeriesTitle}", createSeriesDto.Title);
 
-            // Business validation
+            // Map DTO to Model
+            var series = _mapper.Map<TVSeries>(createSeriesDto);
+
+            // Business validation (additional to DTO validation)
             if (string.IsNullOrWhiteSpace(series.Title))
             {
                 throw new BadRequestException("TV series title is required");
@@ -77,22 +90,31 @@ namespace MovizoneApp.Application.Services
                 throw new BadRequestException("Total episodes must be at least 1");
             }
 
+            // Set timestamps
             series.CreatedAt = DateTime.UtcNow;
+
+            // Save to repository
             var created = await _seriesRepository.AddAsync(series);
 
             _logger.LogInformation("TV series created successfully with ID: {SeriesId}", created.Id);
-            return created;
+
+            // Map back to DTO and return
+            return _mapper.Map<TVSeriesDto>(created);
         }
 
-        public async Task UpdateSeriesAsync(TVSeries series)
+        public async Task UpdateSeriesAsync(UpdateTVSeriesDto updateSeriesDto)
         {
-            _logger.LogInformation("Updating TV series with ID: {SeriesId}", series.Id);
+            _logger.LogInformation("Updating TV series with ID: {SeriesId}", updateSeriesDto.Id);
 
-            var existing = await _seriesRepository.GetByIdAsync(series.Id);
+            // Check if series exists
+            var existing = await _seriesRepository.GetByIdAsync(updateSeriesDto.Id);
             if (existing == null)
             {
-                throw new NotFoundException("TV Series", series.Id);
+                throw new NotFoundException("TV Series", updateSeriesDto.Id);
             }
+
+            // Map DTO to Model
+            var series = _mapper.Map<TVSeries>(updateSeriesDto);
 
             // Business validation
             if (string.IsNullOrWhiteSpace(series.Title))
@@ -100,9 +122,11 @@ namespace MovizoneApp.Application.Services
                 throw new BadRequestException("TV series title is required");
             }
 
-            series.UpdatedAt = DateTime.UtcNow;
+            // Preserve creation date and set update time
             series.CreatedAt = existing.CreatedAt;
+            series.UpdatedAt = DateTime.UtcNow;
 
+            // Update in repository
             await _seriesRepository.UpdateAsync(series);
             _logger.LogInformation("TV series updated successfully: {SeriesId}", series.Id);
         }

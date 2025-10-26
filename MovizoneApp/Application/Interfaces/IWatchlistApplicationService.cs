@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MovizoneApp.Models;
+using MovizoneApp.DTOs;
 
 namespace MovizoneApp.Application.Interfaces
 {
     /// <summary>
     /// Application service for watchlist-related business logic
+    /// Now uses DTOs instead of exposing database models
     /// </summary>
     public interface IWatchlistApplicationService
     {
-        Task<IEnumerable<WatchlistItem>> GetUserWatchlistAsync(int userId);
-        Task<IEnumerable<Movie>> GetUserWatchlistWithMoviesAsync(int userId);
-        Task<WatchlistItem> AddToWatchlistAsync(int userId, int movieId);
+        Task<IEnumerable<WatchlistDto>> GetUserWatchlistAsync(int userId);
+        Task<WatchlistDto> AddToWatchlistAsync(CreateWatchlistItemDto createWatchlistItemDto);
         Task RemoveFromWatchlistAsync(int userId, int movieId);
         Task<bool> IsInWatchlistAsync(int userId, int movieId);
     }

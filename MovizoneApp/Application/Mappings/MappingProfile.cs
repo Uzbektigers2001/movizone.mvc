@@ -26,18 +26,28 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate ?? DateTime.UtcNow));
 
             // TVSeries mappings
-            CreateMap<TVSeries, TVSeriesDto>();
+            CreateMap<TVSeries, TVSeriesDto>()
+                .ForMember(dest => dest.TotalSeasons, opt => opt.MapFrom(src => src.Seasons))
+                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator));
             CreateMap<CreateTVSeriesDto, TVSeries>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-                .ForMember(dest => dest.Episodes, opt => opt.Ignore());
+                .ForMember(dest => dest.Episodes, opt => opt.Ignore())
+                .ForMember(dest => dest.ShowInBanner, opt => opt.Ignore())
+                .ForMember(dest => dest.FirstAired, opt => opt.Ignore())
+                .ForMember(dest => dest.Seasons, opt => opt.MapFrom(src => src.TotalSeasons))
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Director));
             CreateMap<UpdateTVSeriesDto, TVSeries>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-                .ForMember(dest => dest.Episodes, opt => opt.Ignore());
+                .ForMember(dest => dest.Episodes, opt => opt.Ignore())
+                .ForMember(dest => dest.ShowInBanner, opt => opt.Ignore())
+                .ForMember(dest => dest.FirstAired, opt => opt.Ignore())
+                .ForMember(dest => dest.Seasons, opt => opt.MapFrom(src => src.TotalSeasons))
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Director));
 
             // Actor mappings
             CreateMap<Actor, ActorDto>();

@@ -1,37 +1,44 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Core.Exceptions;
 using MovizoneApp.Core.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Application.Services
 {
     /// <summary>
     /// Application service for actor business logic
+    /// Uses DTOs and AutoMapper for clean separation from database models
     /// </summary>
     public class ActorApplicationService : IActorApplicationService
     {
         private readonly IActorRepository _actorRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<ActorApplicationService> _logger;
 
         public ActorApplicationService(
             IActorRepository actorRepository,
+            IMapper mapper,
             ILogger<ActorApplicationService> logger)
         {
             _actorRepository = actorRepository;
+            _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Actor>> GetAllActorsAsync()
+        public async Task<IEnumerable<ActorDto>> GetAllActorsAsync()
         {
             _logger.LogInformation("Fetching all actors");
-            return await _actorRepository.GetAllAsync();
+            var actors = await _actorRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ActorDto>>(actors);
         }
 
-        public async Task<Actor?> GetActorByIdAsync(int id)
+        public async Task<ActorDto?> GetActorByIdAsync(int id)
         {
             _logger.LogInformation("Fetching actor with ID: {ActorId}", id);
             var actor = await _actorRepository.GetByIdAsync(id);
@@ -39,22 +46,27 @@ namespace MovizoneApp.Application.Services
             if (actor == null)
             {
                 _logger.LogWarning("Actor with ID {ActorId} not found", id);
+                return null;
             }
 
-            return actor;
+            return _mapper.Map<ActorDto>(actor);
         }
 
-        public async Task<Actor?> GetActorWithDetailsAsync(int id)
+        public async Task<ActorDto?> GetActorWithDetailsAsync(int id)
         {
             _logger.LogInformation("Fetching actor with details, ID: {ActorId}", id);
-            return await _actorRepository.GetActorWithDetailsAsync(id);
+            var actor = await _actorRepository.GetActorWithDetailsAsync(id);
+            return actor == null ? null : _mapper.Map<ActorDto>(actor);
         }
 
-        public async Task<Actor> CreateActorAsync(Actor actor)
+        public async Task<ActorDto> CreateActorAsync(CreateActorDto createActorDto)
         {
-            _logger.LogInformation("Creating new actor: {ActorName}", actor.Name);
+            _logger.LogInformation("Creating new actor: {ActorName}", createActorDto.Name);
 
-            // Business validation
+            // Map DTO to Model
+            var actor = _mapper.Map<Actor>(createActorDto);
+
+            // Business validation (additional to DTO validation)
             if (string.IsNullOrWhiteSpace(actor.Name))
             {
                 throw new BadRequestException("Actor name is required");
@@ -71,22 +83,31 @@ namespace MovizoneApp.Application.Services
                 throw new BadRequestException("Invalid birth date");
             }
 
+            // Set timestamps
             actor.CreatedAt = DateTime.UtcNow;
+
+            // Save to repository
             var created = await _actorRepository.AddAsync(actor);
 
             _logger.LogInformation("Actor created successfully with ID: {ActorId}", created.Id);
-            return created;
+
+            // Map back to DTO and return
+            return _mapper.Map<ActorDto>(created);
         }
 
-        public async Task UpdateActorAsync(Actor actor)
+        public async Task UpdateActorAsync(UpdateActorDto updateActorDto)
         {
-            _logger.LogInformation("Updating actor with ID: {ActorId}", actor.Id);
+            _logger.LogInformation("Updating actor with ID: {ActorId}", updateActorDto.Id);
 
-            var existing = await _actorRepository.GetByIdAsync(actor.Id);
+            // Check if actor exists
+            var existing = await _actorRepository.GetByIdAsync(updateActorDto.Id);
             if (existing == null)
             {
-                throw new NotFoundException("Actor", actor.Id);
+                throw new NotFoundException("Actor", updateActorDto.Id);
             }
+
+            // Map DTO to Model
+            var actor = _mapper.Map<Actor>(updateActorDto);
 
             // Business validation
             if (string.IsNullOrWhiteSpace(actor.Name))
@@ -94,9 +115,11 @@ namespace MovizoneApp.Application.Services
                 throw new BadRequestException("Actor name is required");
             }
 
-            actor.UpdatedAt = DateTime.UtcNow;
+            // Preserve creation date and set update time
             actor.CreatedAt = existing.CreatedAt;
+            actor.UpdatedAt = DateTime.UtcNow;
 
+            // Update in repository
             await _actorRepository.UpdateAsync(actor);
             _logger.LogInformation("Actor updated successfully: {ActorId}", actor.Id);
         }

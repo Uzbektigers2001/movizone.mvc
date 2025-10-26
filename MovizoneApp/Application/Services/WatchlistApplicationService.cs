@@ -2,92 +2,85 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Core.Exceptions;
 using MovizoneApp.Core.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Application.Services
 {
     /// <summary>
     /// Application service for watchlist business logic
+    /// Uses DTOs and AutoMapper for clean separation from database models
     /// </summary>
     public class WatchlistApplicationService : IWatchlistApplicationService
     {
         private readonly IWatchlistRepository _watchlistRepository;
         private readonly IMovieRepository _movieRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<WatchlistApplicationService> _logger;
 
         public WatchlistApplicationService(
             IWatchlistRepository watchlistRepository,
             IMovieRepository movieRepository,
             IUserRepository userRepository,
+            IMapper mapper,
             ILogger<WatchlistApplicationService> logger)
         {
             _watchlistRepository = watchlistRepository;
             _movieRepository = movieRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<WatchlistItem>> GetUserWatchlistAsync(int userId)
+        public async Task<IEnumerable<WatchlistDto>> GetUserWatchlistAsync(int userId)
         {
             _logger.LogInformation("Fetching watchlist for user ID: {UserId}", userId);
-            return await _watchlistRepository.GetUserWatchlistAsync(userId);
-        }
-
-        public async Task<IEnumerable<Movie>> GetUserWatchlistWithMoviesAsync(int userId)
-        {
-            _logger.LogInformation("Fetching watchlist with movies for user ID: {UserId}", userId);
-
             var watchlistItems = await _watchlistRepository.GetUserWatchlistAsync(userId);
-            var movieIds = watchlistItems.Select(w => w.MovieId).ToList();
-
-            if (!movieIds.Any())
-            {
-                return new List<Movie>();
-            }
-
-            var movies = await _movieRepository.FindAsync(m => movieIds.Contains(m.Id));
-            return movies;
+            return _mapper.Map<IEnumerable<WatchlistDto>>(watchlistItems);
         }
 
-        public async Task<WatchlistItem> AddToWatchlistAsync(int userId, int movieId)
+        public async Task<WatchlistDto> AddToWatchlistAsync(CreateWatchlistItemDto createWatchlistItemDto)
         {
-            _logger.LogInformation("Adding movie {MovieId} to watchlist for user {UserId}", movieId, userId);
+            _logger.LogInformation("Adding movie {MovieId} to watchlist for user {UserId}",
+                createWatchlistItemDto.MovieId, createWatchlistItemDto.UserId);
 
-            // Business validation
-            var userExists = await _userRepository.ExistsAsync(u => u.Id == userId);
+            // Map DTO to Model
+            var watchlistItem = _mapper.Map<WatchlistItem>(createWatchlistItemDto);
+
+            // Business validation (additional to DTO validation)
+            var userExists = await _userRepository.ExistsAsync(u => u.Id == watchlistItem.UserId);
             if (!userExists)
             {
-                throw new NotFoundException("User", userId);
+                throw new NotFoundException("User", watchlistItem.UserId);
             }
 
-            var movieExists = await _movieRepository.ExistsAsync(m => m.Id == movieId);
+            var movieExists = await _movieRepository.ExistsAsync(m => m.Id == watchlistItem.MovieId);
             if (!movieExists)
             {
-                throw new NotFoundException("Movie", movieId);
+                throw new NotFoundException("Movie", watchlistItem.MovieId);
             }
 
             // Check if already in watchlist
-            if (await _watchlistRepository.IsInWatchlistAsync(userId, movieId))
+            if (await _watchlistRepository.IsInWatchlistAsync(watchlistItem.UserId, watchlistItem.MovieId))
             {
                 throw new BadRequestException("Movie is already in watchlist");
             }
 
-            var watchlistItem = new WatchlistItem
-            {
-                UserId = userId,
-                MovieId = movieId,
-                AddedAt = DateTime.UtcNow
-            };
+            // Set timestamp
+            watchlistItem.AddedAt = DateTime.UtcNow;
 
+            // Save to repository
             var created = await _watchlistRepository.AddAsync(watchlistItem);
             _logger.LogInformation("Movie added to watchlist successfully");
 
-            return created;
+            // Map back to DTO and return
+            return _mapper.Map<WatchlistDto>(created);
         }
 
         public async Task RemoveFromWatchlistAsync(int userId, int movieId)
