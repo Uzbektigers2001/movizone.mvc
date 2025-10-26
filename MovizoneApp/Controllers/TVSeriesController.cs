@@ -51,7 +51,7 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var reviews = _reviewService.GetReviewsByMovieId(id);
+            var reviews = _reviewService.GetReviewsByTVSeriesId(id);
             ViewBag.Reviews = reviews;
             ViewBag.AverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
             ViewBag.ReviewCount = reviews.Count;
@@ -81,7 +81,7 @@ namespace MovizoneApp.Controllers
 
             var review = new Review
             {
-                MovieId = seriesId, // Using MovieId field for SeriesId
+                TVSeriesId = seriesId, // Fixed: using TVSeriesId instead of MovieId
                 UserId = 1,
                 UserName = userName,
                 Comment = comment,

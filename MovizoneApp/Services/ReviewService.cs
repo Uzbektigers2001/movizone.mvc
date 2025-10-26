@@ -35,7 +35,16 @@ namespace MovizoneApp.Services
 
         public List<Review> GetReviewsByMovieId(int movieId)
         {
-            return _reviews.Where(r => r.MovieId == movieId).OrderByDescending(r => r.CreatedAt).ToList();
+            return _reviews.Where(r => r.MovieId.HasValue && r.MovieId.Value == movieId)
+                          .OrderByDescending(r => r.CreatedAt)
+                          .ToList();
+        }
+
+        public List<Review> GetReviewsByTVSeriesId(int tvSeriesId)
+        {
+            return _reviews.Where(r => r.TVSeriesId.HasValue && r.TVSeriesId.Value == tvSeriesId)
+                          .OrderByDescending(r => r.CreatedAt)
+                          .ToList();
         }
 
         public List<Review> GetReviewsByUserId(int userId)
