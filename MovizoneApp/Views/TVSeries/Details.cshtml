@@ -385,60 +385,54 @@
 				</div>
 				<!-- end content tabs -->
 			</div>
+
+			<!-- sidebar -->
+			<div class="col-12 col-lg-4">
+				<div class="sidebar">
+					<!-- You may also like -->
+					<div class="sidebar__item">
+						<h3 class="sidebar__title">You may also like...</h3>
+						<div class="row">
+							@{
+								var similarSeries = ViewBag.SimilarSeries as List<MovizoneApp.Models.TVSeries>;
+								if (similarSeries != null && similarSeries.Any())
+								{
+									foreach (var similarShow in similarSeries.Take(6))
+									{
+										<div class="col-6 col-sm-4 col-lg-6">
+											<div class="item">
+												<div class="item__cover">
+													<img src="@similarShow.CoverImage" alt="@similarShow.Title">
+													<a asp-action="Details" asp-route-id="@similarShow.Id" class="item__play">
+														<i class="ti ti-player-play-filled"></i>
+													</a>
+													<span class="item__rate @(similarShow.Rating >= 8 ? "item__rate--green" : similarShow.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarShow.Rating</span>
+													<button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+												</div>
+												<div class="item__content">
+													<h3 class="item__title"><a asp-action="Details" asp-route-id="@similarShow.Id">@similarShow.Title</a></h3>
+													<span class="item__category">
+														@foreach (var genre in similarShow.Genre.Split(',').Take(2))
+														{
+															<a href="#">@genre.Trim()</a>
+														}
+													</span>
+												</div>
+											</div>
+										</div>
+									}
+								}
+							}
+						</div>
+					</div>
+					<!-- end You may also like -->
+				</div>
+			</div>
+			<!-- end sidebar -->
 		</div>
 	</div>
 </section>
 <!-- end content -->
-
-<!-- You may also like... -->
-@{
-	var similarSeries = ViewBag.SimilarSeries as List<MovizoneApp.Models.TVSeries>;
-}
-@if (similarSeries != null && similarSeries.Any())
-{
-	<section class="content">
-		<div class="content__head">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<h2 class="content__title">You may also like...</h2>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="container">
-			<div class="row row--grid">
-				@foreach (var similarShow in similarSeries)
-				{
-					<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-						<div class="item">
-							<div class="item__cover">
-								<img src="@similarShow.CoverImage" alt="@similarShow.Title">
-								<a asp-action="Details" asp-route-id="@similarShow.Id" class="item__play">
-									<i class="ti ti-player-play-filled"></i>
-								</a>
-								<span class="item__rate @(similarShow.Rating >= 8 ? "item__rate--green" : similarShow.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarShow.Rating</span>
-								<button class="item__favorite" type="button">
-									<i class="ti ti-bookmark"></i>
-								</button>
-							</div>
-							<div class="item__content">
-								<h3 class="item__title">
-									<a asp-action="Details" asp-route-id="@similarShow.Id">@similarShow.Title</a>
-								</h3>
-								<span class="item__category">
-									<a href="#">@similarShow.Genre</a>
-								</span>
-							</div>
-						</div>
-					</div>
-				}
-			</div>
-		</div>
-	</section>
-}
-<!-- end You may also like... -->
 
 @section Scripts {
 	<script>
