@@ -72,8 +72,7 @@ namespace MovizoneApp.Application.Services
                 throw new BadRequestException("Movie is already in watchlist");
             }
 
-            // Set timestamp
-            watchlistItem.AddedAt = DateTime.UtcNow;
+            // CreatedAt timestamp will be set automatically by DbContext
 
             // Save to repository
             var created = await _watchlistRepository.AddAsync(watchlistItem);
