@@ -20,5 +20,6 @@ namespace MovizoneApp.Models
         public bool ShowActorsInNav { get; set; } = true;
         public bool ShowPricingPlanInNav { get; set; } = true;
         public bool ShowPagesInNav { get; set; } = true;
+        public bool ShowMoreMenuInNav { get; set; } = true;
     }
 }
