@@ -1,126 +1,408 @@
 @model MovizoneApp.Models.DashboardStatistics
+@inject MovizoneApp.Services.ILocalizationService Localizer
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<style>
+    /* Dashboard Statistics Cards */
+    .stats-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: transform 0.2s;
+    }
+    .stats-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .stats-card__title {
+        font-size: 0.875rem;
+        color: #6c757d;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .stats-card__value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 0.25rem;
+    }
+    .stats-card__change {
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    .stats-card__change.positive {
+        color: #28a745;
+    }
+    .stats-card__change.negative {
+        color: #dc3545;
+    }
+    .stats-card__icon {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 3rem;
+        opacity: 0.1;
+    }
+
+    /* Dashbox Widgets */
+    .dashbox {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    .dashbox__header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .dashbox__title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #212529;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .dashbox__actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .dashbox__actions a {
+        font-size: 0.875rem;
+        color: #6c757d;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .dashbox__actions a:hover {
+        color: #ff55a5;
+    }
+    .dashbox__table {
+        width: 100%;
+    }
+    .dashbox__table thead th {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #6c757d;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .dashbox__table tbody td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #f8f9fa;
+        vertical-align: middle;
+    }
+    .dashbox__table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .dashbox__table tbody tr:hover {
+        background: #f8f9fa;
+    }
+    .dashbox__table-text {
+        font-size: 0.875rem;
+        color: #212529;
+    }
+    .dashbox__table-text--grey {
+        color: #6c757d;
+        font-weight: 500;
+    }
+    .dashbox__table-text--rate {
+        color: #ffc107;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .dashbox__table-text a {
+        color: #212529;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .dashbox__table-text a:hover {
+        color: #ff55a5;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2><i class="ti ti-dashboard"></i> Dashboard</h2>
+            <a asp-action="CreateMovie" class="btn btn-primary">
+                <i class="ti ti-plus"></i> Add Item
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Statistics Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-primary bg-opacity-10 rounded p-3">
-                        <i class="ti ti-movie fs-3 text-primary"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "TotalMovies")</h6>
-                        <h3 class="mb-0">@Model.TotalMovies</h3>
-                    </div>
+<div class="row">
+    <!-- Subscriptions this month -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stats-card">
+            <div class="stats-card__title">Subscriptions this month</div>
+            <div class="stats-card__value">
+                @Model.SubscriptionsThisMonth.ToString("N0")
+                @if (Model.SubscriptionsChange != 0)
+                {
+                    <span class="stats-card__change @(Model.SubscriptionsChange > 0 ? "positive" : "negative")">
+                        @(Model.SubscriptionsChange > 0 ? "+" : "")@Model.SubscriptionsChange
+                    </span>
+                }
+            </div>
+            <i class="ti ti-diamond stats-card__icon"></i>
+        </div>
+    </div>
+
+    <!-- Items added this month -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stats-card">
+            <div class="stats-card__title">Items added this month</div>
+            <div class="stats-card__value">
+                @Model.ItemsAddedThisMonth.ToString("N0")
+                @if (Model.ItemsAddedChange != 0)
+                {
+                    <span class="stats-card__change @(Model.ItemsAddedChange > 0 ? "positive" : "negative")">
+                        @(Model.ItemsAddedChange > 0 ? "+" : "")@Model.ItemsAddedChange
+                    </span>
+                }
+            </div>
+            <i class="ti ti-movie stats-card__icon"></i>
+        </div>
+    </div>
+
+    <!-- Views this month -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stats-card">
+            <div class="stats-card__title">Views this month</div>
+            <div class="stats-card__value">
+                @Model.ViewsThisMonth.ToString("N0")
+                @if (Model.ViewsChangePercent != 0)
+                {
+                    <span class="stats-card__change @(Model.ViewsChangePercent > 0 ? "positive" : "negative")">
+                        @(Model.ViewsChangePercent > 0 ? "+" : "")@Model.ViewsChangePercent.ToString("0.0")%
+                    </span>
+                }
+            </div>
+            <i class="ti ti-eye stats-card__icon"></i>
+        </div>
+    </div>
+
+    <!-- Reviews this month -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stats-card">
+            <div class="stats-card__title">Reviews this month</div>
+            <div class="stats-card__value">
+                @Model.ReviewsThisMonth.ToString("N0")
+                @if (Model.ReviewsChange != 0)
+                {
+                    <span class="stats-card__change @(Model.ReviewsChange > 0 ? "positive" : "negative")">
+                        @(Model.ReviewsChange > 0 ? "+" : "")@Model.ReviewsChange
+                    </span>
+                }
+            </div>
+            <i class="ti ti-star-half-filled stats-card__icon"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Widgets -->
+<div class="row">
+    <!-- Top Items -->
+    <div class="col-12 col-xl-6">
+        <div class="dashbox">
+            <div class="dashbox__header">
+                <h3 class="dashbox__title">
+                    <i class="ti ti-trophy"></i> Top Items
+                </h3>
+                <div class="dashbox__actions">
+                    <a asp-action="Movies">View All</a>
                 </div>
+            </div>
+            <div class="table-responsive">
+                <table class="dashbox__table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TITLE</th>
+                            <th>CATEGORY</th>
+                            <th>RATING</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TopItems.Any())
+                        {
+                            @foreach (var item in Model.TopItems)
+                            {
+                                <tr>
+                                    <td><div class="dashbox__table-text dashbox__table-text--grey">@item.Id</div></td>
+                                    <td><div class="dashbox__table-text"><a href="#">@item.Title</a></div></td>
+                                    <td><div class="dashbox__table-text">@item.Category</div></td>
+                                    <td><div class="dashbox__table-text dashbox__table-text--rate"><i class="ti ti-star"></i> @item.Rating.ToString("0.0")</div></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No items available</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-success bg-opacity-10 rounded p-3">
-                        <i class="ti ti-device-tv fs-3 text-success"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "TotalSeries")</h6>
-                        <h3 class="mb-0">@Model.TotalSeries</h3>
-                    </div>
+    <!-- Latest Items -->
+    <div class="col-12 col-xl-6">
+        <div class="dashbox">
+            <div class="dashbox__header">
+                <h3 class="dashbox__title">
+                    <i class="ti ti-movie"></i> Latest Items
+                </h3>
+                <div class="dashbox__actions">
+                    <a asp-action="Movies">View All</a>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-warning bg-opacity-10 rounded p-3">
-                        <i class="ti ti-users fs-3 text-warning"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "TotalUsers")</h6>
-                        <h3 class="mb-0">@Model.TotalUsers</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-info bg-opacity-10 rounded p-3">
-                        <i class="ti ti-eye fs-3 text-info"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "MonthlyViews")</h6>
-                        <h3 class="mb-0">@Model.MonthlyViews.ToString("N0")</h3>
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table class="dashbox__table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TITLE</th>
+                            <th>CATEGORY</th>
+                            <th>RATING</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LatestItems.Any())
+                        {
+                            @foreach (var item in Model.LatestItems)
+                            {
+                                <tr>
+                                    <td><div class="dashbox__table-text dashbox__table-text--grey">@item.Id</div></td>
+                                    <td><div class="dashbox__table-text"><a href="#">@item.Title</a></div></td>
+                                    <td><div class="dashbox__table-text">@item.Category</div></td>
+                                    <td><div class="dashbox__table-text dashbox__table-text--rate"><i class="ti ti-star"></i> @item.Rating.ToString("0.0")</div></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No items available</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row g-4">
-    <div class="col-md-8">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0 py-3">
-                <h5 class="mb-0">@Localizer.GetString("Admin", "RecentActivities")</h5>
+<div class="row">
+    <!-- Latest Users -->
+    <div class="col-12 col-xl-6">
+        <div class="dashbox">
+            <div class="dashbox__header">
+                <h3 class="dashbox__title">
+                    <i class="ti ti-users"></i> Latest Users
+                </h3>
+                <div class="dashbox__actions">
+                    <a asp-action="Users">View All</a>
+                </div>
             </div>
-            <div class="card-body">
-                @if (Model.RecentActivities.Any())
-                {
-                    <div class="list-group list-group-flush">
-                        @foreach (var activity in Model.RecentActivities)
+            <div class="table-responsive">
+                <table class="dashbox__table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>FULL NAME</th>
+                            <th>EMAIL</th>
+                            <th>USERNAME</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LatestUsers.Any())
                         {
-                            <div class="list-group-item border-0 px-0">
-                                <div class="d-flex align-items-center">
-                                    <i class="@activity.Icon me-3 fs-4 text-muted"></i>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0">@activity.Description</p>
-                                        <small class="text-muted">@activity.Timestamp.ToString("MMM dd, yyyy HH:mm")</small>
-                                    </div>
-                                </div>
-                            </div>
+                            @foreach (var user in Model.LatestUsers)
+                            {
+                                <tr>
+                                    <td><div class="dashbox__table-text">@user.Id</div></td>
+                                    <td><div class="dashbox__table-text"><a href="#">@user.Name</a></div></td>
+                                    <td><div class="dashbox__table-text dashbox__table-text--grey">@user.Email</div></td>
+                                    <td><div class="dashbox__table-text">@user.Username</div></td>
+                                </tr>
+                            }
                         }
-                    </div>
-                }
-                else
-                {
-                    <p class="text-muted mb-0">@Localizer.GetString("Admin", "NoRecentActivities")</p>
-                }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No users available</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0 py-3">
-                <h5 class="mb-0">@Localizer.GetString("Admin", "QuickStats")</h5>
+    <!-- Latest Reviews -->
+    <div class="col-12 col-xl-6">
+        <div class="dashbox">
+            <div class="dashbox__header">
+                <h3 class="dashbox__title">
+                    <i class="ti ti-star-half-filled"></i> Latest Reviews
+                </h3>
+                <div class="dashbox__actions">
+                    <a asp-action="Reviews">View All</a>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="mb-3 pb-3 border-bottom">
-                    <p class="text-muted mb-1">@Localizer.GetString("Admin", "TodayViews")</p>
-                    <h4 class="mb-0">@Model.TodayViews.ToString("N0")</h4>
-                </div>
-                <div class="mb-3 pb-3 border-bottom">
-                    <p class="text-muted mb-1">@Localizer.GetString("Admin", "MonthlyRevenue")</p>
-                    <h4 class="mb-0">$@Model.MonthlyRevenue.ToString("N2")</h4>
-                </div>
-                <div>
-                    <p class="text-muted mb-1">@Localizer.GetString("Admin", "TotalActors")</p>
-                    <h4 class="mb-0">@Model.TotalActors</h4>
-                </div>
+            <div class="table-responsive">
+                <table class="dashbox__table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ITEM</th>
+                            <th>AUTHOR</th>
+                            <th>RATING</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LatestReviews.Any())
+                        {
+                            @foreach (var review in Model.LatestReviews)
+                            {
+                                <tr>
+                                    <td><div class="dashbox__table-text dashbox__table-text--grey">@review.Id</div></td>
+                                    <td><div class="dashbox__table-text"><a asp-action="EditMovie" asp-route-id="@review.MovieId">@review.ItemTitle</a></div></td>
+                                    <td><div class="dashbox__table-text">@review.Author</div></td>
+                                    <td><div class="dashbox__table-text dashbox__table-text--rate"><i class="ti ti-star"></i> @review.Rating.ToString("0.0")</div></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No reviews available</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

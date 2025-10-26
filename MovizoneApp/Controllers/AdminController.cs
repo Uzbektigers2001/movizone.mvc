@@ -64,26 +64,87 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin accessing dashboard");
 
+            // Get all data
             var movies = await _movieService.GetAllMoviesAsync();
             var series = await _seriesService.GetAllSeriesAsync();
             var users = await _userService.GetAllUsersAsync();
             var actors = await _actorService.GetAllActorsAsync();
+            var comments = _commentService.GetAllComments();
+            var reviews = _reviewService.GetAllReviews();
+
+            // Calculate monthly statistics
+            var moviesThisMonth = movies.Count(m => m.CreatedAt.Month == DateTime.Now.Month);
+            var seriesThisMonth = series.Count(s => s.CreatedAt.Month == DateTime.Now.Month);
+            var itemsAddedThisMonth = moviesThisMonth + seriesThisMonth;
+            var reviewsThisMonth = reviews.Count(r => r.CreatedAt.Month == DateTime.Now.Month);
+
+            // Get top items (by rating)
+            var topMovies = movies.OrderByDescending(m => m.Rating).Take(3)
+                .Select(m => new TopItem { Id = m.Id, Title = m.Title, Category = "Movie", Rating = m.Rating });
+            var topSeries = series.OrderByDescending(s => s.Rating).Take(2)
+                .Select(s => new TopItem { Id = s.Id, Title = s.Title, Category = "TV Series", Rating = s.Rating });
+            var topItems = topMovies.Concat(topSeries).OrderByDescending(i => i.Rating).Take(5).ToList();
+
+            // Get latest items
+            var latestMovies = movies.OrderByDescending(m => m.CreatedAt).Take(3)
+                .Select(m => new LatestItem { Id = m.Id, Title = m.Title, Category = "Movie", Rating = m.Rating });
+            var latestSeries = series.OrderByDescending(s => s.CreatedAt).Take(2)
+                .Select(s => new LatestItem { Id = s.Id, Title = s.Title, Category = "TV Series", Rating = s.Rating });
+            var latestItems = latestMovies.Concat(latestSeries).OrderByDescending(i => i.Id).Take(5).ToList();
+
+            // Get latest users
+            var latestUsers = users.OrderByDescending(u => u.CreatedAt).Take(5)
+                .Select(u => new LatestUser
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email,
+                    Username = u.Email.Split('@')[0] // Extract username from email
+                }).ToList();
+
+            // Get latest reviews
+            var latestReviews = reviews.OrderByDescending(r => r.CreatedAt).Take(5)
+                .Select(r => {
+                    var movie = movies.FirstOrDefault(m => m.Id == r.MovieId);
+                    return new LatestReview
+                    {
+                        Id = r.Id,
+                        ItemTitle = movie?.Title ?? "Unknown",
+                        Author = r.UserName,
+                        Rating = r.Rating,
+                        MovieId = r.MovieId
+                    };
+                }).ToList();
 
             var stats = new DashboardStatistics
             {
+                // Main statistics
                 TotalMovies = movies.Count(),
                 TotalSeries = series.Count(),
                 TotalUsers = users.Count(),
                 TotalActors = actors.Count(),
+                TotalComments = comments.Count,
+                TotalReviews = reviews.Count,
+
+                // Monthly statistics
+                SubscriptionsThisMonth = users.Count(u => u.CreatedAt.Month == DateTime.Now.Month),
+                SubscriptionsChange = 15, // Mock data - would need previous month data
+                ItemsAddedThisMonth = itemsAddedThisMonth,
+                ItemsAddedChange = -44, // Mock data
+                ViewsThisMonth = 509573, // Mock data
+                ViewsChangePercent = 3.1, // Mock data
+                ReviewsThisMonth = reviewsThisMonth,
+                ReviewsChange = 8, // Mock data
+
+                // Today statistics
                 TodayViews = 1247,
-                MonthlyViews = 45231,
                 MonthlyRevenue = 12500.50m,
-                RecentActivities = new List<RecentActivity>
-                {
-                    new RecentActivity { Type = "movie", Description = "New movie added", Timestamp = DateTime.Now.AddHours(-2), Icon = "ti-movie" },
-                    new RecentActivity { Type = "user", Description = "New user registered", Timestamp = DateTime.Now.AddHours(-5), Icon = "ti-user" },
-                    new RecentActivity { Type = "series", Description = "TV series updated", Timestamp = DateTime.Now.AddHours(-8), Icon = "ti-device-tv" }
-                }
+
+                // Lists
+                TopItems = topItems,
+                LatestItems = latestItems,
+                LatestUsers = latestUsers,
+                LatestReviews = latestReviews
             };
 
             return View(stats);
