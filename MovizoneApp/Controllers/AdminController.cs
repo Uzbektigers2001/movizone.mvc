@@ -173,6 +173,15 @@ namespace MovizoneApp.Controllers
                 return View(movie);
             }
 
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(movie.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("Movie creation failed - No cover image provided");
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
+                return View(movie);
+            }
+
             // Handle cover image upload
             if (coverFile != null && coverFile.Length > 0)
             {
@@ -308,6 +317,15 @@ namespace MovizoneApp.Controllers
                 _logger.LogWarning("Movie update failed - No video content provided for ID: {MovieId}", movie.Id);
                 TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
                 ModelState.AddModelError("VideoUrl", "Either Video URL or video file is required");
+                return View(movie);
+            }
+
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(movie.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("Movie update failed - No cover image provided for ID: {MovieId}", movie.Id);
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
                 return View(movie);
             }
 
@@ -475,6 +493,15 @@ namespace MovizoneApp.Controllers
                 return View(series);
             }
 
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(series.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("TV series creation failed - No cover image provided");
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
+                return View(series);
+            }
+
             if (coverFile != null && coverFile.Length > 0)
             {
                 var fileName = $"cover_{Guid.NewGuid()}{Path.GetExtension(coverFile.FileName)}";
@@ -578,6 +605,15 @@ namespace MovizoneApp.Controllers
             {
                 _logger.LogWarning("TV series update failed - ModelState invalid for ID: {SeriesId}", series.Id);
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
+                return View(series);
+            }
+
+            // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
+            if (string.IsNullOrWhiteSpace(series.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            {
+                _logger.LogWarning("TV series update failed - No cover image provided for ID: {SeriesId}", series.Id);
+                TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
+                ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
                 return View(series);
             }
 
