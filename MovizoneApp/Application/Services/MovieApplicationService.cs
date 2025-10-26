@@ -108,27 +108,26 @@ namespace MovizoneApp.Application.Services
                 throw new NotFoundException("Movie", updateMovieDto.Id);
             }
 
-            // Map DTO to Model
-            var movie = _mapper.Map<Movie>(updateMovieDto);
+            // Map DTO properties to existing tracked entity
+            _mapper.Map(updateMovieDto, existing);
 
             // Business validation
-            if (movie.Year < 1900 || movie.Year > DateTime.UtcNow.Year + 5)
+            if (existing.Year < 1900 || existing.Year > DateTime.UtcNow.Year + 5)
             {
-                throw new BadRequestException($"Invalid year: {movie.Year}");
+                throw new BadRequestException($"Invalid year: {existing.Year}");
             }
 
-            if (movie.Rating < 0 || movie.Rating > 10)
+            if (existing.Rating < 0 || existing.Rating > 10)
             {
                 throw new BadRequestException("Rating must be between 0 and 10");
             }
 
-            // Preserve creation date and set update time
-            movie.CreatedAt = existing.CreatedAt;
-            movie.UpdatedAt = DateTime.UtcNow;
+            // Set update time (CreatedAt already preserved in existing entity)
+            existing.UpdatedAt = DateTime.UtcNow;
 
             // Update in repository
-            await _movieRepository.UpdateAsync(movie);
-            _logger.LogInformation("Movie updated successfully: {MovieId}", movie.Id);
+            await _movieRepository.UpdateAsync(existing);
+            _logger.LogInformation("Movie updated successfully: {MovieId}", existing.Id);
         }
 
         public async Task DeleteMovieAsync(int id)
