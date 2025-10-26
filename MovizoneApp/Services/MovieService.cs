@@ -26,6 +26,7 @@ namespace MovizoneApp.Services
                     Director = "Doug Liman",
                     CoverImage = "/img/covers/cover12.jpg",
                     PosterImage = "/img/posters/poster12.jpg",
+                    BannerImage = "/img/banners/banner12.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Tom Cruise", "Emily Blunt" },
                     IsFeatured = true,
@@ -44,6 +45,7 @@ namespace MovizoneApp.Services
                     Director = "Christopher Nolan",
                     CoverImage = "/img/covers/cover1.jpg",
                     PosterImage = "/img/posters/poster1.jpg",
+                    BannerImage = "/img/banners/banner1.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Matthew McConaughey", "Anne Hathaway" },
                     IsFeatured = true,
@@ -61,6 +63,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Director = "Christopher Nolan",
                     CoverImage = "/img/covers/cover2.jpg",
+                    PosterImage = "/img/posters/poster2.jpg",
+                    BannerImage = "/img/banners/banner2.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Leonardo DiCaprio", "Joseph Gordon-Levitt" },
                     IsFeatured = true,
@@ -78,6 +82,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Director = "Christopher Nolan",
                     CoverImage = "/img/covers/cover3.jpg",
+                    PosterImage = "/img/posters/poster3.jpg",
+                    BannerImage = "/img/banners/banner3.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Christian Bale", "Heath Ledger" },
                     IsFeatured = true,
@@ -95,6 +101,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Director = "Lana Wachowski, Lilly Wachowski",
                     CoverImage = "/img/covers/cover4.jpg",
+                    PosterImage = "/img/posters/poster4.jpg",
+                    BannerImage = "/img/banners/banner4.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Keanu Reeves", "Laurence Fishburne" },
                     IsFeatured = false,
@@ -112,6 +120,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Director = "Ridley Scott",
                     CoverImage = "/img/covers/cover5.jpg",
+                    PosterImage = "/img/posters/poster5.jpg",
+                    BannerImage = "/img/banners/banner5.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Russell Crowe", "Joaquin Phoenix" },
                     IsFeatured = false,
@@ -129,6 +139,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Director = "Frank Darabont",
                     CoverImage = "/img/covers/cover6.jpg",
+                    PosterImage = "/img/posters/poster6.jpg",
+                    BannerImage = "/img/banners/banner6.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "Tim Robbins", "Morgan Freeman" },
                     IsFeatured = false,
@@ -146,6 +158,8 @@ namespace MovizoneApp.Services
                     Country = "USA",
                     Director = "Quentin Tarantino",
                     CoverImage = "/img/covers/cover7.jpg",
+                    PosterImage = "/img/posters/poster7.jpg",
+                    BannerImage = "/img/banners/banner7.jpg",
                     VideoUrl = "#",
                     Actors = new List<string> { "John Travolta", "Uma Thurman" },
                     IsFeatured = false,
@@ -193,10 +207,14 @@ namespace MovizoneApp.Services
                 existingMovie.Country = movie.Country;
                 existingMovie.Director = movie.Director;
                 existingMovie.CoverImage = movie.CoverImage;
+                existingMovie.PosterImage = movie.PosterImage;
+                existingMovie.BannerImage = movie.BannerImage;
                 existingMovie.VideoUrl = movie.VideoUrl;
                 existingMovie.Actors = movie.Actors;
                 existingMovie.IsFeatured = movie.IsFeatured;
                 existingMovie.ReleaseDate = movie.ReleaseDate;
+                existingMovie.IsHidden = movie.IsHidden;
+                existingMovie.ShowInBanner = movie.ShowInBanner;
             }
         }
 

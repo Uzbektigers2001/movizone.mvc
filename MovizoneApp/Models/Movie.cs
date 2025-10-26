@@ -38,6 +38,12 @@ namespace MovizoneApp.Models
         [MaxLength(500)]
         public string CoverImage { get; set; } = string.Empty;
 
+        [MaxLength(500)]
+        public string PosterImage { get; set; } = string.Empty;
+
+        [MaxLength(500)]
+        public string BannerImage { get; set; } = string.Empty;
+
         [MaxLength(1000)]
         public string VideoUrl { get; set; } = string.Empty;
 
