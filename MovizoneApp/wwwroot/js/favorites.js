@@ -20,11 +20,26 @@
     }
 
     // Add to favorites
-    function addToFavorites(id, type, title) {
+    function addToFavorites(id, type, title, coverImage, rating, year, genre) {
         const favorites = getFavorites();
         if (!isFavorite(id, type)) {
-            favorites.push({ id, type, title, addedAt: new Date().toISOString() });
+            favorites.push({
+                id,
+                type,
+                title,
+                coverImage: coverImage || '',
+                rating: rating || 'N/A',
+                year: year || '',
+                genre: genre || '',
+                addedAt: new Date().toISOString()
+            });
             saveFavorites(favorites);
+
+            // Also add to watchlist with full details
+            if (window.MovizoneWatchlist) {
+                window.MovizoneWatchlist.add(id, type, title, coverImage, rating, year, genre);
+            }
+
             return true;
         }
         return false;
@@ -39,12 +54,12 @@
     }
 
     // Toggle favorite
-    function toggleFavorite(id, type, title) {
+    function toggleFavorite(id, type, title, coverImage, rating, year, genre) {
         if (isFavorite(id, type)) {
             removeFromFavorites(id, type);
             return false;
         } else {
-            addToFavorites(id, type, title);
+            addToFavorites(id, type, title, coverImage, rating, year, genre);
             return true;
         }
     }
@@ -68,6 +83,10 @@
             const id = parseInt(button.dataset.id);
             const type = button.dataset.type; // 'movie' or 'series'
             const title = button.dataset.title;
+            const coverImage = button.dataset.coverImage || button.dataset.cover || '';
+            const rating = button.dataset.rating || 'N/A';
+            const year = button.dataset.year || '';
+            const genre = button.dataset.genre || '';
 
             // Set initial state
             if (isFavorite(id, type)) {
@@ -79,7 +98,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                const isNowFavorite = toggleFavorite(id, type, title);
+                const isNowFavorite = toggleFavorite(id, type, title, coverImage, rating, year, genre);
                 updateButtonUI(button, isNowFavorite);
 
                 // Show toast notification (optional)

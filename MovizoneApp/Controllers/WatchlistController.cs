@@ -46,54 +46,69 @@ namespace MovizoneApp.Controllers
 
         private async Task<IActionResult> GetWatchlistView(string viewName = "Index")
         {
-            // In real app, get userId from authenticated user
-            int userId = 1;
-            _logger.LogInformation("Fetching watchlist for user {UserId}", userId);
+            // Check if user is logged in
+            var userIdSession = HttpContext.Session.GetInt32("UserId");
 
-            var watchlistDtos = await _watchlistService.GetUserWatchlistAsync(userId);
-
-            // Fetch movie details for each watchlist item
-            var movies = new List<object>();
-            foreach (var itemDto in watchlistDtos)
+            if (userIdSession.HasValue)
             {
-                var movieDto = await _movieService.GetMovieByIdAsync(itemDto.MovieId);
-                if (movieDto != null)
+                // User is logged in - fetch from database
+                int userId = userIdSession.Value;
+                _logger.LogInformation("Fetching watchlist for logged-in user {UserId}", userId);
+
+                var watchlistDtos = await _watchlistService.GetUserWatchlistAsync(userId);
+
+                // Fetch movie details for each watchlist item
+                var movies = new List<object>();
+                foreach (var itemDto in watchlistDtos)
                 {
-                    movies.Add(new
-                    {
-                        WatchlistId = itemDto.Id,
-                        MovieId = movieDto.Id,
-                        Title = movieDto.Title,
-                        CoverImage = movieDto.CoverImage,
-                        Rating = movieDto.Rating,
-                        Year = movieDto.Year,
-                        Genre = movieDto.Genre,
-                        CreatedAt = itemDto.CreatedAt,
-                        Type = "Movie"
-                    });
-                }
-                else
-                {
-                    var seriesDto = await _tvSeriesService.GetSeriesByIdAsync(itemDto.MovieId);
-                    if (seriesDto != null)
+                    var movieDto = await _movieService.GetMovieByIdAsync(itemDto.MovieId);
+                    if (movieDto != null)
                     {
                         movies.Add(new
                         {
                             WatchlistId = itemDto.Id,
-                            MovieId = seriesDto.Id,
-                            Title = seriesDto.Title,
-                            CoverImage = seriesDto.CoverImage,
-                            Rating = seriesDto.Rating,
-                            Year = seriesDto.Year,
-                            Genre = seriesDto.Genre,
+                            MovieId = movieDto.Id,
+                            Title = movieDto.Title,
+                            CoverImage = movieDto.CoverImage,
+                            Rating = movieDto.Rating,
+                            Year = movieDto.Year,
+                            Genre = movieDto.Genre,
                             CreatedAt = itemDto.CreatedAt,
-                            Type = "Series"
+                            Type = "Movie"
                         });
                     }
+                    else
+                    {
+                        var seriesDto = await _tvSeriesService.GetSeriesByIdAsync(itemDto.MovieId);
+                        if (seriesDto != null)
+                        {
+                            movies.Add(new
+                            {
+                                WatchlistId = itemDto.Id,
+                                MovieId = seriesDto.Id,
+                                Title = seriesDto.Title,
+                                CoverImage = seriesDto.CoverImage,
+                                Rating = seriesDto.Rating,
+                                Year = seriesDto.Year,
+                                Genre = seriesDto.Genre,
+                                CreatedAt = itemDto.CreatedAt,
+                                Type = "Series"
+                            });
+                        }
+                    }
                 }
+
+                ViewBag.WatchlistItems = movies;
+                ViewBag.IsLoggedIn = true;
+            }
+            else
+            {
+                // User is not logged in - view will load from localStorage via JavaScript
+                _logger.LogInformation("Anonymous user accessing watchlist - will load from localStorage");
+                ViewBag.WatchlistItems = new List<object>();
+                ViewBag.IsLoggedIn = false;
             }
 
-            ViewBag.WatchlistItems = movies;
             return View(viewName);
         }
 
