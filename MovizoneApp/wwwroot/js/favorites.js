@@ -79,35 +79,16 @@
 
     // Initialize favorites on page load
     function initFavorites() {
+        // Note: Click handlers are managed by watchlist.js to avoid conflicts
+        // This function only updates button states for items already in favorites
         document.querySelectorAll('.item__favorite').forEach(button => {
             const id = parseInt(button.dataset.id);
-            const type = button.dataset.type; // 'movie' or 'series'
-            const title = button.dataset.title;
-            const coverImage = button.dataset.coverImage || button.dataset.cover || '';
-            const rating = button.dataset.rating || 'N/A';
-            const year = button.dataset.year || '';
-            const genre = button.dataset.genre || '';
+            const type = button.dataset.type;
 
-            // Set initial state
-            if (isFavorite(id, type)) {
+            // Only update UI state, don't add click handlers
+            if (id && !isNaN(id) && isFavorite(id, type)) {
                 updateButtonUI(button, true);
             }
-
-            // Add click handler
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const isNowFavorite = toggleFavorite(id, type, title, coverImage, rating, year, genre);
-                updateButtonUI(button, isNowFavorite);
-
-                // Show toast notification (optional)
-                const message = isNowFavorite
-                    ? `Added "${title}" to favorites`
-                    : `Removed "${title}" from favorites`;
-
-                showToast(message);
-            });
         });
     }
 
