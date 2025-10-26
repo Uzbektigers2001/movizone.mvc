@@ -41,16 +41,19 @@
 
 						<!-- header nav -->
 						<ul class="header__nav">
-							<!-- dropdown -->
-							<li class="header__nav-item">
-								<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Home <i class="ti ti-chevron-down"></i></a>
+							@if (navSettings.ShowHomeInNav)
+							{
+								<!-- dropdown -->
+								<li class="header__nav-item">
+									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Home <i class="ti ti-chevron-down"></i></a>
 
-								<ul class="dropdown-menu header__dropdown-menu">
-									<li><a asp-controller="Home" asp-action="Index">Home</a></li>
-									<li><a asp-controller="Statistics" asp-action="Index">Statistics</a></li>
-								</ul>
-							</li>
-							<!-- end dropdown -->
+									<ul class="dropdown-menu header__dropdown-menu">
+										<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+										<li><a asp-controller="Statistics" asp-action="Index">Statistics</a></li>
+									</ul>
+								</li>
+								<!-- end dropdown -->
+							}
 
 							<!-- Catalog Items -->
 							@if (navSettings.ShowMoviesInNav)
@@ -75,30 +78,36 @@
 							}
 							<!-- end Catalog Items -->
 
-							<li class="header__nav-item">
-								<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">Pricing plan</a>
-							</li>
+							@if (navSettings.ShowPricingPlanInNav)
+							{
+								<li class="header__nav-item">
+									<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">Pricing plan</a>
+								</li>
+							}
 
-							<!-- dropdown -->
-							<li class="header__nav-item">
-								<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages <i class="ti ti-chevron-down"></i></a>
+							@if (navSettings.ShowPagesInNav)
+							{
+								<!-- dropdown -->
+								<li class="header__nav-item">
+									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages <i class="ti ti-chevron-down"></i></a>
 
-								<ul class="dropdown-menu header__dropdown-menu">
-									<li><a asp-controller="Home" asp-action="About">About Us</a></li>
-									@if (Context.Session.GetInt32("UserId").HasValue)
-									{
-										<li><a asp-controller="Auth" asp-action="Profile">Profile</a></li>
-									}
-									<li><a asp-controller="Home" asp-action="Contacts">Contacts</a></li>
-									<li><a asp-controller="Home" asp-action="Faq">Help center</a></li>
-									<li><a asp-controller="Home" asp-action="Privacy">Privacy policy</a></li>
-									@if (Context.Session.GetString("UserName") == "admin")
-									{
-										<li><a asp-controller="Admin" asp-action="Index">Admin pages</a></li>
-									}
-								</ul>
-							</li>
-							<!-- end dropdown -->
+									<ul class="dropdown-menu header__dropdown-menu">
+										<li><a asp-controller="Home" asp-action="About">About Us</a></li>
+										@if (Context.Session.GetInt32("UserId").HasValue)
+										{
+											<li><a asp-controller="Auth" asp-action="Profile">Profile</a></li>
+										}
+										<li><a asp-controller="Home" asp-action="Contacts">Contacts</a></li>
+										<li><a asp-controller="Home" asp-action="Faq">Help center</a></li>
+										<li><a asp-controller="Home" asp-action="Privacy">Privacy policy</a></li>
+										@if (Context.Session.GetString("UserName") == "admin")
+										{
+											<li><a asp-controller="Admin" asp-action="Index">Admin pages</a></li>
+										}
+									</ul>
+								</li>
+								<!-- end dropdown -->
+							}
 
 							<!-- dropdown -->
 							<li class="header__nav-item">

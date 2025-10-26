@@ -82,15 +82,26 @@
         <div class="col-md-12">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="ti ti-menu"></i> Navigation Settings</h5>
+                    <h5 class="mb-0"><i class="ti ti-menu"></i> Navigation Menu Items</h5>
                 </div>
                 <div class="card-body">
+                    <p class="text-muted mb-3">Control which items appear in the main navigation menu</p>
                     <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowHomeInNav" class="form-check-input" type="checkbox" id="showHomeNav">
+                                <label class="form-check-label" for="showHomeNav">
+                                    <strong>Show Home</strong><br>
+                                    <small class="text-muted">Link to home page</small>
+                                </label>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowMoviesInNav" class="form-check-input" type="checkbox" id="showMoviesNav">
                                 <label class="form-check-label" for="showMoviesNav">
-                                    <strong>Show Movies in Navigation</strong>
+                                    <strong>Show Movies</strong><br>
+                                    <small class="text-muted">Movies catalog link</small>
                                 </label>
                             </div>
                         </div>
@@ -98,7 +109,8 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowTVSeriesInNav" class="form-check-input" type="checkbox" id="showSeriesNav">
                                 <label class="form-check-label" for="showSeriesNav">
-                                    <strong>Show TV Series in Navigation</strong>
+                                    <strong>Show TV Series</strong><br>
+                                    <small class="text-muted">TV series catalog link</small>
                                 </label>
                             </div>
                         </div>
@@ -106,7 +118,26 @@
                             <div class="form-check form-switch mb-3">
                                 <input asp-for="ShowActorsInNav" class="form-check-input" type="checkbox" id="showActorsNav">
                                 <label class="form-check-label" for="showActorsNav">
-                                    <strong>Show Actors in Navigation</strong>
+                                    <strong>Show Actors</strong><br>
+                                    <small class="text-muted">Actors list link</small>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowPricingPlanInNav" class="form-check-input" type="checkbox" id="showPricingNav">
+                                <label class="form-check-label" for="showPricingNav">
+                                    <strong>Show Pricing Plan</strong><br>
+                                    <small class="text-muted">Pricing plans page</small>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowPagesInNav" class="form-check-input" type="checkbox" id="showPagesNav">
+                                <label class="form-check-label" for="showPagesNav">
+                                    <strong>Show Pages</strong><br>
+                                    <small class="text-muted">Pages dropdown menu</small>
                                 </label>
                             </div>
                         </div>
