@@ -41,6 +41,12 @@ namespace MovizoneApp.Models
         [MaxLength(500)]
         public string CoverImage { get; set; } = string.Empty;
 
+        [MaxLength(500)]
+        public string PosterImage { get; set; } = string.Empty;
+
+        [MaxLength(500)]
+        public string BannerImage { get; set; } = string.Empty;
+
         public List<string> Actors { get; set; } = new List<string>();
         public List<Episode> Episodes { get; set; } = new List<Episode>();
         public bool IsFeatured { get; set; }
