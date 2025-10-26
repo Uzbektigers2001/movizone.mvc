@@ -112,11 +112,11 @@
                     <div class="col-6 col-md-2">
                         <label class="form-label text-white">Rating</label>
                         <select name="ratingFrom" class="form-select bg-dark text-white border-secondary">
-                            <option value="">Any rating</option>
-                            <option value="3" selected="@(ViewBag.SelectedRatingFrom == "3")">from 3.0</option>
-                            <option value="5" selected="@(ViewBag.SelectedRatingFrom == "5")">from 5.0</option>
-                            <option value="7" selected="@(ViewBag.SelectedRatingFrom == "7")">from 7.0</option>
-                            <option value="9" selected="@(ViewBag.SelectedRatingFrom == "9")">from 9.0</option>
+                            <option value="" @(string.IsNullOrEmpty(ViewBag.SelectedRatingFrom as string) ? "selected" : "")>Any rating</option>
+                            <option value="3" @((ViewBag.SelectedRatingFrom as string) == "3" ? "selected" : "")>from 3.0</option>
+                            <option value="5" @((ViewBag.SelectedRatingFrom as string) == "5" ? "selected" : "")>from 5.0</option>
+                            <option value="7" @((ViewBag.SelectedRatingFrom as string) == "7" ? "selected" : "")>from 7.0</option>
+                            <option value="9" @((ViewBag.SelectedRatingFrom as string) == "9" ? "selected" : "")>from 9.0</option>
                         </select>
                     </div>
                     <div class="col-6 col-md-2">

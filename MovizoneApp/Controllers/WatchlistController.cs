@@ -35,6 +35,17 @@ namespace MovizoneApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            return await GetWatchlistView();
+        }
+
+        // Favorites is same as Watchlist
+        public async Task<IActionResult> Favorites()
+        {
+            return await GetWatchlistView("Favorites");
+        }
+
+        private async Task<IActionResult> GetWatchlistView(string viewName = "Index")
+        {
             // In real app, get userId from authenticated user
             int userId = 1;
             _logger.LogInformation("Fetching watchlist for user {UserId}", userId);
@@ -57,7 +68,7 @@ namespace MovizoneApp.Controllers
                         Rating = movieDto.Rating,
                         Year = movieDto.Year,
                         Genre = movieDto.Genre,
-                        AddedAt = itemDto.AddedAt,
+                        CreatedAt = itemDto.CreatedAt,
                         Type = "Movie"
                     });
                 }
@@ -75,7 +86,7 @@ namespace MovizoneApp.Controllers
                             Rating = seriesDto.Rating,
                             Year = seriesDto.Year,
                             Genre = seriesDto.Genre,
-                            AddedAt = itemDto.AddedAt,
+                            CreatedAt = itemDto.CreatedAt,
                             Type = "Series"
                         });
                     }
@@ -83,7 +94,7 @@ namespace MovizoneApp.Controllers
             }
 
             ViewBag.WatchlistItems = movies;
-            return View();
+            return View(viewName);
         }
 
         [HttpPost]
