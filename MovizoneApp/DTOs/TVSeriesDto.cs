@@ -22,10 +22,14 @@ namespace MovizoneApp.DTOs
         public string BannerImage { get; set; } = string.Empty;
         public List<string> Actors { get; set; } = new List<string>();
         public int TotalSeasons { get; set; }
+        public int Seasons { get; set; } // Alias for TotalSeasons
         public int TotalEpisodes { get; set; }
         public string Status { get; set; } = string.Empty;
+        public string Creator { get; set; } = string.Empty;
+        public DateTime? FirstAired { get; set; }
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; }
+        public bool ShowInBanner { get; set; }
 
         // Audit fields
         public DateTime CreatedAt { get; set; }
@@ -83,14 +87,23 @@ namespace MovizoneApp.DTOs
         [Range(1, 100)]
         public int TotalSeasons { get; set; }
 
+        [Range(1, 100)]
+        public int Seasons { get; set; } // Alias for TotalSeasons
+
         [Range(0, 1000)]
         public int TotalEpisodes { get; set; }
 
         [MaxLength(50)]
         public string Status { get; set; } = "Ongoing";
 
+        [MaxLength(200)]
+        public string Creator { get; set; } = string.Empty;
+
+        public DateTime? FirstAired { get; set; }
+
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; }
+        public bool ShowInBanner { get; set; }
     }
 
     /// <summary>
@@ -140,13 +153,22 @@ namespace MovizoneApp.DTOs
         [Range(1, 100)]
         public int TotalSeasons { get; set; }
 
+        [Range(1, 100)]
+        public int Seasons { get; set; } // Alias for TotalSeasons
+
         [Range(0, 1000)]
         public int TotalEpisodes { get; set; }
 
         [MaxLength(50)]
         public string Status { get; set; } = "Ongoing";
 
+        [MaxLength(200)]
+        public string Creator { get; set; } = string.Empty;
+
+        public DateTime? FirstAired { get; set; }
+
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; }
+        public bool ShowInBanner { get; set; }
     }
 }
