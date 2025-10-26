@@ -47,7 +47,9 @@ namespace MovizoneApp.Models
         [MaxLength(1000)]
         public string VideoUrl { get; set; } = string.Empty;
 
-        public List<string> Actors { get; set; } = new List<string>();
+        // Many-to-many relationship with Actor through MovieActor join entity
+        public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
+
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; } // Hide from public listings
         public bool ShowInBanner { get; set; } // Show in home page banner carousel

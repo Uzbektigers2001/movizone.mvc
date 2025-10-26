@@ -6,8 +6,12 @@ namespace MovizoneApp.Models
 {
     public class Review : BaseAuditableEntity
     {
+        // Either MovieId OR TVSeriesId should be set, not both
+        public int? MovieId { get; set; }
+        public Movie? Movie { get; set; }
 
-        public int MovieId { get; set; }
+        public int? TVSeriesId { get; set; }
+        public TVSeries? TVSeries { get; set; }
 
         public int UserId { get; set; }
 
@@ -21,5 +25,17 @@ namespace MovizoneApp.Models
 
         [Range(1, 10)]
         public int Rating { get; set; } // 1-10
+
+        /// <summary>
+        /// Helper property to get content type
+        /// </summary>
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public string ContentType => MovieId.HasValue ? "Movie" : "TVSeries";
+
+        /// <summary>
+        /// Helper property to get content ID
+        /// </summary>
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public int ContentId => MovieId ?? TVSeriesId ?? 0;
     }
 }

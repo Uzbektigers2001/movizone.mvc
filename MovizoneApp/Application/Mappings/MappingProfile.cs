@@ -17,6 +17,7 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
             CreateMap<CreateMovieDto, Movie>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.MovieActors, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -26,6 +27,7 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate ?? DateTime.UtcNow));
             CreateMap<UpdateMovieDto, Movie>()
+                .ForMember(dest => dest.MovieActors, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -49,6 +51,7 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Director));
             CreateMap<CreateTVSeriesDto, TVSeries>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.TVSeriesActors, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -62,6 +65,7 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.Seasons, opt => opt.MapFrom(src => src.TotalSeasons))
                 .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Director));
             CreateMap<UpdateTVSeriesDto, TVSeries>()
+                .ForMember(dest => dest.TVSeriesActors, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -89,6 +93,8 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
             CreateMap<CreateActorDto, Actor>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.MovieActors, opt => opt.Ignore())
+                .ForMember(dest => dest.TVSeriesActors, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -98,6 +104,8 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate ?? DateTime.UtcNow.AddYears(-30)));
             CreateMap<UpdateActorDto, Actor>()
+                .ForMember(dest => dest.MovieActors, opt => opt.Ignore())
+                .ForMember(dest => dest.TVSeriesActors, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -143,10 +151,15 @@ namespace MovizoneApp.Application.Mappings
 
             // Review mappings
             CreateMap<Review, ReviewDto>()
-                .ForMember(dest => dest.MovieTitle, opt => opt.Ignore()) // Will be populated from Movie
-                .ForMember(dest => dest.UserName, opt => opt.Ignore()); // Will be populated from User
+                .ForMember(dest => dest.ContentTitle, opt => opt.MapFrom(src =>
+                    src.MovieId.HasValue ? (src.Movie != null ? src.Movie.Title : string.Empty) :
+                    (src.TVSeries != null ? src.TVSeries.Title : string.Empty)))
+                .ForMember(dest => dest.ContentType, opt => opt.MapFrom(src =>
+                    src.MovieId.HasValue ? "Movie" : "TVSeries"));
             CreateMap<CreateReviewDto, Review>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Movie, opt => opt.Ignore())
+                .ForMember(dest => dest.TVSeries, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -156,6 +169,9 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
             CreateMap<UpdateReviewDto, Review>()
                 .ForMember(dest => dest.MovieId, opt => opt.Ignore())
+                .ForMember(dest => dest.Movie, opt => opt.Ignore())
+                .ForMember(dest => dest.TVSeriesId, opt => opt.Ignore())
+                .ForMember(dest => dest.TVSeries, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())

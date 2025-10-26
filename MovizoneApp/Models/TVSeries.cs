@@ -47,8 +47,12 @@ namespace MovizoneApp.Models
         [MaxLength(500)]
         public string BannerImage { get; set; } = string.Empty;
 
-        public List<string> Actors { get; set; } = new List<string>();
-        public List<Episode> Episodes { get; set; } = new List<Episode>();
+        // Many-to-many relationship with Actor through TVSeriesActor join entity
+        public ICollection<TVSeriesActor> TVSeriesActors { get; set; } = new List<TVSeriesActor>();
+
+        // One-to-many relationship with Episodes
+        public ICollection<Episode> Episodes { get; set; } = new List<Episode>();
+
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; } // Hide from public listings
         public bool ShowInBanner { get; set; } // Show in home page banner carousel
