@@ -140,9 +140,9 @@
 <div class="row mb-4">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
-            <h2><i class="ti ti-dashboard"></i> @Localizer.GetString("Admin.Dashboard")</h2>
+            <h2><i class="ti ti-dashboard"></i> @Localizer.GetString("Admin", "Dashboard")</h2>
             <a asp-action="CreateMovie" class="btn btn-primary">
-                <i class="ti ti-plus"></i> @Localizer.GetString("Admin.AddItem")
+                <i class="ti ti-plus"></i> @Localizer.GetString("Admin", "AddItem")
             </a>
         </div>
     </div>
@@ -153,7 +153,7 @@
     <!-- Subscriptions this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin.SubscriptionsThisMonth")</div>
+            <div class="stats-card__title">@Localizer.GetString("Admin", "SubscriptionsThisMonth")</div>
             <div class="stats-card__value">
                 @Model.SubscriptionsThisMonth.ToString("N0")
                 @if (Model.SubscriptionsChange != 0)
@@ -170,7 +170,7 @@
     <!-- Items added this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin.ItemsAddedThisMonth")</div>
+            <div class="stats-card__title">@Localizer.GetString("Admin", "ItemsAddedThisMonth")</div>
             <div class="stats-card__value">
                 @Model.ItemsAddedThisMonth.ToString("N0")
                 @if (Model.ItemsAddedChange != 0)
@@ -187,7 +187,7 @@
     <!-- Views this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin.ViewsThisMonth")</div>
+            <div class="stats-card__title">@Localizer.GetString("Admin", "ViewsThisMonth")</div>
             <div class="stats-card__value">
                 @Model.ViewsThisMonth.ToString("N0")
                 @if (Model.ViewsChangePercent != 0)
@@ -204,7 +204,7 @@
     <!-- Reviews this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin.ReviewsThisMonth")</div>
+            <div class="stats-card__title">@Localizer.GetString("Admin", "ReviewsThisMonth")</div>
             <div class="stats-card__value">
                 @Model.ReviewsThisMonth.ToString("N0")
                 @if (Model.ReviewsChange != 0)
@@ -226,19 +226,19 @@
         <div class="dashbox">
             <div class="dashbox__header">
                 <h3 class="dashbox__title">
-                    <i class="ti ti-trophy"></i> @Localizer.GetString("Admin.TopItems")
+                    <i class="ti ti-trophy"></i> @Localizer.GetString("Admin", "TopItems")
                 </h3>
                 <div class="dashbox__actions">
-                    <a asp-action="Movies">@Localizer.GetString("Admin.ViewAll")</a>
+                    <a asp-action="Movies">@Localizer.GetString("Admin", "ViewAll")</a>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="dashbox__table">
                     <thead>
                         <tr>
-                            <th>@Localizer.GetString("Admin.ID")</th>
+                            <th>@Localizer.GetString("Admin", "ID")</th>
                             <th>@Localizer.GetString("Movie.Title")</th>
-                            <th>@Localizer.GetString("Admin.Category")</th>
+                            <th>@Localizer.GetString("Admin", "Category")</th>
                             <th>@Localizer.GetString("Movie.Rating")</th>
                         </tr>
                     </thead>
@@ -258,7 +258,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin.NoItemsAvailable")</td>
+                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin", "NoItemsAvailable")</td>
                             </tr>
                         }
                     </tbody>
@@ -272,19 +272,19 @@
         <div class="dashbox">
             <div class="dashbox__header">
                 <h3 class="dashbox__title">
-                    <i class="ti ti-movie"></i> @Localizer.GetString("Admin.LatestItems")
+                    <i class="ti ti-movie"></i> @Localizer.GetString("Admin", "LatestItems")
                 </h3>
                 <div class="dashbox__actions">
-                    <a asp-action="Movies">@Localizer.GetString("Admin.ViewAll")</a>
+                    <a asp-action="Movies">@Localizer.GetString("Admin", "ViewAll")</a>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="dashbox__table">
                     <thead>
                         <tr>
-                            <th>@Localizer.GetString("Admin.ID")</th>
+                            <th>@Localizer.GetString("Admin", "ID")</th>
                             <th>@Localizer.GetString("Movie.Title")</th>
-                            <th>@Localizer.GetString("Admin.Category")</th>
+                            <th>@Localizer.GetString("Admin", "Category")</th>
                             <th>@Localizer.GetString("Movie.Rating")</th>
                         </tr>
                     </thead>
@@ -304,7 +304,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin.NoItemsAvailable")</td>
+                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin", "NoItemsAvailable")</td>
                             </tr>
                         }
                     </tbody>
@@ -320,20 +320,20 @@
         <div class="dashbox">
             <div class="dashbox__header">
                 <h3 class="dashbox__title">
-                    <i class="ti ti-users"></i> @Localizer.GetString("Admin.LatestUsers")
+                    <i class="ti ti-users"></i> @Localizer.GetString("Admin", "LatestUsers")
                 </h3>
                 <div class="dashbox__actions">
-                    <a asp-action="Users">@Localizer.GetString("Admin.ViewAll")</a>
+                    <a asp-action="Users">@Localizer.GetString("Admin", "ViewAll")</a>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="dashbox__table">
                     <thead>
                         <tr>
-                            <th>@Localizer.GetString("Admin.ID")</th>
-                            <th>@Localizer.GetString("Admin.FullName")</th>
+                            <th>@Localizer.GetString("Admin", "ID")</th>
+                            <th>@Localizer.GetString("Admin", "FullName")</th>
                             <th>@Localizer.GetString("Common.Email")</th>
-                            <th>@Localizer.GetString("Admin.Username")</th>
+                            <th>@Localizer.GetString("Admin", "Username")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -352,7 +352,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin.NoUsersAvailable")</td>
+                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin", "NoUsersAvailable")</td>
                             </tr>
                         }
                     </tbody>
@@ -366,19 +366,19 @@
         <div class="dashbox">
             <div class="dashbox__header">
                 <h3 class="dashbox__title">
-                    <i class="ti ti-star-half-filled"></i> @Localizer.GetString("Admin.LatestReviews")
+                    <i class="ti ti-star-half-filled"></i> @Localizer.GetString("Admin", "LatestReviews")
                 </h3>
                 <div class="dashbox__actions">
-                    <a asp-action="Reviews">@Localizer.GetString("Admin.ViewAll")</a>
+                    <a asp-action="Reviews">@Localizer.GetString("Admin", "ViewAll")</a>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="dashbox__table">
                     <thead>
                         <tr>
-                            <th>@Localizer.GetString("Admin.ID")</th>
-                            <th>@Localizer.GetString("Admin.Item")</th>
-                            <th>@Localizer.GetString("Admin.Author")</th>
+                            <th>@Localizer.GetString("Admin", "ID")</th>
+                            <th>@Localizer.GetString("Admin", "Item")</th>
+                            <th>@Localizer.GetString("Admin", "Author")</th>
                             <th>@Localizer.GetString("Movie.Rating")</th>
                         </tr>
                     </thead>
@@ -398,7 +398,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin.NoReviewsAvailable")</td>
+                                <td colspan="4" class="text-center text-muted py-3">@Localizer.GetString("Admin", "NoReviewsAvailable")</td>
                             </tr>
                         }
                     </tbody>
