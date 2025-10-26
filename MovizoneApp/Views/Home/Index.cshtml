@@ -98,14 +98,14 @@
     <div class="container mb-4">
         <div class="card bg-dark border-secondary" style="box-shadow: none;">
             <div class="card-body">
-                <form asp-controller="Movie" asp-action="Catalog" method="get" class="row g-3 align-items-end">
+                <form asp-controller="Home" asp-action="Index" method="get" class="row g-3 align-items-end">
                     <div class="col-6 col-md-3">
                         <label class="form-label text-white"><i class="ti ti-filter me-1"></i> Genre</label>
                         <select name="genre" class="form-select bg-dark text-white border-secondary">
                             <option value="">All genres</option>
                             @foreach (var genre in allGenres)
                             {
-                                <option value="@genre">@genre</option>
+                                <option value="@genre" selected="@(ViewBag.SelectedGenre == genre)">@genre</option>
                             }
                         </select>
                     </div>
@@ -113,28 +113,28 @@
                         <label class="form-label text-white">Rating</label>
                         <select name="ratingFrom" class="form-select bg-dark text-white border-secondary">
                             <option value="">Any rating</option>
-                            <option value="3">from 3.0</option>
-                            <option value="5">from 5.0</option>
-                            <option value="7">from 7.0</option>
-                            <option value="9">from 9.0</option>
+                            <option value="3" selected="@(ViewBag.SelectedRatingFrom == "3")">from 3.0</option>
+                            <option value="5" selected="@(ViewBag.SelectedRatingFrom == "5")">from 5.0</option>
+                            <option value="7" selected="@(ViewBag.SelectedRatingFrom == "7")">from 7.0</option>
+                            <option value="9" selected="@(ViewBag.SelectedRatingFrom == "9")">from 9.0</option>
                         </select>
                     </div>
                     <div class="col-6 col-md-2">
                         <label class="form-label text-white">Year</label>
                         <select name="yearFrom" class="form-select bg-dark text-white border-secondary">
                             <option value="">Any year</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2020">2020+</option>
+                            <option value="2024" selected="@(ViewBag.SelectedYearFrom == "2024")">2024</option>
+                            <option value="2023" selected="@(ViewBag.SelectedYearFrom == "2023")">2023</option>
+                            <option value="2022" selected="@(ViewBag.SelectedYearFrom == "2022")">2022</option>
+                            <option value="2020" selected="@(ViewBag.SelectedYearFrom == "2020")">2020+</option>
                         </select>
                     </div>
                     <div class="col-6 col-md-2">
                         <label class="form-label text-white">Sort</label>
                         <select name="sort" class="form-select bg-dark text-white border-secondary">
-                            <option value="newest">Newest</option>
-                            <option value="rating">Rating</option>
-                            <option value="title">Title</option>
+                            <option value="newest" selected="@(ViewBag.SelectedSort == "newest")">Newest</option>
+                            <option value="rating" selected="@(ViewBag.SelectedSort == "rating")">Rating</option>
+                            <option value="title" selected="@(ViewBag.SelectedSort == "title")">Title</option>
                         </select>
                     </div>
                     <div class="col-12 col-md-3">
@@ -162,7 +162,7 @@
                             <i class="ti ti-player-play-filled"></i>
                         </a>
                         <span class="item__rate @ratingClass">@movie.Rating</span>
-                        <button class="item__favorite" type="button" title="Add to watchlist">
+                        <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title">
                             <i class="ti ti-bookmark"></i>
                         </button>
                     </div>
@@ -246,7 +246,7 @@
                             <i class="ti ti-player-play-filled"></i>
                         </a>
                         <span class="item__rate @ratingClass">@movie.Rating</span>
-                        <button class="item__favorite" type="button" title="Add to watchlist">
+                        <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title">
                             <i class="ti ti-bookmark"></i>
                         </button>
                     </div>
@@ -317,7 +317,7 @@
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <span class="item__rate @ratingClass">@item.Rating.ToString("0.0")</span>
-                                <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@item.Id" data-type="@item.Type" data-title="@item.Title"><i class="ti ti-bookmark"></i></button>
                             </div>
                             <div class="item__content">
                                 <h3 class="item__title">
@@ -354,7 +354,7 @@
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <span class="item__rate @ratingClass">@movie.Rating.ToString("0.0")</span>
-                                <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@movie.Id" data-type="movie" data-title="@movie.Title"><i class="ti ti-bookmark"></i></button>
                             </div>
                             <div class="item__content">
                                 <h3 class="item__title">
@@ -391,7 +391,7 @@
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <span class="item__rate @ratingClass">@series.Rating.ToString("0.0")</span>
-                                <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                <button class="item__favorite" type="button" title="Add to favorites" data-id="@series.Id" data-type="series" data-title="@series.Title"><i class="ti ti-bookmark"></i></button>
                             </div>
                             <div class="item__content">
                                 <h3 class="item__title">

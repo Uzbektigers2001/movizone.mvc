@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovizoneApp.Services;
 using MovizoneApp.Models;
+using MovizoneApp.Enums;
 
 namespace MovizoneApp.Controllers
 {
@@ -31,7 +32,7 @@ namespace MovizoneApp.Controllers
 
         private bool IsAdmin()
         {
-            return HttpContext.Session.GetString("UserRole") == "Admin";
+            return HttpContext.Session.GetString(SessionKeys.UserRole) == UserRole.Admin;
         }
 
         public IActionResult Index()
@@ -72,11 +73,11 @@ namespace MovizoneApp.Controllers
         {
             var user = _userService.Authenticate(email, password);
 
-            if (user != null && user.Role == "Admin")
+            if (user != null && user.Role == UserRole.Admin)
             {
-                HttpContext.Session.SetString("UserId", user.Id.ToString());
-                HttpContext.Session.SetString("UserName", user.Name);
-                HttpContext.Session.SetString("UserRole", user.Role);
+                HttpContext.Session.SetString(SessionKeys.UserId, user.Id.ToString());
+                HttpContext.Session.SetString(SessionKeys.UserName, user.Name);
+                HttpContext.Session.SetString(SessionKeys.UserRole, user.Role);
 
                 return RedirectToAction("Index");
             }
@@ -800,7 +801,7 @@ namespace MovizoneApp.Controllers
             if (!IsAdmin()) return RedirectToAction("Login");
 
             _settingsService.UpdateSettings(settings);
-            TempData["Success"] = "Settings updated successfully!";
+            TempData[TempDataKeys.Success] = "Settings updated successfully!";
             return RedirectToAction("Settings");
         }
     }

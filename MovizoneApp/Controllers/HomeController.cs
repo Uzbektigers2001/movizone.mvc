@@ -20,7 +20,7 @@ public class HomeController : Controller
         _settingsService = settingsService;
     }
 
-    public IActionResult Index(int page = 1)
+    public IActionResult Index(int page = 1, string genre = "", string ratingFrom = "", string yearFrom = "", string sort = "newest")
     {
         // Banner Movies (only movies with ShowInBanner=true and not hidden)
         var bannerMovies = _movieService.GetAllMovies()
@@ -34,9 +34,41 @@ public class HomeController : Controller
             .OrderByDescending(s => s.Rating)
             .ToList();
 
-        // Pagination for catalog grid
+        // Pagination for catalog grid with filters
         int pageSize = 18;
         var allFeaturedMovies = _movieService.GetFeaturedMovies().Where(m => !m.IsHidden).ToList();
+
+        // Apply filters
+        if (!string.IsNullOrEmpty(genre))
+        {
+            allFeaturedMovies = allFeaturedMovies.Where(m => m.Genre.Contains(genre, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(ratingFrom) && double.TryParse(ratingFrom, out double minRating))
+        {
+            allFeaturedMovies = allFeaturedMovies.Where(m => m.Rating >= minRating).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(yearFrom) && int.TryParse(yearFrom, out int year))
+        {
+            if (year == 2020)
+            {
+                allFeaturedMovies = allFeaturedMovies.Where(m => m.Year >= 2020).ToList();
+            }
+            else
+            {
+                allFeaturedMovies = allFeaturedMovies.Where(m => m.Year == year).ToList();
+            }
+        }
+
+        // Apply sorting
+        allFeaturedMovies = sort switch
+        {
+            "rating" => allFeaturedMovies.OrderByDescending(m => m.Rating).ToList(),
+            "title" => allFeaturedMovies.OrderBy(m => m.Title).ToList(),
+            _ => allFeaturedMovies.OrderByDescending(m => m.ReleaseDate).ToList() // newest
+        };
+
         var totalPages = (int)Math.Ceiling(allFeaturedMovies.Count / (double)pageSize);
         var featuredMovies = allFeaturedMovies
             .Skip((page - 1) * pageSize)
@@ -45,6 +77,10 @@ public class HomeController : Controller
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = totalPages;
+        ViewBag.SelectedGenre = genre;
+        ViewBag.SelectedRatingFrom = ratingFrom;
+        ViewBag.SelectedYearFrom = yearFrom;
+        ViewBag.SelectedSort = sort;
         var featuredSeries = _tvSeriesService.GetFeaturedSeries().Where(s => !s.IsHidden).ToList();
 
         // Top Rated (rating >= 8.0)
