@@ -18,7 +18,7 @@ public class HomeController : Controller
         _tvSeriesService = tvSeriesService;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(int page = 1)
     {
         // Banner Movies (only movies with ShowInBanner=true and not hidden)
         var bannerMovies = _movieService.GetAllMovies()
@@ -32,7 +32,17 @@ public class HomeController : Controller
             .OrderByDescending(s => s.Rating)
             .ToList();
 
-        var featuredMovies = _movieService.GetFeaturedMovies().Where(m => !m.IsHidden).ToList();
+        // Pagination for catalog grid
+        int pageSize = 18;
+        var allFeaturedMovies = _movieService.GetFeaturedMovies().Where(m => !m.IsHidden).ToList();
+        var totalPages = (int)Math.Ceiling(allFeaturedMovies.Count / (double)pageSize);
+        var featuredMovies = allFeaturedMovies
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
         var featuredSeries = _tvSeriesService.GetFeaturedSeries().Where(s => !s.IsHidden).ToList();
 
         // Top Rated (rating >= 8.0)
