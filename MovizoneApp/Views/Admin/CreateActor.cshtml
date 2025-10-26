@@ -12,7 +12,7 @@
 
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0">Add New Actor</h5>
+        <h5 class="mb-0">@Localizer.GetString("Admin", "AddNewActor")</h5>
     </div>
     <div class="card-body">
         <form asp-action="CreateActor" method="post" enctype="multipart/form-data">
@@ -42,7 +42,7 @@
                     <input asp-for="Photo" class="form-control" placeholder="/img/covers/actor.jpg">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Upload Photo</label>
+                    <label class="form-label">@Localizer.GetString("UploadPhoto")</label>
                     <input type="file" name="photoFile" class="form-control" accept="image/*">
                 </div>
             </div>

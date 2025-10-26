@@ -19,7 +19,7 @@
     "Search": "Search",
     "Watchlist": "Watchlist",
     "Favorites": "Favorites",
-    "More": "More",
+    "More": "more",
     "Back": "Back",
     "Save": "Save",
     "Cancel": "Cancel",
@@ -57,7 +57,23 @@
     "Info": "Info",
     "Confirm": "Confirm",
     "Yes": "Yes",
-    "No": "No"
+    "No": "No",
+    "Newest": "Newest",
+    "NewItems": "New items",
+    "Upload": "Upload",
+    "UploadPhoto": "Upload Photo",
+    "UploadNewPhoto": "Upload New Photo",
+    "UploadCoverImage": "Upload Cover Image",
+    "UploadPosterImage": "Upload Poster Image",
+    "UploadThumbnail": "Upload Thumbnail Image",
+    "UploadNewCover": "Upload New Cover",
+    "UploadNewPoster": "Upload New Poster",
+    "UploadNewBanner": "Upload New Banner Image",
+    "UploadNewThumbnail": "Upload New Thumbnail",
+    "UploadVideoFile": "Upload New Video File",
+    "SelectSeries": "Select Series...",
+    "LeaveEmptyToKeep": "leave empty to keep current",
+    "NewPassword": "New Password"
   },
   "Home": {
     "Welcome": "Welcome to HotFlix",
@@ -84,7 +100,9 @@
     "Address": "Address",
     "Phone": "Phone",
     "AboutTitle": "About HotFlix",
-    "AboutDescription": "Your premier destination for movies and TV shows"
+    "AboutDescription": "Your premier destination for movies and TV shows",
+    "SelectPerfectPlan": "Select the perfect plan for your streaming needs",
+    "NewContentRegularly": "New content added regularly"
   },
   "Movie": {
     "Title": "Title",
@@ -130,7 +148,8 @@
     "BelowAverage": "Below Average",
     "Poor": "Poor",
     "VeryPoor": "Very Poor",
-    "Terrible": "Terrible"
+    "Terrible": "Terrible",
+    "SampleVideoNote": "Sample video - In production, this would be the actual movie."
   },
   "TVSeries": {
     "Creator": "Creator",
@@ -158,7 +177,8 @@
     "KnownFor": "Known For",
     "Filmography": "Filmography",
     "AllActors": "All Actors",
-    "ActorsCatalog": "Actors Catalog"
+    "ActorsCatalog": "Actors Catalog",
+    "BrowseTalentedCast": "Browse our talented cast"
   },
   "Pricing": {
     "ChooseYourPlan": "Choose Your Plan",
@@ -174,7 +194,8 @@
     "GetStarted": "Get Started",
     "CurrentPlan": "Current Plan",
     "PopularPlan": "Most Popular",
-    "SelectPlan": "Select Plan"
+    "SelectPlan": "Select Plan",
+    "SelectYourPlan": "Select Your Plan"
   },
   "Watchlist": {
     "MyWatchlist": "My Watchlist",
@@ -279,7 +300,11 @@
     "DeleteConfirm": "This action cannot be undone",
     "SuccessfullyCreated": "Successfully created",
     "SuccessfullyUpdated": "Successfully updated",
-    "SuccessfullyDeleted": "Successfully deleted"
+    "SuccessfullyDeleted": "Successfully deleted",
+    "AddNewMovie": "Add New Movie",
+    "AddNewSeries": "Add New TV Series",
+    "AddNewActor": "Add New Actor",
+    "AddNewEpisode": "Add New Episode"
   },
   "Auth": {
     "EmailAddress": "Email Address",

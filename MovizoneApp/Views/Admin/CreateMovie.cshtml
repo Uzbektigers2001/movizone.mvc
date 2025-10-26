@@ -12,7 +12,7 @@
 
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0">Add New Movie</h5>
+        <h5 class="mb-0">@Localizer.GetString("Admin", "AddNewMovie")</h5>
     </div>
     <div class="card-body">
         <form asp-action="CreateMovie" method="post" enctype="multipart/form-data">
@@ -63,7 +63,7 @@
                     <small class="text-muted">Or upload below</small>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Upload Cover Image</label>
+                    <label class="form-label">@Localizer.GetString("UploadCoverImage")</label>
                     <input type="file" name="coverFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -75,7 +75,7 @@
                     <small class="text-muted">Or upload below. Falls back to cover image if not set.</small>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Upload Poster Image</label>
+                    <label class="form-label">@Localizer.GetString("UploadPosterImage")</label>
                     <input type="file" name="posterFile" class="form-control" accept="image/*">
                 </div>
             </div>

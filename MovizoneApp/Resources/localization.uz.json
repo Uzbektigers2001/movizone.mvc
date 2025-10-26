@@ -19,7 +19,7 @@
     "Search": "Qidirish",
     "Watchlist": "Ko'rish ro'yxati",
     "Favorites": "Sevimlilar",
-    "More": "Yana",
+    "More": "yana",
     "Back": "Orqaga",
     "Save": "Saqlash",
     "Cancel": "Bekor qilish",
@@ -57,7 +57,23 @@
     "Info": "Ma'lumot",
     "Confirm": "Tasdiqlash",
     "Yes": "Ha",
-    "No": "Yo'q"
+    "No": "Yo'q",
+    "Newest": "Eng yangi",
+    "NewItems": "Yangi elementlar",
+    "Upload": "Yuklash",
+    "UploadPhoto": "Foto yuklash",
+    "UploadNewPhoto": "Yangi foto yuklash",
+    "UploadCoverImage": "Muqova rasmini yuklash",
+    "UploadPosterImage": "Poster rasmini yuklash",
+    "UploadThumbnail": "Eskiz rasmini yuklash",
+    "UploadNewCover": "Yangi muqova yuklash",
+    "UploadNewPoster": "Yangi poster yuklash",
+    "UploadNewBanner": "Yangi banner rasmini yuklash",
+    "UploadNewThumbnail": "Yangi eskiz yuklash",
+    "UploadVideoFile": "Yangi video faylni yuklash",
+    "SelectSeries": "Serialni tanlang...",
+    "LeaveEmptyToKeep": "joriy holatda qoldirish uchun bo'sh qoldiring",
+    "NewPassword": "Yangi parol"
   },
   "Home": {
     "Welcome": "HotFlix'ga xush kelibsiz",
@@ -84,7 +100,9 @@
     "Address": "Manzil",
     "Phone": "Telefon",
     "AboutTitle": "HotFlix haqida",
-    "AboutDescription": "Filmlar va seriallar uchun eng yaxshi joyingiz"
+    "AboutDescription": "Filmlar va seriallar uchun eng yaxshi joyingiz",
+    "SelectPerfectPlan": "O'zingiz uchun eng mos rejani tanlang",
+    "NewContentRegularly": "Yangi kontent muntazam qo'shiladi"
   },
   "Movie": {
     "Title": "Sarlavha",
@@ -130,7 +148,8 @@
     "BelowAverage": "O'rtachadan past",
     "Poor": "Yomon",
     "VeryPoor": "Juda yomon",
-    "Terrible": "Dahshatli"
+    "Terrible": "Dahshatli",
+    "SampleVideoNote": "Namuna video - Ishlab chiqarishda bu haqiqiy film bo'ladi."
   },
   "TVSeries": {
     "Creator": "Yaratuvchi",
@@ -158,7 +177,8 @@
     "KnownFor": "Tanilgan",
     "Filmography": "Filmografiya",
     "AllActors": "Barcha aktyorlar",
-    "ActorsCatalog": "Aktyorlar katalogi"
+    "ActorsCatalog": "Aktyorlar katalogi",
+    "BrowseTalentedCast": "Iqtidorli aktyorlarimizni ko'ring"
   },
   "Pricing": {
     "ChooseYourPlan": "Rejangizni tanlang",
@@ -174,7 +194,8 @@
     "GetStarted": "Boshlash",
     "CurrentPlan": "Joriy reja",
     "PopularPlan": "Eng mashhur",
-    "SelectPlan": "Rejani tanlash"
+    "SelectPlan": "Rejani tanlash",
+    "SelectYourPlan": "Rejangizni tanlang"
   },
   "Watchlist": {
     "MyWatchlist": "Mening ro'yxatim",
@@ -279,7 +300,11 @@
     "DeleteConfirm": "Bu amalni bekor qilish mumkin emas",
     "SuccessfullyCreated": "Muvaffaqiyatli yaratildi",
     "SuccessfullyUpdated": "Muvaffaqiyatli yangilandi",
-    "SuccessfullyDeleted": "Muvaffaqiyatli o'chirildi"
+    "SuccessfullyDeleted": "Muvaffaqiyatli o'chirildi",
+    "AddNewMovie": "Yangi film qo'shish",
+    "AddNewSeries": "Yangi serial qo'shish",
+    "AddNewActor": "Yangi aktyor qo'shish",
+    "AddNewEpisode": "Yangi epizod qo'shish"
   },
   "Auth": {
     "EmailAddress": "Email manzil",
