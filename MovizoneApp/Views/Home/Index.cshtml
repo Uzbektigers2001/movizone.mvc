@@ -144,8 +144,8 @@
 
     <!-- Catalog Grid -->
     <div class="container">
-        <div class="row g-3 g-md-4 mb-5">
-            @foreach (var movie in featuredMovies.Take(18))
+        <div class="row g-3 g-md-4 mb-4">
+            @foreach (var movie in featuredMovies)
             {
                 var ratingClass = movie.Rating >= 8 ? "item__rate--green" : movie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
@@ -173,13 +173,40 @@
             }
         </div>
 
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <a asp-controller="Movie" asp-action="Catalog" class="btn btn-outline-primary btn-lg px-5">
-                    <i class="ti ti-reload me-2"></i> Load More
-                </a>
+        <!-- Pagination -->
+        @{
+            var currentPage = ViewBag.CurrentPage ?? 1;
+            var totalPages = ViewBag.TotalPages ?? 1;
+        }
+        @if (totalPages > 1)
+        {
+            <div class="row mb-5">
+                <div class="col-12">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage - 1)">
+                                    <i class="ti ti-chevron-left"></i> Previous
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                                <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage + 1)">
+                                    Next <i class="ti ti-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
@@ -224,8 +251,8 @@
 </section>
 
 <!-- Recently Updated -->
-<section class="content py-5" style="background-color: #0f0f1e; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-    <div class="content__head">
+<section class="content py-5" style="background-color: #0f0f1e;">
+    <div class="content__head" style="background-color: transparent;">
         <div class="container">
             <div class="row">
                 <div class="col-12">
