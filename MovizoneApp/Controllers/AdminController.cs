@@ -242,7 +242,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
+        public async Task<IActionResult> CreateMovie(CreateMovieDto movieDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -251,25 +251,25 @@ namespace MovizoneApp.Controllers
             {
                 _logger.LogWarning("Movie creation failed - ModelState invalid");
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
-                return View(movie);
+                return View(movieDto);
             }
 
             // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
-            if (string.IsNullOrWhiteSpace(movie.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(movieDto.VideoUrl) && (videoFile == null || videoFile.Length == 0))
             {
                 _logger.LogWarning("Movie creation failed - No video content provided");
                 TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
                 ModelState.AddModelError("VideoUrl", "Either Video URL or video file is required");
-                return View(movie);
+                return View(movieDto);
             }
 
             // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
-            if (string.IsNullOrWhiteSpace(movie.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(movieDto.CoverImage) && (coverFile == null || coverFile.Length == 0))
             {
                 _logger.LogWarning("Movie creation failed - No cover image provided");
                 TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
                 ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
-                return View(movie);
+                return View(movieDto);
             }
 
             // Handle cover image upload
@@ -283,7 +283,7 @@ namespace MovizoneApp.Controllers
                     await coverFile.CopyToAsync(stream);
                 }
 
-                movie.CoverImage = $"/img/covers/{fileName}";
+                movieDto.CoverImage = $"/img/covers/{fileName}";
             }
 
             // Handle poster image upload
@@ -304,7 +304,7 @@ namespace MovizoneApp.Controllers
                     await posterFile.CopyToAsync(stream);
                 }
 
-                movie.PosterImage = $"/img/posters/{posterFileName}";
+                movieDto.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             // Handle banner image upload
@@ -325,7 +325,7 @@ namespace MovizoneApp.Controllers
                     await bannerFile.CopyToAsync(stream);
                 }
 
-                movie.BannerImage = $"/img/banners/{bannerFileName}";
+                movieDto.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
             // Handle video file upload
@@ -346,25 +346,24 @@ namespace MovizoneApp.Controllers
                     await videoFile.CopyToAsync(stream);
                 }
 
-                movie.VideoUrl = $"/videos/{videoFileName}";
+                movieDto.VideoUrl = $"/videos/{videoFileName}";
             }
 
             // Parse actors list
             if (!string.IsNullOrEmpty(actorsList))
             {
-                movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+                movieDto.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
             try
             {
-                var createDto = _mapper.Map<CreateMovieDto>(movie);
-                await _movieService.CreateMovieAsync(createDto);
-                _logger.LogInformation("Movie created successfully: {Title}", movie.Title);
+                await _movieService.CreateMovieAsync(movieDto);
+                _logger.LogInformation("Movie created successfully: {Title}", movieDto.Title);
                 TempData[TempDataKeys.Success] = "Movie created successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating movie: {Title}", movie.Title);
+                _logger.LogError(ex, "Error creating movie: {Title}", movieDto.Title);
                 TempData[TempDataKeys.Error] = "Failed to create movie. Please try again.";
             }
 
@@ -384,39 +383,39 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var movie = _mapper.Map<Movie>(movieDto);
-            return View(movie);
+            var updateDto = _mapper.Map<UpdateMovieDto>(movieDto);
+            return View(updateDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMovie(Movie movie, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
+        public async Task<IActionResult> EditMovie(UpdateMovieDto movieDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             // Validate required fields
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Movie update failed - ModelState invalid for ID: {MovieId}", movie.Id);
+                _logger.LogWarning("Movie update failed - ModelState invalid for ID: {MovieId}", movieDto.Id);
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
-                return View(movie);
+                return View(movieDto);
             }
 
             // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
-            if (string.IsNullOrWhiteSpace(movie.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(movieDto.VideoUrl) && (videoFile == null || videoFile.Length == 0))
             {
-                _logger.LogWarning("Movie update failed - No video content provided for ID: {MovieId}", movie.Id);
+                _logger.LogWarning("Movie update failed - No video content provided for ID: {MovieId}", movieDto.Id);
                 TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
                 ModelState.AddModelError("VideoUrl", "Either Video URL or video file is required");
-                return View(movie);
+                return View(movieDto);
             }
 
             // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
-            if (string.IsNullOrWhiteSpace(movie.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(movieDto.CoverImage) && (coverFile == null || coverFile.Length == 0))
             {
-                _logger.LogWarning("Movie update failed - No cover image provided for ID: {MovieId}", movie.Id);
+                _logger.LogWarning("Movie update failed - No cover image provided for ID: {MovieId}", movieDto.Id);
                 TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
                 ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
-                return View(movie);
+                return View(movieDto);
             }
 
             // Handle cover file upload
@@ -430,7 +429,7 @@ namespace MovizoneApp.Controllers
                     await coverFile.CopyToAsync(stream);
                 }
 
-                movie.CoverImage = $"/img/covers/{fileName}";
+                movieDto.CoverImage = $"/img/covers/{fileName}";
             }
 
             // Handle poster file upload
@@ -451,7 +450,7 @@ namespace MovizoneApp.Controllers
                     await posterFile.CopyToAsync(stream);
                 }
 
-                movie.PosterImage = $"/img/posters/{posterFileName}";
+                movieDto.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             // Handle banner file upload
@@ -472,7 +471,7 @@ namespace MovizoneApp.Controllers
                     await bannerFile.CopyToAsync(stream);
                 }
 
-                movie.BannerImage = $"/img/banners/{bannerFileName}";
+                movieDto.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
             // Handle video file upload
@@ -493,25 +492,24 @@ namespace MovizoneApp.Controllers
                     await videoFile.CopyToAsync(stream);
                 }
 
-                movie.VideoUrl = $"/videos/{videoFileName}";
+                movieDto.VideoUrl = $"/videos/{videoFileName}";
             }
 
             // Parse actors list
             if (!string.IsNullOrEmpty(actorsList))
             {
-                movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+                movieDto.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
             try
             {
-                var updateDto = _mapper.Map<UpdateMovieDto>(movie);
-                await _movieService.UpdateMovieAsync(updateDto);
-                _logger.LogInformation("Movie updated successfully: {MovieId}", movie.Id);
+                await _movieService.UpdateMovieAsync(movieDto);
+                _logger.LogInformation("Movie updated successfully: {MovieId}", movieDto.Id);
                 TempData[TempDataKeys.Success] = "Movie updated successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating movie: {MovieId}", movie.Id);
+                _logger.LogError(ex, "Error updating movie: {MovieId}", movieDto.Id);
                 TempData[TempDataKeys.Error] = "Failed to update movie. Please try again.";
             }
 
@@ -571,7 +569,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
+        public async Task<IActionResult> CreateSeries(CreateTVSeriesDto seriesDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -580,16 +578,16 @@ namespace MovizoneApp.Controllers
             {
                 _logger.LogWarning("TV series creation failed - ModelState invalid");
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
-                return View(series);
+                return View(seriesDto);
             }
 
             // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
-            if (string.IsNullOrWhiteSpace(series.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(seriesDto.CoverImage) && (coverFile == null || coverFile.Length == 0))
             {
                 _logger.LogWarning("TV series creation failed - No cover image provided");
                 TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
                 ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
-                return View(series);
+                return View(seriesDto);
             }
 
             if (coverFile != null && coverFile.Length > 0)
@@ -602,7 +600,7 @@ namespace MovizoneApp.Controllers
                     await coverFile.CopyToAsync(stream);
                 }
 
-                series.CoverImage = $"/img/covers/{fileName}";
+                seriesDto.CoverImage = $"/img/covers/{fileName}";
             }
 
             // Handle poster image upload
@@ -623,7 +621,7 @@ namespace MovizoneApp.Controllers
                     await posterFile.CopyToAsync(stream);
                 }
 
-                series.PosterImage = $"/img/posters/{posterFileName}";
+                seriesDto.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             // Handle banner image upload
@@ -644,24 +642,23 @@ namespace MovizoneApp.Controllers
                     await bannerFile.CopyToAsync(stream);
                 }
 
-                series.BannerImage = $"/img/banners/{bannerFileName}";
+                seriesDto.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
             if (!string.IsNullOrEmpty(actorsList))
             {
-                series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+                seriesDto.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
             try
             {
-                var createDto = _mapper.Map<CreateTVSeriesDto>(series);
-                await _seriesService.CreateSeriesAsync(createDto);
-                _logger.LogInformation("TV series created successfully: {Title}", series.Title);
+                await _seriesService.CreateSeriesAsync(seriesDto);
+                _logger.LogInformation("TV series created successfully: {Title}", seriesDto.Title);
                 TempData[TempDataKeys.Success] = "TV series created successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating TV series: {Title}", series.Title);
+                _logger.LogError(ex, "Error creating TV series: {Title}", seriesDto.Title);
                 TempData[TempDataKeys.Error] = "Failed to create TV series. Please try again.";
             }
 
@@ -681,30 +678,30 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var series = _mapper.Map<TVSeries>(seriesDto);
-            return View(series);
+            var updateDto = _mapper.Map<UpdateTVSeriesDto>(seriesDto);
+            return View(updateDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditSeries(TVSeries series, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
+        public async Task<IActionResult> EditSeries(UpdateTVSeriesDto seriesDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             // Validate required fields
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("TV series update failed - ModelState invalid for ID: {SeriesId}", series.Id);
+                _logger.LogWarning("TV series update failed - ModelState invalid for ID: {SeriesId}", seriesDto.Id);
                 TempData[TempDataKeys.Error] = "Please fill in all required fields.";
-                return View(series);
+                return View(seriesDto);
             }
 
             // Validate that either CoverImage path or coverFile is provided (cover image is essential for display)
-            if (string.IsNullOrWhiteSpace(series.CoverImage) && (coverFile == null || coverFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(seriesDto.CoverImage) && (coverFile == null || coverFile.Length == 0))
             {
-                _logger.LogWarning("TV series update failed - No cover image provided for ID: {SeriesId}", series.Id);
+                _logger.LogWarning("TV series update failed - No cover image provided for ID: {SeriesId}", seriesDto.Id);
                 TempData[TempDataKeys.Error] = "Please provide either a Cover Image path or upload a cover image file.";
                 ModelState.AddModelError("CoverImage", "Either Cover Image path or cover image file is required");
-                return View(series);
+                return View(seriesDto);
             }
 
             if (coverFile != null && coverFile.Length > 0)
@@ -717,7 +714,7 @@ namespace MovizoneApp.Controllers
                     await coverFile.CopyToAsync(stream);
                 }
 
-                series.CoverImage = $"/img/covers/{fileName}";
+                seriesDto.CoverImage = $"/img/covers/{fileName}";
             }
 
             // Handle poster file upload
@@ -738,7 +735,7 @@ namespace MovizoneApp.Controllers
                     await posterFile.CopyToAsync(stream);
                 }
 
-                series.PosterImage = $"/img/posters/{posterFileName}";
+                seriesDto.PosterImage = $"/img/posters/{posterFileName}";
             }
 
             // Handle banner file upload
@@ -759,24 +756,23 @@ namespace MovizoneApp.Controllers
                     await bannerFile.CopyToAsync(stream);
                 }
 
-                series.BannerImage = $"/img/banners/{bannerFileName}";
+                seriesDto.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
             if (!string.IsNullOrEmpty(actorsList))
             {
-                series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+                seriesDto.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
             }
 
             try
             {
-                var updateDto = _mapper.Map<UpdateTVSeriesDto>(series);
-                await _seriesService.UpdateSeriesAsync(updateDto);
-                _logger.LogInformation("TV series updated successfully: {SeriesId}", series.Id);
+                await _seriesService.UpdateSeriesAsync(seriesDto);
+                _logger.LogInformation("TV series updated successfully: {SeriesId}", seriesDto.Id);
                 TempData[TempDataKeys.Success] = "TV series updated successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating TV series: {SeriesId}", series.Id);
+                _logger.LogError(ex, "Error updating TV series: {SeriesId}", seriesDto.Id);
                 TempData[TempDataKeys.Error] = "Failed to update TV series. Please try again.";
             }
 
@@ -828,12 +824,12 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var user = _mapper.Map<User>(userDto);
-            return View(user);
+            var updateDto = _mapper.Map<UpdateUserDto>(userDto);
+            return View(updateDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUser(User user)
+        public async Task<IActionResult> EditUser(UpdateUserDto userDto)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -841,19 +837,18 @@ namespace MovizoneApp.Controllers
             {
                 try
                 {
-                    var updateDto = _mapper.Map<UpdateUserDto>(user);
-                    await _userService.UpdateUserAsync(updateDto);
-                    _logger.LogInformation("User updated successfully: {UserId}", user.Id);
+                    await _userService.UpdateUserAsync(userDto);
+                    _logger.LogInformation("User updated successfully: {UserId}", userDto.Id);
                     TempData[TempDataKeys.Success] = "User updated successfully!";
                     return RedirectToAction("Users");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error updating user: {UserId}", user.Id);
+                    _logger.LogError(ex, "Error updating user: {UserId}", userDto.Id);
                     TempData[TempDataKeys.Error] = "Failed to update user. Please try again.";
                 }
             }
-            return View(user);
+            return View(userDto);
         }
 
         [HttpPost]
@@ -895,7 +890,7 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateActor(Actor actor, IFormFile? photoFile, string? moviesList, string? seriesList)
+        public async Task<IActionResult> CreateActor(CreateActorDto actorDto, IFormFile? photoFile, string? moviesList, string? seriesList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -909,29 +904,28 @@ namespace MovizoneApp.Controllers
                     await photoFile.CopyToAsync(stream);
                 }
 
-                actor.Photo = $"/img/covers/{fileName}";
+                actorDto.Photo = $"/img/covers/{fileName}";
             }
 
             if (!string.IsNullOrEmpty(moviesList))
             {
-                actor.Movies = moviesList.Split(',').Select(m => m.Trim()).ToList();
+                actorDto.Movies = moviesList.Split(',').Select(m => m.Trim()).ToList();
             }
 
             if (!string.IsNullOrEmpty(seriesList))
             {
-                actor.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
+                actorDto.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
             }
 
             try
             {
-                var createDto = _mapper.Map<CreateActorDto>(actor);
-                await _actorService.CreateActorAsync(createDto);
-                _logger.LogInformation("Actor created successfully: {Name}", actor.Name);
+                await _actorService.CreateActorAsync(actorDto);
+                _logger.LogInformation("Actor created successfully: {Name}", actorDto.Name);
                 TempData[TempDataKeys.Success] = "Actor created successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating actor: {Name}", actor.Name);
+                _logger.LogError(ex, "Error creating actor: {Name}", actorDto.Name);
                 TempData[TempDataKeys.Error] = "Failed to create actor. Please try again.";
             }
 
@@ -951,12 +945,12 @@ namespace MovizoneApp.Controllers
                 return NotFound();
             }
 
-            var actor = _mapper.Map<Actor>(actorDto);
-            return View(actor);
+            var updateDto = _mapper.Map<UpdateActorDto>(actorDto);
+            return View(updateDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditActor(Actor actor, IFormFile? photoFile, string? moviesList, string? seriesList)
+        public async Task<IActionResult> EditActor(UpdateActorDto actorDto, IFormFile? photoFile, string? moviesList, string? seriesList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
@@ -970,29 +964,28 @@ namespace MovizoneApp.Controllers
                     await photoFile.CopyToAsync(stream);
                 }
 
-                actor.Photo = $"/img/covers/{fileName}";
+                actorDto.Photo = $"/img/covers/{fileName}";
             }
 
             if (!string.IsNullOrEmpty(moviesList))
             {
-                actor.Movies = moviesList.Split(',').Select(m => m.Trim()).ToList();
+                actorDto.Movies = moviesList.Split(',').Select(m => m.Trim()).ToList();
             }
 
             if (!string.IsNullOrEmpty(seriesList))
             {
-                actor.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
+                actorDto.TVSeries = seriesList.Split(',').Select(s => s.Trim()).ToList();
             }
 
             try
             {
-                var updateDto = _mapper.Map<UpdateActorDto>(actor);
-                await _actorService.UpdateActorAsync(updateDto);
-                _logger.LogInformation("Actor updated successfully: {ActorId}", actor.Id);
+                await _actorService.UpdateActorAsync(actorDto);
+                _logger.LogInformation("Actor updated successfully: {ActorId}", actorDto.Id);
                 TempData[TempDataKeys.Success] = "Actor updated successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating actor: {ActorId}", actor.Id);
+                _logger.LogError(ex, "Error updating actor: {ActorId}", actorDto.Id);
                 TempData[TempDataKeys.Error] = "Failed to update actor. Please try again.";
             }
 
@@ -1062,12 +1055,12 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEpisode(Episode episode, IFormFile? thumbnailFile, IFormFile? videoFile)
+        public async Task<IActionResult> CreateEpisode(CreateEpisodeDto episodeDto, IFormFile? thumbnailFile, IFormFile? videoFile)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
-            if (string.IsNullOrWhiteSpace(episode.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(episodeDto.VideoUrl) && (videoFile == null || videoFile.Length == 0))
             {
                 _logger.LogWarning("Episode creation failed - No video content provided");
                 TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
@@ -1077,7 +1070,7 @@ namespace MovizoneApp.Controllers
                 var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
                 ViewBag.AllSeries = allSeries;
 
-                return View(episode);
+                return View(episodeDto);
             }
 
             // Handle thumbnail upload
@@ -1097,7 +1090,7 @@ namespace MovizoneApp.Controllers
                     await thumbnailFile.CopyToAsync(stream);
                 }
 
-                episode.ThumbnailImage = $"/img/episodes/{thumbnailFileName}";
+                episodeDto.ThumbnailImage = $"/img/episodes/{thumbnailFileName}";
             }
 
             // Handle video upload
@@ -1117,11 +1110,12 @@ namespace MovizoneApp.Controllers
                     await videoFile.CopyToAsync(stream);
                 }
 
-                episode.VideoUrl = $"/videos/episodes/{videoFileName}";
+                episodeDto.VideoUrl = $"/videos/episodes/{videoFileName}";
             }
 
+            var episode = _mapper.Map<Episode>(episodeDto);
             _episodeService.AddEpisode(episode);
-            return RedirectToAction("Episodes", new { seriesId = episode.TVSeriesId });
+            return RedirectToAction("Episodes", new { seriesId = episodeDto.TVSeriesId });
         }
 
         public async Task<IActionResult> EditEpisode(int id)
@@ -1134,18 +1128,20 @@ namespace MovizoneApp.Controllers
             var allSeriesDto = await _seriesService.GetAllSeriesAsync();
             var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
             ViewBag.AllSeries = allSeries;
-            return View(episode);
+
+            var updateDto = _mapper.Map<UpdateEpisodeDto>(episode);
+            return View(updateDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditEpisode(Episode episode, IFormFile? thumbnailFile, IFormFile? videoFile)
+        public async Task<IActionResult> EditEpisode(UpdateEpisodeDto episodeDto, IFormFile? thumbnailFile, IFormFile? videoFile)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
             // Validate that either VideoUrl or videoFile is provided (not both required, but at least one)
-            if (string.IsNullOrWhiteSpace(episode.VideoUrl) && (videoFile == null || videoFile.Length == 0))
+            if (string.IsNullOrWhiteSpace(episodeDto.VideoUrl) && (videoFile == null || videoFile.Length == 0))
             {
-                _logger.LogWarning("Episode update failed - No video content provided for ID: {EpisodeId}", episode.Id);
+                _logger.LogWarning("Episode update failed - No video content provided for ID: {EpisodeId}", episodeDto.Id);
                 TempData[TempDataKeys.Error] = "Please provide either a Video URL or upload a video file.";
 
                 // Re-populate ViewBag for form
@@ -1153,7 +1149,7 @@ namespace MovizoneApp.Controllers
                 var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
                 ViewBag.AllSeries = allSeries;
 
-                return View(episode);
+                return View(episodeDto);
             }
 
             // Handle thumbnail upload
@@ -1173,7 +1169,7 @@ namespace MovizoneApp.Controllers
                     await thumbnailFile.CopyToAsync(stream);
                 }
 
-                episode.ThumbnailImage = $"/img/episodes/{thumbnailFileName}";
+                episodeDto.ThumbnailImage = $"/img/episodes/{thumbnailFileName}";
             }
 
             // Handle video upload
@@ -1193,11 +1189,12 @@ namespace MovizoneApp.Controllers
                     await videoFile.CopyToAsync(stream);
                 }
 
-                episode.VideoUrl = $"/videos/episodes/{videoFileName}";
+                episodeDto.VideoUrl = $"/videos/episodes/{videoFileName}";
             }
 
+            var episode = _mapper.Map<Episode>(episodeDto);
             _episodeService.UpdateEpisode(episode);
-            return RedirectToAction("Episodes", new { seriesId = episode.TVSeriesId });
+            return RedirectToAction("Episodes", new { seriesId = episodeDto.TVSeriesId });
         }
 
         [HttpPost]
