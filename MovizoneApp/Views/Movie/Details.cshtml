@@ -23,25 +23,45 @@
 							<div class="item__cover">
 								<img src="@Model.CoverImage" alt="@Model.Title">
 								<span class="item__rate @(Model.Rating >= 8 ? "item__rate--green" : Model.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@Model.Rating</span>
-								@if (ViewBag.IsInWatchlist)
+								@if (Context.Session.GetInt32("UserId").HasValue)
 								{
-									<form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
-										<input type="hidden" name="movieId" value="@Model.Id" />
-										<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-										<button class="item__favorite item__favorite--static item__favorite--active" type="submit" title="Remove from watchlist">
-											<i class="ti ti-bookmark-filled"></i>
-										</button>
-									</form>
+									@* Logged-in users: use server-side form *@
+									@if (ViewBag.IsInWatchlist)
+									{
+										<form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
+											<input type="hidden" name="movieId" value="@Model.Id" />
+											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+											<button class="item__favorite item__favorite--static item__favorite--active" type="submit" title="Remove from watchlist">
+												<i class="ti ti-bookmark-filled"></i>
+											</button>
+										</form>
+									}
+									else
+									{
+										<form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
+											<input type="hidden" name="movieId" value="@Model.Id" />
+											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+											<button class="item__favorite item__favorite--static" type="submit" title="Add to watchlist">
+												<i class="ti ti-bookmark"></i>
+											</button>
+										</form>
+									}
 								}
 								else
 								{
-									<form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
-										<input type="hidden" name="movieId" value="@Model.Id" />
-										<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-										<button class="item__favorite item__favorite--static" type="submit" title="Add to watchlist">
-											<i class="ti ti-bookmark"></i>
-										</button>
-									</form>
+									@* Anonymous users: use client-side JavaScript *@
+									<button class="item__favorite item__favorite--static"
+									        type="button"
+									        title="Add to watchlist"
+									        data-id="@Model.Id"
+									        data-type="movie"
+									        data-title="@Model.Title"
+									        data-cover-image="@Model.CoverImage"
+									        data-rating="@Model.Rating"
+									        data-year="@Model.Year"
+									        data-genre="@Model.Genre">
+										<i class="ti ti-bookmark"></i>
+									</button>
 								}
 							</div>
 						</div>
@@ -370,7 +390,18 @@
 														<i class="ti ti-player-play-filled"></i>
 													</a>
 													<span class="item__rate @(similarMovie.Rating >= 8 ? "item__rate--green" : similarMovie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarMovie.Rating</span>
-													<button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+													<button class="item__favorite"
+													        type="button"
+													        title="Add to watchlist"
+													        data-id="@similarMovie.Id"
+													        data-type="movie"
+													        data-title="@similarMovie.Title"
+													        data-cover-image="@similarMovie.CoverImage"
+													        data-rating="@similarMovie.Rating"
+													        data-year="@similarMovie.Year"
+													        data-genre="@similarMovie.Genre">
+														<i class="ti ti-bookmark"></i>
+													</button>
 												</div>
 												<div class="item__content">
 													<h3 class="item__title"><a asp-action="Details" asp-route-id="@similarMovie.Id">@similarMovie.Title</a></h3>
