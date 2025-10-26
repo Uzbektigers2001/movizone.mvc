@@ -19,7 +19,7 @@
     "Search": "Поиск",
     "Watchlist": "Список просмотра",
     "Favorites": "Избранное",
-    "More": "Ещё",
+    "More": "ещё",
     "Back": "Назад",
     "Save": "Сохранить",
     "Cancel": "Отмена",
@@ -57,7 +57,23 @@
     "Info": "Информация",
     "Confirm": "Подтвердить",
     "Yes": "Да",
-    "No": "Нет"
+    "No": "Нет",
+    "Newest": "Новейшие",
+    "NewItems": "Новые элементы",
+    "Upload": "Загрузить",
+    "UploadPhoto": "Загрузить фото",
+    "UploadNewPhoto": "Загрузить новое фото",
+    "UploadCoverImage": "Загрузить обложку",
+    "UploadPosterImage": "Загрузить постер",
+    "UploadThumbnail": "Загрузить миниатюру",
+    "UploadNewCover": "Загрузить новую обложку",
+    "UploadNewPoster": "Загрузить новый постер",
+    "UploadNewBanner": "Загрузить новый баннер",
+    "UploadNewThumbnail": "Загрузить новую миниатюру",
+    "UploadVideoFile": "Загрузить новый видеофайл",
+    "SelectSeries": "Выберите сериал...",
+    "LeaveEmptyToKeep": "оставьте пустым, чтобы сохранить текущий",
+    "NewPassword": "Новый пароль"
   },
   "Home": {
     "Welcome": "Добро пожаловать в HotFlix",
@@ -84,7 +100,9 @@
     "Address": "Адрес",
     "Phone": "Телефон",
     "AboutTitle": "О HotFlix",
-    "AboutDescription": "Ваше главное место для фильмов и сериалов"
+    "AboutDescription": "Ваше главное место для фильмов и сериалов",
+    "SelectPerfectPlan": "Выберите идеальный план для ваших потребностей",
+    "NewContentRegularly": "Новый контент добавляется регулярно"
   },
   "Movie": {
     "Title": "Название",
@@ -130,7 +148,8 @@
     "BelowAverage": "Ниже среднего",
     "Poor": "Плохо",
     "VeryPoor": "Очень плохо",
-    "Terrible": "Ужасно"
+    "Terrible": "Ужасно",
+    "SampleVideoNote": "Пример видео - В продакшене это будет настоящий фильм."
   },
   "TVSeries": {
     "Creator": "Создатель",
@@ -158,7 +177,8 @@
     "KnownFor": "Известен по",
     "Filmography": "Фильмография",
     "AllActors": "Все актёры",
-    "ActorsCatalog": "Каталог актёров"
+    "ActorsCatalog": "Каталог актёров",
+    "BrowseTalentedCast": "Просмотрите наших талантливых актёров"
   },
   "Pricing": {
     "ChooseYourPlan": "Выберите ваш план",
@@ -174,7 +194,8 @@
     "GetStarted": "Начать",
     "CurrentPlan": "Текущий план",
     "PopularPlan": "Самый популярный",
-    "SelectPlan": "Выбрать план"
+    "SelectPlan": "Выбрать план",
+    "SelectYourPlan": "Выберите ваш план"
   },
   "Watchlist": {
     "MyWatchlist": "Мой список",
@@ -279,7 +300,11 @@
     "DeleteConfirm": "Это действие нельзя отменить",
     "SuccessfullyCreated": "Успешно создано",
     "SuccessfullyUpdated": "Успешно обновлено",
-    "SuccessfullyDeleted": "Успешно удалено"
+    "SuccessfullyDeleted": "Успешно удалено",
+    "AddNewMovie": "Добавить новый фильм",
+    "AddNewSeries": "Добавить новый сериал",
+    "AddNewActor": "Добавить нового актёра",
+    "AddNewEpisode": "Добавить новый эпизод"
   },
   "Auth": {
     "EmailAddress": "Email адрес",

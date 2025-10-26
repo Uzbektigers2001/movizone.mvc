@@ -70,7 +70,7 @@
                     <input asp-for="CoverImage" class="form-control">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Upload New Cover</label>
+                    <label class="form-label">@Localizer.GetString("UploadNewCover")</label>
                     <input type="file" name="coverFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -91,7 +91,7 @@
                     <input asp-for="PosterImage" class="form-control">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Upload New Poster</label>
+                    <label class="form-label">@Localizer.GetString("UploadNewPoster")</label>
                     <input type="file" name="posterFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -112,7 +112,7 @@
                     <input asp-for="BannerImage" class="form-control" placeholder="/img/banners/banner1.jpg">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Upload New Banner Image</label>
+                    <label class="form-label">@Localizer.GetString("UploadNewBanner")</label>
                     <input type="file" name="bannerFile" class="form-control" accept="image/*">
                     <small class="text-muted">Recommended: 1920x800px or wider</small>
                 </div>

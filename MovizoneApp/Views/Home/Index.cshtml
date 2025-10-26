@@ -135,7 +135,7 @@
                     <div class="col-6 col-md-2">
                         <label class="form-label text-white">Sort</label>
                         <select name="sort" class="form-select bg-dark text-white border-secondary">
-                            <option value="newest" selected="@(ViewBag.SelectedSort == "newest")">Newest</option>
+                            <option value="newest" selected="@(ViewBag.SelectedSort == "newest")">@Localizer.GetString("Newest")</option>
                             <option value="rating" selected="@(ViewBag.SelectedSort == "rating")">Rating</option>
                             <option value="title" selected="@(ViewBag.SelectedSort == "title")">Title</option>
                         </select>
@@ -302,7 +302,7 @@
                     <!-- content tabs nav -->
                     <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button id="1-tab" class="active" data-bs-toggle="tab" data-bs-target="#tab-1" type="button" role="tab" aria-controls="tab-1" aria-selected="true">New items</button>
+                            <button id="1-tab" class="active" data-bs-toggle="tab" data-bs-target="#tab-1" type="button" role="tab" aria-controls="tab-1" aria-selected="true">@Localizer.GetString("NewItems")</button>
                         </li>
 
                         <li class="nav-item" role="presentation">
