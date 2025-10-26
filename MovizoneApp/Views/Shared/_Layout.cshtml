@@ -109,28 +109,31 @@
 								<!-- end dropdown -->
 							}
 
-							<!-- dropdown -->
-							<li class="header__nav-item">
-								<a class="header__nav-link header__nav-link--more" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots"></i></a>
+							@if (navSettings.ShowMoreMenuInNav)
+							{
+								<!-- dropdown -->
+								<li class="header__nav-item">
+									<a class="header__nav-link header__nav-link--more" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots"></i></a>
 
-								<ul class="dropdown-menu header__dropdown-menu">
-									<li><a asp-controller="Watchlist" asp-action="Index"><i class="ti ti-bookmark"></i> Watchlist</a></li>
-									<li><a asp-controller="Watchlist" asp-action="Favorites"><i class="ti ti-heart"></i> Favorites</a></li>
-									@if (!Context.Session.GetInt32("UserId").HasValue)
-									{
-										<li><hr class="dropdown-divider"></li>
-										<li><a asp-controller="Auth" asp-action="SignIn">Sign in</a></li>
-										<li><a asp-controller="Auth" asp-action="SignUp">Sign up</a></li>
-										<li><a asp-controller="Auth" asp-action="ForgotPassword">Forgot password</a></li>
-									}
-									else
-									{
-										<li><hr class="dropdown-divider"></li>
-										<li><a asp-controller="Auth" asp-action="Logout">Logout</a></li>
-									}
-								</ul>
-							</li>
-							<!-- end dropdown -->
+									<ul class="dropdown-menu header__dropdown-menu">
+										<li><a asp-controller="Watchlist" asp-action="Index"><i class="ti ti-bookmark"></i> Watchlist</a></li>
+										<li><a asp-controller="Watchlist" asp-action="Favorites"><i class="ti ti-heart"></i> Favorites</a></li>
+										@if (!Context.Session.GetInt32("UserId").HasValue)
+										{
+											<li><hr class="dropdown-divider"></li>
+											<li><a asp-controller="Auth" asp-action="SignIn">Sign in</a></li>
+											<li><a asp-controller="Auth" asp-action="SignUp">Sign up</a></li>
+											<li><a asp-controller="Auth" asp-action="ForgotPassword">Forgot password</a></li>
+										}
+										else
+										{
+											<li><hr class="dropdown-divider"></li>
+											<li><a asp-controller="Auth" asp-action="Logout">Logout</a></li>
+										}
+									</ul>
+								</li>
+								<!-- end dropdown -->
+							}
 						</ul>
 						<!-- end header nav -->
 
