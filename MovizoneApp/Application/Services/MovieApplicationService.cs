@@ -2,49 +2,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Core.Exceptions;
 using MovizoneApp.Core.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Application.Services
 {
     /// <summary>
     /// Application service for movie business logic
+    /// Uses DTOs and AutoMapper for clean separation from database models
     /// </summary>
     public class MovieApplicationService : IMovieApplicationService
     {
         private readonly IMovieRepository _movieRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<MovieApplicationService> _logger;
 
         public MovieApplicationService(
             IMovieRepository movieRepository,
+            IMapper mapper,
             ILogger<MovieApplicationService> logger)
         {
             _movieRepository = movieRepository;
+            _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
+        public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
         {
             _logger.LogInformation("Fetching all movies");
-            return await _movieRepository.GetAllAsync();
+            var movies = await _movieRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
-        public async Task<IEnumerable<Movie>> GetFeaturedMoviesAsync()
+        public async Task<IEnumerable<MovieDto>> GetFeaturedMoviesAsync()
         {
             _logger.LogInformation("Fetching featured movies");
-            return await _movieRepository.GetFeaturedMoviesAsync();
+            var movies = await _movieRepository.GetFeaturedMoviesAsync();
+            return _mapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
-        public async Task<IEnumerable<Movie>> SearchMoviesAsync(string? searchTerm, string? genre)
+        public async Task<IEnumerable<MovieDto>> SearchMoviesAsync(string? searchTerm, string? genre)
         {
             _logger.LogInformation("Searching movies with term: {SearchTerm}, genre: {Genre}", searchTerm, genre);
-            return await _movieRepository.SearchMoviesAsync(searchTerm, genre);
+            var movies = await _movieRepository.SearchMoviesAsync(searchTerm, genre);
+            return _mapper.Map<IEnumerable<MovieDto>>(movies);
         }
 
-        public async Task<Movie?> GetMovieByIdAsync(int id)
+        public async Task<MovieDto?> GetMovieByIdAsync(int id)
         {
             _logger.LogInformation("Fetching movie with ID: {MovieId}", id);
             var movie = await _movieRepository.GetByIdAsync(id);
@@ -52,21 +61,20 @@ namespace MovizoneApp.Application.Services
             if (movie == null)
             {
                 _logger.LogWarning("Movie with ID {MovieId} not found", id);
+                return null;
             }
 
-            return movie;
+            return _mapper.Map<MovieDto>(movie);
         }
 
-        public async Task<Movie> CreateMovieAsync(Movie movie)
+        public async Task<MovieDto> CreateMovieAsync(CreateMovieDto createMovieDto)
         {
-            _logger.LogInformation("Creating new movie: {MovieTitle}", movie.Title);
+            _logger.LogInformation("Creating new movie: {MovieTitle}", createMovieDto.Title);
 
-            // Business validation
-            if (string.IsNullOrWhiteSpace(movie.Title))
-            {
-                throw new BadRequestException("Movie title is required");
-            }
+            // Map DTO to Model
+            var movie = _mapper.Map<Movie>(createMovieDto);
 
+            // Business validation (additional to DTO validation)
             if (movie.Year < 1900 || movie.Year > DateTime.UtcNow.Year + 5)
             {
                 throw new BadRequestException($"Invalid year: {movie.Year}");
@@ -77,32 +85,48 @@ namespace MovizoneApp.Application.Services
                 throw new BadRequestException("Rating must be between 0 and 10");
             }
 
+            // Set timestamps
             movie.CreatedAt = DateTime.UtcNow;
+
+            // Save to repository
             var created = await _movieRepository.AddAsync(movie);
 
             _logger.LogInformation("Movie created successfully with ID: {MovieId}", created.Id);
-            return created;
+
+            // Map back to DTO and return
+            return _mapper.Map<MovieDto>(created);
         }
 
-        public async Task UpdateMovieAsync(Movie movie)
+        public async Task UpdateMovieAsync(UpdateMovieDto updateMovieDto)
         {
-            _logger.LogInformation("Updating movie with ID: {MovieId}", movie.Id);
+            _logger.LogInformation("Updating movie with ID: {MovieId}", updateMovieDto.Id);
 
-            var existing = await _movieRepository.GetByIdAsync(movie.Id);
+            // Check if movie exists
+            var existing = await _movieRepository.GetByIdAsync(updateMovieDto.Id);
             if (existing == null)
             {
-                throw new NotFoundException("Movie", movie.Id);
+                throw new NotFoundException("Movie", updateMovieDto.Id);
             }
+
+            // Map DTO to Model
+            var movie = _mapper.Map<Movie>(updateMovieDto);
 
             // Business validation
-            if (string.IsNullOrWhiteSpace(movie.Title))
+            if (movie.Year < 1900 || movie.Year > DateTime.UtcNow.Year + 5)
             {
-                throw new BadRequestException("Movie title is required");
+                throw new BadRequestException($"Invalid year: {movie.Year}");
             }
 
-            movie.UpdatedAt = DateTime.UtcNow;
-            movie.CreatedAt = existing.CreatedAt; // Preserve creation date
+            if (movie.Rating < 0 || movie.Rating > 10)
+            {
+                throw new BadRequestException("Rating must be between 0 and 10");
+            }
 
+            // Preserve creation date and set update time
+            movie.CreatedAt = existing.CreatedAt;
+            movie.UpdatedAt = DateTime.UtcNow;
+
+            // Update in repository
             await _movieRepository.UpdateAsync(movie);
             _logger.LogInformation("Movie updated successfully: {MovieId}", movie.Id);
         }
