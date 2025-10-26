@@ -23,6 +23,8 @@ namespace MovizoneApp.Controllers
         private readonly IUserApplicationService _userService;
         private readonly IActorApplicationService _actorService;
         private readonly ISiteSettingsService _settingsService;
+        private readonly ICommentService _commentService;
+        private readonly IReviewService _reviewService;
         private readonly ILogger<AdminController> _logger;
         private readonly IMapper _mapper;
 
@@ -33,6 +35,8 @@ namespace MovizoneApp.Controllers
             IUserApplicationService userService,
             IActorApplicationService actorService,
             ISiteSettingsService settingsService,
+            ICommentService commentService,
+            IReviewService reviewService,
             ILogger<AdminController> logger,
             IMapper mapper)
         {
@@ -42,6 +46,8 @@ namespace MovizoneApp.Controllers
             _userService = userService;
             _actorService = actorService;
             _settingsService = settingsService;
+            _commentService = commentService;
+            _reviewService = reviewService;
             _logger = logger;
             _mapper = mapper;
         }
@@ -1139,6 +1145,74 @@ namespace MovizoneApp.Controllers
             _settingsService.UpdateSettings(settings);
             TempData[TempDataKeys.Success] = "Settings updated successfully!";
             return RedirectToAction("Settings");
+        }
+
+        // Comments Management
+        public IActionResult Comments(string search = "")
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            var comments = _commentService.GetAllComments();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                comments = comments.Where(c =>
+                    c.UserName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                    c.Text.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            ViewBag.SearchQuery = search;
+            return View(comments);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveComment(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            _commentService.ApproveComment(id);
+            TempData[TempDataKeys.Success] = "Comment approved successfully!";
+            return RedirectToAction("Comments");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteComment(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            _commentService.DeleteComment(id);
+            TempData[TempDataKeys.Success] = "Comment deleted successfully!";
+            return RedirectToAction("Comments");
+        }
+
+        // Reviews Management
+        public IActionResult Reviews(string search = "")
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            var reviews = _reviewService.GetAllReviews();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                reviews = reviews.Where(r =>
+                    r.UserName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                    r.Comment.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            ViewBag.SearchQuery = search;
+            return View(reviews);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteReview(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Login");
+
+            _reviewService.DeleteReview(id);
+            TempData[TempDataKeys.Success] = "Review deleted successfully!";
+            return RedirectToAction("Reviews");
         }
     }
 }

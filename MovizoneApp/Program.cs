@@ -123,6 +123,7 @@ try
     builder.Services.AddSingleton<IPricingService, PricingService>();
     builder.Services.AddSingleton<IUserService, UserService>();
     builder.Services.AddSingleton<IReviewService, ReviewService>();
+    builder.Services.AddSingleton<ICommentService, CommentService>();
     builder.Services.AddSingleton<IWatchlistService, WatchlistService>();
     builder.Services.AddSingleton<IEpisodeService, EpisodeService>();
     builder.Services.AddSingleton<ISiteSettingsService, SiteSettingsService>();

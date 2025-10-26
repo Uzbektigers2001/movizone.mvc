@@ -1,0 +1,140 @@
+@model List<MovizoneApp.Models.Review>
+@inject MovizoneApp.Services.ILocalizationService Localizer
+@{
+    ViewData["Title"] = "Reviews Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="ti ti-star-half-filled"></i> Reviews Management</h2>
+</div>
+
+<!-- Search Form -->
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+        <form asp-action="Reviews" method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" name="search" class="form-control" placeholder="Search reviews by user or comment..." value="@ViewBag.SearchQuery">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="ti ti-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="ti ti-check"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Movie ID</th>
+                            <th>Rating</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var review in Model)
+                        {
+                            <tr>
+                                <td>@review.Id</td>
+                                <td>
+                                    <strong>@review.UserName</strong><br>
+                                    <small class="text-muted">User ID: @review.UserId</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">Movie #@review.MovieId</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-warning text-dark fs-6">
+                                            <i class="ti ti-star-filled"></i> @review.Rating/10
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="mb-0" style="max-width: 400px;">@review.Comment</p>
+                                </td>
+                                <td>
+                                    <small>@review.CreatedAt.ToString("MMM dd, yyyy")<br>@review.CreatedAt.ToString("HH:mm")</small>
+                                </td>
+                                <td>
+                                    <form asp-action="DeleteReview" asp-route-id="@review.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Delete this review?')">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rating Distribution -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h5>Rating Distribution</h5>
+                </div>
+                @{
+                    var ratingGroups = Model.GroupBy(r => r.Rating)
+                                            .Select(g => new { Rating = g.Key, Count = g.Count() })
+                                            .OrderByDescending(g => g.Rating)
+                                            .ToList();
+                    var totalReviews = Model.Count;
+                }
+                @foreach (var group in ratingGroups)
+                {
+                    var percentage = (double)group.Count / totalReviews * 100;
+                    <div class="col-12 mb-2">
+                        <div class="d-flex align-items-center">
+                            <span class="me-2" style="min-width: 80px;">
+                                <i class="ti ti-star-filled text-warning"></i> @group.Rating/10
+                            </span>
+                            <div class="progress flex-grow-1" style="height: 25px;">
+                                <div class="progress-bar bg-warning" role="progressbar"
+                                     style="width: @percentage%"
+                                     aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                                    @group.Count reviews (@percentage.ToString("0.0")%)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="ti ti-info-circle"></i> No reviews found.
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss success alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert-success').fadeOut('slow');
+        }, 5000);
+    </script>
+}
