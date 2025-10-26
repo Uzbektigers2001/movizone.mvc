@@ -1,19 +1,22 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Models;
-using MovizoneApp.Services;
 
 namespace MovizoneApp.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly IMovieService _movieService;
-    private readonly ITVSeriesService _tvSeriesService;
-    private readonly ISiteSettingsService _settingsService;
+    private readonly IMovieApplicationService _movieService;
+    private readonly ITVSeriesApplicationService _tvSeriesService;
 
-    public HomeController(ILogger<HomeController> logger, IMovieService movieService, ITVSeriesService tvSeriesService, ISiteSettingsService settingsService)
+    public HomeController(
+        ILogger<HomeController> logger,
+        IMovieApplicationService movieService,
+        ITVSeriesApplicationService tvSeriesService)
     {
         _logger = logger;
         _movieService = movieService;
@@ -21,13 +24,12 @@ public class HomeController : Controller
         _settingsService = settingsService;
     }
 
-    public IActionResult Index(int page = 1, string genre = "", string ratingFrom = "", string yearFrom = "", string sort = "newest")
+    public async Task<IActionResult> Index()
     {
-        // Banner Movies (only movies with ShowInBanner=true and not hidden)
-        var bannerMovies = _movieService.GetAllMovies()
-            .Where(m => m.ShowInBanner && !m.IsHidden)
-            .OrderByDescending(m => m.Rating)
-            .ToList();
+        _logger.LogInformation("Accessing home page");
+
+        var featuredMovies = await _movieService.GetFeaturedMoviesAsync();
+        var featuredSeries = await _tvSeriesService.GetFeaturedSeriesAsync();
 
         // Banner Series (only series with ShowInBanner=true and not hidden)
         var bannerSeries = _tvSeriesService.GetAllSeries()
