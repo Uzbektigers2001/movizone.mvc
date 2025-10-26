@@ -1852,3 +1852,29 @@ button, .btn, input[type="submit"], input[type="button"] {
 		font-size: 14px;
 	}
 }
+
+/* Remove all button shadows */
+.btn,
+.filter__btn,
+.sign__btn,
+.header__action,
+.btn-play-episode,
+button,
+input[type="submit"],
+input[type="button"],
+.item__favorite,
+.paginator__item a,
+.page-link {
+	box-shadow: none !important;
+}
+
+.btn:hover,
+.filter__btn:hover,
+.sign__btn:hover,
+.header__action:hover,
+.btn-play-episode:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+	box-shadow: none !important;
+}

@@ -7,6 +7,7 @@
     var topRatedMovies = ViewBag.TopRatedMovies as List<Movie> ?? new List<Movie>();
     var recentMovies = ViewBag.RecentMovies as List<Movie> ?? new List<Movie>();
     var allGenres = (ViewBag.Genres as List<string> ?? new List<string>()).Distinct().OrderBy(g => g).ToList();
+    var settings = ViewBag.SiteSettings as SiteSettings ?? new SiteSettings();
 
     // Combine movies and series for banner using tuples
     var bannerItems = new List<(string Title, double Rating, string Description, string Genre, string BannerImage, string Type, int Id)>();
@@ -25,6 +26,8 @@
 }
 
 <!-- Hero Carousel -->
+@if (settings.ShowHeroBanner)
+{
 <section class="home home--hero" style="padding: 0; margin-top: -2rem;">
     <div class="container-fluid px-0">
         <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
@@ -85,8 +88,11 @@
         </div>
     </div>
 </section>
+}
 
 <!-- Filter & Catalog -->
+@if (settings.ShowCatalogSection)
+{
 <div style="background-color: #0f0f1e; padding-top: 3rem;">
     <!-- Filter -->
     <div class="container mb-4">
@@ -182,35 +188,44 @@
         {
             <div class="row mb-5">
                 <div class="col-12">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                                <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage - 1)">
-                                    <i class="ti ti-chevron-left"></i> Previous
-                                </a>
-                            </li>
-
-                            @for (int i = 1; i <= totalPages; i++)
+                    <div class="paginator">
+                        <ul class="paginator__list">
+                            @if (currentPage > 1)
                             {
-                                <li class="page-item @(i == currentPage ? "active" : "")">
-                                    <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-page="@i">@i</a>
+                                <li class="paginator__item">
+                                    <a asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage - 1)">
+                                        <i class="ti ti-chevron-left"></i>
+                                    </a>
                                 </li>
                             }
 
-                            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                                <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage + 1)">
-                                    Next <i class="ti ti-chevron-right"></i>
-                                </a>
-                            </li>
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="paginator__item @(i == currentPage ? "paginator__item--active" : "")">
+                                    <a asp-controller="Home" asp-action="Index" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPages)
+                            {
+                                <li class="paginator__item">
+                                    <a asp-controller="Home" asp-action="Index" asp-route-page="@(currentPage + 1)">
+                                        <i class="ti ti-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
                         </ul>
-                    </nav>
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
+}
 
 <!-- Expected Premiere -->
+@if (settings.ShowExpectedPremiere)
+{
 <section class="py-5" style="background-color: #0b0b17; border-top: 1px solid rgba(255, 255, 255, 0.1);">
     <div class="container">
         <div class="row mb-4">
@@ -249,8 +264,11 @@
         </div>
     </div>
 </section>
+}
 
 <!-- Recently Updated -->
+@if (settings.ShowRecentlyUpdated)
+{
 <section class="content py-5" style="background-color: #0f0f1e;">
     <div class="content__head" style="background-color: transparent;">
         <div class="container">
@@ -397,9 +415,12 @@
         <!-- end content tabs -->
     </div>
 </section>
+}
 <!-- end Recently Updated -->
 
 <!-- Pricing Plans -->
+@if (settings.ShowPricingPlans)
+{
 <section class="py-5" style="background-color: #0f0f1e; border-top: 1px solid rgba(255, 255, 255, 0.1);">
     <div class="container">
         <div class="row mb-5">
@@ -464,6 +485,7 @@
         </div>
     </div>
 </section>
+}
 
 <style>
     .carousel-item {
