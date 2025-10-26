@@ -13,9 +13,12 @@ namespace MovizoneApp.Models
         public bool ShowRecentlyUpdated { get; set; } = true;
         public bool ShowPricingPlans { get; set; } = true;
 
-        // Navigation
+        // Navigation Menu Items
+        public bool ShowHomeInNav { get; set; } = true;
         public bool ShowMoviesInNav { get; set; } = true;
         public bool ShowTVSeriesInNav { get; set; } = true;
         public bool ShowActorsInNav { get; set; } = true;
+        public bool ShowPricingPlanInNav { get; set; } = true;
+        public bool ShowPagesInNav { get; set; } = true;
     }
 }
