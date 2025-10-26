@@ -464,7 +464,28 @@
     "AdminRole": "Администратор",
     "OnlyFillToChangePassword": "Заполните только если хотите изменить пароль",
     "AccountActive": "Аккаунт активен",
-    "AccountCreated": "Аккаунт создан:"
+    "AccountCreated": "Аккаунт создан:",
+    "CommentsManagement": "Управление комментариями",
+    "ReviewsManagement": "Управление отзывами",
+    "SearchCommentsByUserOrText": "Поиск комментариев по пользователю или тексту...",
+    "SearchReviewsByUserOrComment": "Поиск отзывов по пользователю или комментарию...",
+    "NoCommentsFound": "Комментарии не найдены.",
+    "NoReviewsFound": "Отзывы не найдены.",
+    "User": "Пользователь",
+    "ContentType": "Тип контента",
+    "Comment": "Комментарий",
+    "CommentText": "Комментарий",
+    "StatusPending": "Ожидание",
+    "StatusApproved": "Одобрено",
+    "Date": "Дата",
+    "Approve": "Одобрить",
+    "DeleteThisComment": "Удалить этот комментарий?",
+    "DeleteThisReview": "Удалить этот отзыв?",
+    "CommentApproved": "Комментарий успешно одобрен!",
+    "CommentDeleted": "Комментарий успешно удален!",
+    "ReviewDeleted": "Отзыв успешно удален!",
+    "RatingDistribution": "Распределение рейтингов",
+    "MovieID": "ID фильма"
   },
   "Auth": {
     "EmailAddress": "Email адрес",
@@ -501,5 +522,7 @@
     "BackToHome": "Вернуться на главную",
     "SomethingWentWrong": "Что-то пошло не так",
     "TryAgain": "Пожалуйста, попробуйте позже"
-  }
+  },
+  "Comments": "Комментарии",
+  "Reviews": "Отзывы"
 }

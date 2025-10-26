@@ -464,7 +464,28 @@
     "AdminRole": "Admin",
     "OnlyFillToChangePassword": "Faqat parolni o'zgartirmoqchi bo'lsangiz to'ldiring",
     "AccountActive": "Hisob faol",
-    "AccountCreated": "Hisob yaratilgan:"
+    "AccountCreated": "Hisob yaratilgan:",
+    "CommentsManagement": "Izohlarni boshqarish",
+    "ReviewsManagement": "Sharhlarni boshqarish",
+    "SearchCommentsByUserOrText": "Foydalanuvchi yoki matn bo'yicha izohlarni qidirish...",
+    "SearchReviewsByUserOrComment": "Foydalanuvchi yoki sharh bo'yicha sharhlarni qidirish...",
+    "NoCommentsFound": "Izohlar topilmadi.",
+    "NoReviewsFound": "Sharhlar topilmadi.",
+    "User": "Foydalanuvchi",
+    "ContentType": "Kontent turi",
+    "Comment": "Izoh",
+    "CommentText": "Izoh",
+    "StatusPending": "Kutilmoqda",
+    "StatusApproved": "Tasdiqlangan",
+    "Date": "Sana",
+    "Approve": "Tasdiqlash",
+    "DeleteThisComment": "Bu izohni o'chirmoqchimisiz?",
+    "DeleteThisReview": "Bu sharhni o'chirmoqchimisiz?",
+    "CommentApproved": "Izoh muvaffaqiyatli tasdiqlandi!",
+    "CommentDeleted": "Izoh muvaffaqiyatli o'chirildi!",
+    "ReviewDeleted": "Sharh muvaffaqiyatli o'chirildi!",
+    "RatingDistribution": "Reytinglar taqsimoti",
+    "MovieID": "Film ID"
   },
   "Auth": {
     "EmailAddress": "Email manzil",
@@ -501,5 +522,7 @@
     "BackToHome": "Bosh sahifaga qaytish",
     "SomethingWentWrong": "Nimadir xato ketdi",
     "TryAgain": "Keyinroq qayta urinib ko'ring"
-  }
+  },
+  "Comments": "Izohlar",
+  "Reviews": "Sharhlar"
 }

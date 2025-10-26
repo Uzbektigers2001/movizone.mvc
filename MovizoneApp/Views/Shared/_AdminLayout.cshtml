@@ -131,6 +131,12 @@
             <a asp-action="Actors" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Actors" ? "active" : "")">
                 <i class="ti ti-users me-2"></i><span>@Localizer.GetString("Actors")</span>
             </a>
+            <a asp-action="Comments" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Comments" ? "active" : "")">
+                <i class="ti ti-message me-2"></i><span>@Localizer.GetString("Comments")</span>
+            </a>
+            <a asp-action="Reviews" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reviews" ? "active" : "")">
+                <i class="ti ti-star-half-filled me-2"></i><span>@Localizer.GetString("Reviews")</span>
+            </a>
             <a asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
                 <i class="ti ti-user me-2"></i><span>@Localizer.GetString("Admin", "ManageUsers")</span>
             </a>

@@ -464,7 +464,28 @@
     "AdminRole": "Admin",
     "OnlyFillToChangePassword": "Only fill if you want to change password",
     "AccountActive": "Account Active",
-    "AccountCreated": "Account Created:"
+    "AccountCreated": "Account Created:",
+    "CommentsManagement": "Comments Management",
+    "ReviewsManagement": "Reviews Management",
+    "SearchCommentsByUserOrText": "Search comments by user or text...",
+    "SearchReviewsByUserOrComment": "Search reviews by user or comment...",
+    "NoCommentsFound": "No comments found.",
+    "NoReviewsFound": "No reviews found.",
+    "User": "User",
+    "ContentType": "Content Type",
+    "Comment": "Comment",
+    "CommentText": "Comment",
+    "StatusPending": "Pending",
+    "StatusApproved": "Approved",
+    "Date": "Date",
+    "Approve": "Approve",
+    "DeleteThisComment": "Delete this comment?",
+    "DeleteThisReview": "Delete this review?",
+    "CommentApproved": "Comment approved successfully!",
+    "CommentDeleted": "Comment deleted successfully!",
+    "ReviewDeleted": "Review deleted successfully!",
+    "RatingDistribution": "Rating Distribution",
+    "MovieID": "Movie ID"
   },
   "Auth": {
     "EmailAddress": "Email Address",
@@ -501,5 +522,7 @@
     "BackToHome": "Back to Home",
     "SomethingWentWrong": "Something went wrong",
     "TryAgain": "Please try again later"
-  }
+  },
+  "Comments": "Comments",
+  "Reviews": "Reviews"
 }
