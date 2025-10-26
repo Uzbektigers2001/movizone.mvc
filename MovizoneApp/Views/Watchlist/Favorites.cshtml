@@ -21,73 +21,84 @@
             </div>
         }
 
-        @if (ViewBag.WatchlistItems != null && ViewBag.WatchlistItems.Count > 0)
+        @if (ViewBag.IsLoggedIn == true)
         {
-            <div class="row g-4">
-                @foreach (var item in ViewBag.WatchlistItems)
-                {
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card bg-dark h-100 border-secondary">
-                            <div class="position-relative">
-                                <img src="@item.CoverImage" class="card-img-top" alt="@item.Title" style="height: 350px; object-fit: cover;">
-                                <span class="position-absolute top-0 end-0 m-2 badge bg-danger">
-                                    <i class="ti ti-heart-filled"></i> Favorite
-                                </span>
-                            </div>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">@item.Title</h5>
-                                <div class="mb-2">
-                                    <span class="item__rate--green me-2">@item.Rating</span>
-                                    <span class="text-muted">@item.Year</span>
-                                    <span class="badge bg-info ms-2">@item.Type</span>
+            @* Logged-in users: Show server-side data *@
+            @if (ViewBag.WatchlistItems != null && ViewBag.WatchlistItems.Count > 0)
+            {
+                <div class="row g-4">
+                    @foreach (var item in ViewBag.WatchlistItems)
+                    {
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card bg-dark h-100 border-secondary">
+                                <div class="position-relative">
+                                    <img src="@item.CoverImage" class="card-img-top" alt="@item.Title" style="height: 350px; object-fit: cover;">
+                                    <span class="position-absolute top-0 end-0 m-2 badge bg-danger">
+                                        <i class="ti ti-heart-filled"></i> Favorite
+                                    </span>
                                 </div>
-                                <p class="text-muted mb-2">
-                                    <small><i class="ti ti-clock"></i> Added: @item.CreatedAt.ToString("MMM dd, yyyy")</small>
-                                </p>
-                                <p class="text-muted mb-3">@item.Genre</p>
-                                <div class="mt-auto">
-                                    @if (item.Type == "Movie")
-                                    {
-                                        <a asp-controller="Movie" asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-primary btn-sm w-100 mb-2">
-                                            <i class="ti ti-eye"></i> View Details
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-primary btn-sm w-100 mb-2">
-                                            <i class="ti ti-eye"></i> View Details
-                                        </a>
-                                    }
-                                    <form asp-action="Remove" method="post" class="d-inline w-100">
-                                        <input type="hidden" name="movieId" value="@item.MovieId" />
-                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                            <i class="ti ti-heart-minus"></i> Remove from Favorites
-                                        </button>
-                                    </form>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">@item.Title</h5>
+                                    <div class="mb-2">
+                                        <span class="item__rate--green me-2">@item.Rating</span>
+                                        <span class="text-muted">@item.Year</span>
+                                        <span class="badge bg-info ms-2">@item.Type</span>
+                                    </div>
+                                    <p class="text-muted mb-2">
+                                        <small><i class="ti ti-clock"></i> Added: @item.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                    </p>
+                                    <p class="text-muted mb-3">@item.Genre</p>
+                                    <div class="mt-auto">
+                                        @if (item.Type == "Movie")
+                                        {
+                                            <a asp-controller="Movie" asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-primary btn-sm w-100 mb-2">
+                                                <i class="ti ti-eye"></i> View Details
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-primary btn-sm w-100 mb-2">
+                                                <i class="ti ti-eye"></i> View Details
+                                            </a>
+                                        }
+                                        <form asp-action="Remove" method="post" class="d-inline w-100">
+                                            <input type="hidden" name="movieId" value="@item.MovieId" />
+                                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                                <i class="ti ti-heart-minus"></i> Remove from Favorites
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="ti ti-info-circle"></i> You haven't added any favorites yet. Start adding movies and TV series you love!
+                        </div>
+                        <div class="text-center mt-4">
+                            <a asp-controller="Movie" asp-action="Catalog" class="btn btn-primary me-2">
+                                <i class="ti ti-movie"></i> Browse Movies
+                            </a>
+                            <a asp-controller="TVSeries" asp-action="Catalog" class="btn btn-primary">
+                                <i class="ti ti-device-tv"></i> Browse TV Series
+                            </a>
+                        </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         }
         else
         {
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        <i class="ti ti-info-circle"></i> You haven't added any favorites yet. Start adding movies and TV series you love!
-                    </div>
-                    <div class="text-center mt-4">
-                        <a asp-controller="Movie" asp-action="Catalog" class="btn btn-primary me-2">
-                            <i class="ti ti-movie"></i> Browse Movies
-                        </a>
-                        <a asp-controller="TVSeries" asp-action="Catalog" class="btn btn-primary">
-                            <i class="ti ti-device-tv"></i> Browse TV Series
-                        </a>
-                    </div>
-                </div>
+            @* Anonymous users: JavaScript will load from localStorage *@
+            <div class="row g-4" id="favorites-items-container">
+                @* Items will be loaded by watchlist.js *@
             </div>
         }
     </div>
