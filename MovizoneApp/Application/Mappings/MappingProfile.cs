@@ -37,6 +37,7 @@ namespace MovizoneApp.Application.Mappings
             // Reverse mappings for AdminController
             CreateMap<Movie, CreateMovieDto>();
             CreateMap<Movie, UpdateMovieDto>();
+            CreateMap<MovieDto, UpdateMovieDto>(); // DTO to DTO mapping for EditMovie
 
             // TVSeries mappings
             CreateMap<TVSeries, TVSeriesDto>()
@@ -80,6 +81,7 @@ namespace MovizoneApp.Application.Mappings
             CreateMap<TVSeries, UpdateTVSeriesDto>()
                 .ForMember(dest => dest.TotalSeasons, opt => opt.MapFrom(src => src.Seasons))
                 .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator));
+            CreateMap<TVSeriesDto, UpdateTVSeriesDto>(); // DTO to DTO mapping for EditSeries
 
             // Actor mappings
             CreateMap<Actor, ActorDto>();
@@ -107,6 +109,7 @@ namespace MovizoneApp.Application.Mappings
             // Reverse mappings for AdminController
             CreateMap<Actor, CreateActorDto>();
             CreateMap<Actor, UpdateActorDto>();
+            CreateMap<ActorDto, UpdateActorDto>(); // DTO to DTO mapping for EditActor
 
             // User mappings
             CreateMap<User, UserDto>();
@@ -136,6 +139,7 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
             // Reverse mappings for AdminController
             CreateMap<User, UpdateUserDto>();
+            CreateMap<UserDto, UpdateUserDto>(); // DTO to DTO mapping for EditUser
 
             // Review mappings
             CreateMap<Review, ReviewDto>()
@@ -177,6 +181,21 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
+
+            // Episode mappings
+            CreateMap<Episode, EpisodeDto>();
+            CreateMap<CreateEpisodeDto, Episode>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.AirDate, opt => opt.MapFrom(src => src.AirDate ?? DateTime.UtcNow));
+            CreateMap<UpdateEpisodeDto, Episode>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.AirDate, opt => opt.MapFrom(src => src.AirDate ?? DateTime.UtcNow));
+            // Reverse mappings for AdminController
+            CreateMap<Episode, UpdateEpisodeDto>();
+            CreateMap<EpisodeDto, UpdateEpisodeDto>(); // DTO to DTO mapping for EditEpisode
 
             // PricingPlan mappings
             CreateMap<PricingPlan, PricingPlanDto>();
