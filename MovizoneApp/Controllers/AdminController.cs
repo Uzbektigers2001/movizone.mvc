@@ -227,11 +227,13 @@ namespace MovizoneApp.Controllers
                 movie.VideoUrl = $"/videos/{videoFileName}";
             }
 
+            // TODO: Actor relationships now managed via ActorMovie junction table
+            // Need to refactor to create ActorMovie records instead of string list
             // Parse actors list
-            if (!string.IsNullOrEmpty(actorsList))
-            {
-                movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
-            }
+            // if (!string.IsNullOrEmpty(actorsList))
+            // {
+            //     movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            // }
 
             try
             {
@@ -325,11 +327,13 @@ namespace MovizoneApp.Controllers
                 movie.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
+            // TODO: Actor relationships now managed via ActorMovie junction table
+            // Need to refactor to create ActorMovie records instead of string list
             // Parse actors list
-            if (!string.IsNullOrEmpty(actorsList))
-            {
-                movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
-            }
+            // if (!string.IsNullOrEmpty(actorsList))
+            // {
+            //     movie.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            // }
 
             try
             {
@@ -457,10 +461,12 @@ namespace MovizoneApp.Controllers
                 series.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
-            if (!string.IsNullOrEmpty(actorsList))
-            {
-                series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
-            }
+            // TODO: Actor relationships now managed via ActorTVSeries junction table
+            // Need to refactor to create ActorTVSeries records instead of string list
+            // if (!string.IsNullOrEmpty(actorsList))
+            // {
+            //     series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            // }
 
             try
             {
@@ -553,10 +559,12 @@ namespace MovizoneApp.Controllers
                 series.BannerImage = $"/img/banners/{bannerFileName}";
             }
 
-            if (!string.IsNullOrEmpty(actorsList))
-            {
-                series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
-            }
+            // TODO: Actor relationships now managed via ActorTVSeries junction table
+            // Need to refactor to create ActorTVSeries records instead of string list
+            // if (!string.IsNullOrEmpty(actorsList))
+            // {
+            //     series.Actors = actorsList.Split(',').Select(a => a.Trim()).ToList();
+            // }
 
             try
             {

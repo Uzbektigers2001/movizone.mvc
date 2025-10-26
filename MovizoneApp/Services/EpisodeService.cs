@@ -12,11 +12,13 @@ namespace MovizoneApp.Services
             _seriesService = seriesService;
             _episodes = new List<Episode>();
 
+            // NOTE: Episodes removed from TVSeries model to fix duplication
+            // EpisodeService is now the single source of truth for episodes
             // Initialize with episodes from all series
-            foreach (var series in _seriesService.GetAllSeries())
-            {
-                _episodes.AddRange(series.Episodes);
-            }
+            // foreach (var series in _seriesService.GetAllSeries())
+            // {
+            //     _episodes.AddRange(series.Episodes);
+            // }
         }
 
         public List<Episode> GetAllEpisodes() => _episodes;
@@ -34,12 +36,13 @@ namespace MovizoneApp.Services
             episode.Id = _episodes.Any() ? _episodes.Max(e => e.Id) + 1 : 1;
             _episodes.Add(episode);
 
+            // NOTE: Episodes removed from TVSeries model - no sync needed
             // Also add to the series
-            var series = _seriesService.GetSeriesById(episode.TVSeriesId);
-            if (series != null)
-            {
-                series.Episodes.Add(episode);
-            }
+            // var series = _seriesService.GetSeriesById(episode.TVSeriesId);
+            // if (series != null)
+            // {
+            //     series.Episodes.Add(episode);
+            // }
         }
 
         public void UpdateEpisode(Episode episode)
@@ -57,24 +60,25 @@ namespace MovizoneApp.Services
                 existingEpisode.ThumbnailImage = episode.ThumbnailImage;
                 existingEpisode.AirDate = episode.AirDate;
 
+                // NOTE: Episodes removed from TVSeries model - no sync needed
                 // Update in series
-                var series = _seriesService.GetSeriesById(episode.TVSeriesId);
-                if (series != null)
-                {
-                    var seriesEpisode = series.Episodes.FirstOrDefault(e => e.Id == episode.Id);
-                    if (seriesEpisode != null)
-                    {
-                        seriesEpisode.TVSeriesId = episode.TVSeriesId;
-                        seriesEpisode.SeasonNumber = episode.SeasonNumber;
-                        seriesEpisode.EpisodeNumber = episode.EpisodeNumber;
-                        seriesEpisode.Title = episode.Title;
-                        seriesEpisode.Description = episode.Description;
-                        seriesEpisode.Duration = episode.Duration;
-                        seriesEpisode.VideoUrl = episode.VideoUrl;
-                        seriesEpisode.ThumbnailImage = episode.ThumbnailImage;
-                        seriesEpisode.AirDate = episode.AirDate;
-                    }
-                }
+                // var series = _seriesService.GetSeriesById(episode.TVSeriesId);
+                // if (series != null)
+                // {
+                //     var seriesEpisode = series.Episodes.FirstOrDefault(e => e.Id == episode.Id);
+                //     if (seriesEpisode != null)
+                //     {
+                //         seriesEpisode.TVSeriesId = episode.TVSeriesId;
+                //         seriesEpisode.SeasonNumber = episode.SeasonNumber;
+                //         seriesEpisode.EpisodeNumber = episode.EpisodeNumber;
+                //         seriesEpisode.Title = episode.Title;
+                //         seriesEpisode.Description = episode.Description;
+                //         seriesEpisode.Duration = episode.Duration;
+                //         seriesEpisode.VideoUrl = episode.VideoUrl;
+                //         seriesEpisode.ThumbnailImage = episode.ThumbnailImage;
+                //         seriesEpisode.AirDate = episode.AirDate;
+                //     }
+                // }
             }
         }
 
@@ -85,16 +89,17 @@ namespace MovizoneApp.Services
             {
                 _episodes.Remove(episode);
 
+                // NOTE: Episodes removed from TVSeries model - no sync needed
                 // Remove from series
-                var series = _seriesService.GetSeriesById(episode.TVSeriesId);
-                if (series != null)
-                {
-                    var seriesEpisode = series.Episodes.FirstOrDefault(e => e.Id == id);
-                    if (seriesEpisode != null)
-                    {
-                        series.Episodes.Remove(seriesEpisode);
-                    }
-                }
+                // var series = _seriesService.GetSeriesById(episode.TVSeriesId);
+                // if (series != null)
+                // {
+                //     var seriesEpisode = series.Episodes.FirstOrDefault(e => e.Id == id);
+                //     if (seriesEpisode != null)
+                //     {
+                //         series.Episodes.Remove(seriesEpisode);
+                //     }
+                // }
             }
         }
     }

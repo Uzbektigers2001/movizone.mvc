@@ -24,8 +24,9 @@ namespace MovizoneApp.Models
         [MaxLength(500)]
         public string Photo { get; set; } = string.Empty;
 
-        public List<string> Movies { get; set; } = new List<string>();
-        public List<string> TVSeries { get; set; } = new List<string>();
+        // Navigation properties for many-to-many relationships
+        public ICollection<ActorMovie> ActorMovies { get; set; } = new List<ActorMovie>();
+        public ICollection<ActorTVSeries> ActorTVSeries { get; set; } = new List<ActorTVSeries>();
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }

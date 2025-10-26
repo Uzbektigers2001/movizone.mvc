@@ -41,7 +41,9 @@ namespace MovizoneApp.Models
         [MaxLength(1000)]
         public string VideoUrl { get; set; } = string.Empty;
 
-        public List<string> Actors { get; set; } = new List<string>();
+        // Navigation property for many-to-many relationship with Actors
+        public ICollection<ActorMovie> ActorMovies { get; set; } = new List<ActorMovie>();
+
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; } // Hide from public listings
         public bool ShowInBanner { get; set; } // Show in home page banner carousel

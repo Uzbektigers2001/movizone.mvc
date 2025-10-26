@@ -41,8 +41,12 @@ namespace MovizoneApp.Models
         [MaxLength(500)]
         public string CoverImage { get; set; } = string.Empty;
 
-        public List<string> Actors { get; set; } = new List<string>();
-        public List<Episode> Episodes { get; set; } = new List<Episode>();
+        // Navigation property for many-to-many relationship with Actors
+        public ICollection<ActorTVSeries> ActorTVSeries { get; set; } = new List<ActorTVSeries>();
+
+        // Episodes are managed via EpisodeService - no duplication
+        // Use EpisodeService.GetEpisodesBySeriesId(id) to retrieve episodes
+
         public bool IsFeatured { get; set; }
         public bool IsHidden { get; set; } // Hide from public listings
         public bool ShowInBanner { get; set; } // Show in home page banner carousel

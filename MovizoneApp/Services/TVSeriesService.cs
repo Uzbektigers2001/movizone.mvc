@@ -130,7 +130,8 @@ namespace MovizoneApp.Services
                 existingSeries.Country = series.Country;
                 existingSeries.Creator = series.Creator;
                 existingSeries.CoverImage = series.CoverImage;
-                existingSeries.Actors = series.Actors;
+                // NOTE: Actors now managed via ActorTVSeries junction table - use ActorTVSeries navigation property
+                // existingSeries.Actors = series.Actors;
                 existingSeries.IsFeatured = series.IsFeatured;
                 existingSeries.FirstAired = series.FirstAired;
                 existingSeries.Status = series.Status;

@@ -194,7 +194,8 @@ namespace MovizoneApp.Services
                 existingMovie.Director = movie.Director;
                 existingMovie.CoverImage = movie.CoverImage;
                 existingMovie.VideoUrl = movie.VideoUrl;
-                existingMovie.Actors = movie.Actors;
+                // NOTE: Actors now managed via ActorMovie junction table - use ActorMovies navigation property
+                // existingMovie.Actors = movie.Actors;
                 existingMovie.IsFeatured = movie.IsFeatured;
                 existingMovie.ReleaseDate = movie.ReleaseDate;
             }

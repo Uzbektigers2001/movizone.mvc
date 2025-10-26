@@ -22,6 +22,10 @@ namespace MovizoneApp.Data
         public DbSet<WatchlistItem> WatchlistItems { get; set; } = null!;
         public DbSet<PricingPlan> PricingPlans { get; set; } = null!;
 
+        // Junction tables for many-to-many relationships
+        public DbSet<ActorMovie> ActorMovies { get; set; } = null!;
+        public DbSet<ActorTVSeries> ActorTVSeries { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -35,14 +39,51 @@ namespace MovizoneApp.Data
             modelBuilder.Entity<Actor>().HasQueryFilter(a => !a.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
 
+            // Configure many-to-many relationships via junction tables
+            modelBuilder.Entity<ActorMovie>()
+                .HasOne(am => am.Actor)
+                .WithMany(a => a.ActorMovies)
+                .HasForeignKey(am => am.ActorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActorMovie>()
+                .HasOne(am => am.Movie)
+                .WithMany(m => m.ActorMovies)
+                .HasForeignKey(am => am.MovieId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActorTVSeries>()
+                .HasOne(ats => ats.Actor)
+                .WithMany(a => a.ActorTVSeries)
+                .HasForeignKey(ats => ats.ActorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActorTVSeries>()
+                .HasOne(ats => ats.TVSeries)
+                .WithMany(s => s.ActorTVSeries)
+                .HasForeignKey(ats => ats.TVSeriesId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Review to support both Movie and TVSeries (nullable foreign keys)
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => r.MovieId);
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => r.TVSeriesId);
+
             // Indexes for better performance
             modelBuilder.Entity<Movie>().HasIndex(m => m.Title);
             modelBuilder.Entity<Movie>().HasIndex(m => m.Genre);
             modelBuilder.Entity<TVSeries>().HasIndex(t => t.Title);
             modelBuilder.Entity<TVSeries>().HasIndex(t => t.Genre);
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-            modelBuilder.Entity<Review>().HasIndex(r => r.MovieId);
             modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.UserId);
+
+            // Indexes for junction tables
+            modelBuilder.Entity<ActorMovie>().HasIndex(am => am.ActorId);
+            modelBuilder.Entity<ActorMovie>().HasIndex(am => am.MovieId);
+            modelBuilder.Entity<ActorTVSeries>().HasIndex(ats => ats.ActorId);
+            modelBuilder.Entity<ActorTVSeries>().HasIndex(ats => ats.TVSeriesId);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
