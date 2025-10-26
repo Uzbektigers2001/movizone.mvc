@@ -106,22 +106,21 @@ namespace MovizoneApp.Application.Services
                 throw new NotFoundException("Actor", updateActorDto.Id);
             }
 
-            // Map DTO to Model
-            var actor = _mapper.Map<Actor>(updateActorDto);
+            // Map DTO properties to existing tracked entity
+            _mapper.Map(updateActorDto, existing);
 
             // Business validation
-            if (string.IsNullOrWhiteSpace(actor.Name))
+            if (string.IsNullOrWhiteSpace(existing.Name))
             {
                 throw new BadRequestException("Actor name is required");
             }
 
-            // Preserve creation date and set update time
-            actor.CreatedAt = existing.CreatedAt;
-            actor.UpdatedAt = DateTime.UtcNow;
+            // Set update time (CreatedAt already preserved in existing entity)
+            existing.UpdatedAt = DateTime.UtcNow;
 
             // Update in repository
-            await _actorRepository.UpdateAsync(actor);
-            _logger.LogInformation("Actor updated successfully: {ActorId}", actor.Id);
+            await _actorRepository.UpdateAsync(existing);
+            _logger.LogInformation("Actor updated successfully: {ActorId}", existing.Id);
         }
 
         public async Task DeleteActorAsync(int id)

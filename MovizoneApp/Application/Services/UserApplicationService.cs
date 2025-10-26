@@ -121,17 +121,15 @@ namespace MovizoneApp.Application.Services
                 }
             }
 
-            // Map DTO to Model
-            var user = _mapper.Map<User>(updateUserDto);
+            // Map DTO properties to existing tracked entity
+            _mapper.Map(updateUserDto, existing);
 
-            // Preserve creation date, password, and set update time
-            user.CreatedAt = existing.CreatedAt;
-            user.Password = existing.Password; // Don't update password here
-            user.UpdatedAt = DateTime.UtcNow;
+            // Set update time (CreatedAt and Password already preserved in existing entity)
+            existing.UpdatedAt = DateTime.UtcNow;
 
             // Update in repository
-            await _userRepository.UpdateAsync(user);
-            _logger.LogInformation("User updated successfully: {UserId}", user.Id);
+            await _userRepository.UpdateAsync(existing);
+            _logger.LogInformation("User updated successfully: {UserId}", existing.Id);
         }
 
         public async Task DeleteUserAsync(int id)

@@ -113,22 +113,21 @@ namespace MovizoneApp.Application.Services
                 throw new NotFoundException("TV Series", updateSeriesDto.Id);
             }
 
-            // Map DTO to Model
-            var series = _mapper.Map<TVSeries>(updateSeriesDto);
+            // Map DTO properties to existing tracked entity
+            _mapper.Map(updateSeriesDto, existing);
 
             // Business validation
-            if (string.IsNullOrWhiteSpace(series.Title))
+            if (string.IsNullOrWhiteSpace(existing.Title))
             {
                 throw new BadRequestException("TV series title is required");
             }
 
-            // Preserve creation date and set update time
-            series.CreatedAt = existing.CreatedAt;
-            series.UpdatedAt = DateTime.UtcNow;
+            // Set update time (CreatedAt already preserved in existing entity)
+            existing.UpdatedAt = DateTime.UtcNow;
 
             // Update in repository
-            await _seriesRepository.UpdateAsync(series);
-            _logger.LogInformation("TV series updated successfully: {SeriesId}", series.Id);
+            await _seriesRepository.UpdateAsync(existing);
+            _logger.LogInformation("TV series updated successfully: {SeriesId}", existing.Id);
         }
 
         public async Task DeleteSeriesAsync(int id)
