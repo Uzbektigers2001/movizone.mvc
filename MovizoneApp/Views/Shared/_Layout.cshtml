@@ -153,21 +153,23 @@
 								<i class="ti ti-search"></i>
 							</button>
 
-							@if (Context.Session.GetInt32("UserId").HasValue)
-							{
-								<a asp-controller="Auth" asp-action="Profile" class="header__sign-in">
-									<i class="ti ti-user"></i>
-									<span>@Context.Session.GetString("UserName")</span>
-								</a>
-							}
-							else
-							{
-								<a asp-controller="Auth" asp-action="SignIn" class="header__sign-in">
-									<i class="ti ti-login"></i>
-									<span>sign in</span>
-								</a>
-							}
-						</div>
+					@if (navSettings.ShowSignInButton)
+					{
+								@if (Context.Session.GetInt32("UserId").HasValue)
+								{
+									<a asp-controller="Auth" asp-action="Profile" class="header__sign-in">
+										<i class="ti ti-user"></i>
+										<span>@Context.Session.GetString("UserName")</span>
+									</a>
+								}
+								else
+								{
+									<a asp-controller="Auth" asp-action="SignIn" class="header__sign-in">
+										<i class="ti ti-login"></i>
+										<span>sign in</span>
+									</a>
+								}
+					}
 						<!-- end header auth -->
 
 						<!-- header menu btn -->

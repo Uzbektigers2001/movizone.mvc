@@ -21,5 +21,8 @@ namespace MovizoneApp.Models
         public bool ShowPricingPlanInNav { get; set; } = true;
         public bool ShowPagesInNav { get; set; } = true;
         public bool ShowMoreMenuInNav { get; set; } = true;
+
+        // Authentication Elements
+        public bool ShowSignInButton { get; set; } = true;
     }
 }
