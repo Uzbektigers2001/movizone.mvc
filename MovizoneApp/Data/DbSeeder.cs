@@ -26,8 +26,8 @@ namespace MovizoneApp.Data
         {
             try
             {
-                // Ensure database is created
-                await _context.Database.MigrateAsync();
+                // Ensure database is created (works with both InMemory and Relational databases)
+                await _context.Database.EnsureCreatedAsync();
 
                 // Seed Users
                 if (!await _context.Users.AnyAsync())

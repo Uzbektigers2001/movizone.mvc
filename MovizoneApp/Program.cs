@@ -114,6 +114,8 @@ try
     builder.Services.AddSingleton<IUserService, UserService>();
     builder.Services.AddSingleton<IReviewService, ReviewService>();
     builder.Services.AddSingleton<IWatchlistService, WatchlistService>();
+    builder.Services.AddSingleton<IEpisodeService, EpisodeService>();
+    builder.Services.AddSingleton<ISiteSettingsService, SiteSettingsService>();
 
     // Add Controllers with Views
     builder.Services.AddControllersWithViews();
