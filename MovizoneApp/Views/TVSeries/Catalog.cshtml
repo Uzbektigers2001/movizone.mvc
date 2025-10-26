@@ -10,7 +10,7 @@
 			<div class="col-12">
 				<div class="section__wrap">
 					<!-- section title -->
-					<h1 class="section__title section__title--head">TV Series</h1>
+					<h1 class="section__title section__title--head">@Localizer.GetString("TVSeries")</h1>
 					<!-- end section title -->
 
 					<!-- breadcrumbs -->
@@ -83,7 +83,7 @@
 								<span class="item__rate @ratingClass">@series.Rating</span>
 								<button class="item__favorite"
 								        type="button"
-								        title="Add to watchlist"
+								        title="@Localizer.GetString("Movie", "AddToWatchlist")"
 								        data-id="@series.Id"
 								        data-type="series"
 								        data-title="@series.Title"

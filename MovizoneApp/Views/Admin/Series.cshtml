@@ -5,7 +5,7 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>TV Series</h2>
+    <h2>@Localizer.GetString("TVSeries")</h2>
     <a asp-action="CreateSeries" class="btn btn-primary">
         <i class="ti ti-plus"></i> Add New Series
     </a>
@@ -34,14 +34,14 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Year</th>
+                        <th>@Localizer.GetString("Movie", "Title")</th>
+                        <th>@Localizer.GetString("Year")</th>
                         <th>Rating</th>
-                        <th>Seasons</th>
+                        <th>@Localizer.GetString("TVSeries", "Seasons")</th>
                         <th>Episodes</th>
-                        <th>Status</th>
+                        <th>@Localizer.GetString("Status")</th>
                         <th>Featured</th>
-                        <th>Actions</th>
+                        <th>@Localizer.GetString("Actions")</th>
                     </tr>
                 </thead>
                 <tbody>

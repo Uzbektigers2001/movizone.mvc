@@ -104,7 +104,7 @@
                     <input asp-for="ReleaseDate" type="date" class="form-control">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Video URL</label>
+                    <label class="form-label">@Localizer.GetString("Admin", "VideoURL")</label>
                     <input asp-for="VideoUrl" class="form-control" placeholder="https://... or upload below">
                     <small class="text-muted">Or upload video file below</small>
                 </div>
@@ -141,7 +141,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="ti ti-device-floppy"></i> Save Movie
                 </button>
-                <a asp-action="Movies" class="btn btn-outline-secondary">Cancel</a>
+                <a asp-action="Movies" class="btn btn-outline-secondary">@Localizer.GetString("Cancel")</a>
             </div>
         </form>
     </div>
