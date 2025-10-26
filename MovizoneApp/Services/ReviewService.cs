@@ -32,8 +32,33 @@ namespace MovizoneApp.Services
                     Comment = "Really enjoyed it. Tom Cruise was excellent!",
                     Rating = 8,
                     CreatedAt = DateTime.Now.AddDays(-3)
+                },
+                new Review
+                {
+                    Id = 3,
+                    MovieId = 2,
+                    UserId = 1,
+                    UserName = "Mike Johnson",
+                    Comment = "Solid action movie with great stunts.",
+                    Rating = 7,
+                    CreatedAt = DateTime.Now.AddDays(-2)
+                },
+                new Review
+                {
+                    Id = 4,
+                    MovieId = 3,
+                    UserId = 4,
+                    UserName = "Sarah Williams",
+                    Comment = "Masterpiece! Christopher Nolan at his best.",
+                    Rating = 10,
+                    CreatedAt = DateTime.Now.AddDays(-1)
                 }
             };
+        }
+
+        public List<Review> GetAllReviews()
+        {
+            return _reviews.OrderByDescending(r => r.CreatedAt).ToList();
         }
 
         public List<Review> GetReviewsByMovieId(int movieId)
