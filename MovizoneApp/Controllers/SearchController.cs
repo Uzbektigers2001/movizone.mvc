@@ -1,23 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using MovizoneApp.Services;
+using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly IMovieService _movieService;
-        private readonly ITVSeriesService _tvSeriesService;
-        private readonly IActorService _actorService;
+        private readonly IMovieApplicationService _movieService;
+        private readonly ITVSeriesApplicationService _tvSeriesService;
+        private readonly ILogger<SearchController> _logger;
 
-        public SearchController(IMovieService movieService, ITVSeriesService tvSeriesService, IActorService actorService)
+        public SearchController(
+            IMovieApplicationService movieService,
+            ITVSeriesApplicationService tvSeriesService,
+            ILogger<SearchController> logger)
         {
             _movieService = movieService;
             _tvSeriesService = tvSeriesService;
-            _actorService = actorService;
+            _logger = logger;
         }
 
-        public IActionResult Index(
+        public async Task<IActionResult> Index(
             string query = "",
             string type = "all",
             string genre = "",
@@ -27,12 +31,15 @@ namespace MovizoneApp.Controllers
             double? ratingTo = null,
             string actor = "")
         {
+            _logger.LogInformation("Search request - Query: {Query}, Type: {Type}, Genre: {Genre}", query, type, genre);
+
             var movies = new List<Movie>();
             var series = new List<TVSeries>();
 
             if (type == "all" || type == "movies")
             {
-                movies = _movieService.GetAllMovies();
+                var allMovies = await _movieService.GetAllMoviesAsync();
+                movies = allMovies.ToList();
 
                 // Apply filters
                 if (!string.IsNullOrEmpty(query))
@@ -77,7 +84,8 @@ namespace MovizoneApp.Controllers
 
             if (type == "all" || type == "series")
             {
-                series = _tvSeriesService.GetAllSeries();
+                var allSeries = await _tvSeriesService.GetAllSeriesAsync();
+                series = allSeries.ToList();
 
                 // Apply filters
                 if (!string.IsNullOrEmpty(query))
@@ -133,13 +141,15 @@ namespace MovizoneApp.Controllers
             ViewBag.TotalResults = movies.Count + series.Count;
 
             // Get all genres for dropdown
-            var allGenres = _movieService.GetAllMovies().Select(m => m.Genre)
-                .Concat(_tvSeriesService.GetAllSeries().Select(s => s.Genre))
+            var movieGenres = await _movieService.GetAllGenresAsync();
+            var seriesGenres = await _tvSeriesService.GetAllGenresAsync();
+            var allGenres = movieGenres.Concat(seriesGenres)
                 .Distinct()
                 .OrderBy(g => g)
                 .ToList();
             ViewBag.Genres = allGenres;
 
+            _logger.LogInformation("Search completed - Found {MovieCount} movies and {SeriesCount} series", movies.Count, series.Count);
             return View();
         }
     }
