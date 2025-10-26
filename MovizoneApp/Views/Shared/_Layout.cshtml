@@ -22,8 +22,11 @@
 </head>
 
 @inject MovizoneApp.Services.ISiteSettingsService SettingsService
+@inject MovizoneApp.Services.ILocalizationService Localizer
 @{
 	var navSettings = SettingsService.GetSettings();
+	var currentCulture = Localizer.GetCurrentCulture();
+	var availableLanguages = Localizer.GetAvailableLanguages();
 }
 
 <body>
@@ -45,11 +48,11 @@
 							{
 								<!-- dropdown -->
 								<li class="header__nav-item">
-									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Home <i class="ti ti-chevron-down"></i></a>
+									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@Localizer.GetString("Home") <i class="ti ti-chevron-down"></i></a>
 
 									<ul class="dropdown-menu header__dropdown-menu">
-										<li><a asp-controller="Home" asp-action="Index">Home</a></li>
-										<li><a asp-controller="Statistics" asp-action="Index">Statistics</a></li>
+										<li><a asp-controller="Home" asp-action="Index">@Localizer.GetString("Home")</a></li>
+										<li><a asp-controller="Statistics" asp-action="Index">@Localizer.GetString("Statistics")</a></li>
 									</ul>
 								</li>
 								<!-- end dropdown -->
@@ -59,21 +62,21 @@
 							@if (navSettings.ShowMoviesInNav)
 							{
 								<li class="header__nav-item">
-									<a asp-controller="Movie" asp-action="Catalog" class="header__nav-link">Movies</a>
+									<a asp-controller="Movie" asp-action="Catalog" class="header__nav-link">@Localizer.GetString("Movies")</a>
 								</li>
 							}
 
 							@if (navSettings.ShowTVSeriesInNav)
 							{
 								<li class="header__nav-item">
-									<a asp-controller="TVSeries" asp-action="Catalog" class="header__nav-link">TV Series</a>
+									<a asp-controller="TVSeries" asp-action="Catalog" class="header__nav-link">@Localizer.GetString("TVSeries")</a>
 								</li>
 							}
 
 							@if (navSettings.ShowActorsInNav)
 							{
 								<li class="header__nav-item">
-									<a asp-controller="Actor" asp-action="Index" class="header__nav-link">Actors</a>
+									<a asp-controller="Actor" asp-action="Index" class="header__nav-link">@Localizer.GetString("Actors")</a>
 								</li>
 							}
 							<!-- end Catalog Items -->
@@ -81,7 +84,7 @@
 							@if (navSettings.ShowPricingPlanInNav)
 							{
 								<li class="header__nav-item">
-									<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">Pricing plan</a>
+									<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">@Localizer.GetString("PricingPlan")</a>
 								</li>
 							}
 
@@ -89,20 +92,20 @@
 							{
 								<!-- dropdown -->
 								<li class="header__nav-item">
-									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages <i class="ti ti-chevron-down"></i></a>
+									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@Localizer.GetString("Pages") <i class="ti ti-chevron-down"></i></a>
 
 									<ul class="dropdown-menu header__dropdown-menu">
-										<li><a asp-controller="Home" asp-action="About">About Us</a></li>
+										<li><a asp-controller="Home" asp-action="About">@Localizer.GetString("AboutUs")</a></li>
 										@if (Context.Session.GetInt32("UserId").HasValue)
 										{
-											<li><a asp-controller="Auth" asp-action="Profile">Profile</a></li>
+											<li><a asp-controller="Auth" asp-action="Profile">@Localizer.GetString("Profile")</a></li>
 										}
-										<li><a asp-controller="Home" asp-action="Contacts">Contacts</a></li>
-										<li><a asp-controller="Home" asp-action="Faq">Help center</a></li>
-										<li><a asp-controller="Home" asp-action="Privacy">Privacy policy</a></li>
+										<li><a asp-controller="Home" asp-action="Contacts">@Localizer.GetString("Contacts")</a></li>
+										<li><a asp-controller="Home" asp-action="Faq">@Localizer.GetString("HelpCenter")</a></li>
+										<li><a asp-controller="Home" asp-action="Privacy">@Localizer.GetString("PrivacyPolicy")</a></li>
 										@if (Context.Session.GetString("UserName") == "admin")
 										{
-											<li><a asp-controller="Admin" asp-action="Index">Admin pages</a></li>
+											<li><a asp-controller="Admin" asp-action="Index">@Localizer.GetString("Admin")</a></li>
 										}
 									</ul>
 								</li>
@@ -121,14 +124,14 @@
 										@if (!Context.Session.GetInt32("UserId").HasValue)
 										{
 											<li><hr class="dropdown-divider"></li>
-											<li><a asp-controller="Auth" asp-action="SignIn">Sign in</a></li>
-											<li><a asp-controller="Auth" asp-action="SignUp">Sign up</a></li>
-											<li><a asp-controller="Auth" asp-action="ForgotPassword">Forgot password</a></li>
+											<li><a asp-controller="Auth" asp-action="SignIn">@Localizer.GetString("SignIn")</a></li>
+											<li><a asp-controller="Auth" asp-action="SignUp">@Localizer.GetString("SignUp")</a></li>
+											<li><a asp-controller="Auth" asp-action="ForgotPassword">@Localizer.GetString("ForgotPassword")</a></li>
 										}
 										else
 										{
 											<li><hr class="dropdown-divider"></li>
-											<li><a asp-controller="Auth" asp-action="Logout">Logout</a></li>
+											<li><a asp-controller="Auth" asp-action="Logout">@Localizer.GetString("Logout")</a></li>
 										}
 									</ul>
 								</li>
@@ -140,7 +143,7 @@
 						<!-- header auth -->
 						<div class="header__auth">
 							<form asp-controller="Search" asp-action="Index" method="get" class="header__search">
-								<input class="header__search-input" type="text" name="query" placeholder="Search...">
+								<input class="header__search-input" type="text" name="query" placeholder="@Localizer.GetString("Search")...">
 								<button class="header__search-button" type="submit">
 									<i class="ti ti-search"></i>
 								</button>
@@ -152,6 +155,32 @@
 							<button class="header__search-btn" type="button">
 								<i class="ti ti-search"></i>
 							</button>
+
+						<!-- language selector -->
+						<div class="header__lang">
+							<a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="ti ti-world"></i>
+								@{
+									var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture).Name ?? "EN";
+								}
+								<span>@currentLangName</span>
+							</a>
+							<ul class="dropdown-menu header__dropdown-menu">
+								@foreach (var lang in availableLanguages)
+								{
+									<li>
+										<form asp-controller="Language" asp-action="SetLanguage" method="post" style="display:inline;">
+											<input type="hidden" name="culture" value="@lang.Code" />
+											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+											<button type="submit" class="dropdown-item @(currentCulture == lang.Code ? "active" : "")" style="background:none;border:none;width:100%;text-align:left;padding:8px 16px;cursor:pointer;">
+												@lang.Name
+											</button>
+										</form>
+									</li>
+								}
+							</ul>
+						</div>
+						<!-- end language selector -->
 
 					@if (navSettings.ShowSignInButton)
 					{
@@ -166,7 +195,7 @@
 								{
 									<a asp-controller="Auth" asp-action="SignIn" class="header__sign-in">
 										<i class="ti ti-login"></i>
-										<span>sign in</span>
+										<span>@Localizer.GetString("SignIn").ToLower()</span>
 									</a>
 								}
 					}
@@ -205,9 +234,9 @@
 						<span class="footer__copyright">© HOTFLIX, @DateTime.Now.Year <br> Powered by ASP.NET Core MVC</span>
 
 						<nav class="footer__nav">
-							<a asp-controller="Home" asp-action="About">About Us</a>
-							<a asp-controller="Home" asp-action="Contacts">Contacts</a>
-							<a asp-controller="Home" asp-action="Privacy">Privacy policy</a>
+							<a asp-controller="Home" asp-action="About">@Localizer.GetString("AboutUs")</a>
+							<a asp-controller="Home" asp-action="Contacts">@Localizer.GetString("Contacts")</a>
+							<a asp-controller="Home" asp-action="Privacy">@Localizer.GetString("PrivacyPolicy")</a>
 						</nav>
 
 						<button class="footer__back" type="button">
