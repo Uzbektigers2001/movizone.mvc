@@ -10,10 +10,12 @@
     <style>
         :root {
             --sidebar-width: 250px;
+            --sidebar-collapsed-width: 70px;
             --header-height: 60px;
         }
         body {
             background: #f8f9fa;
+            transition: all 0.3s ease;
         }
         .sidebar {
             position: fixed;
@@ -24,17 +26,28 @@
             background: #2d3748;
             padding-top: var(--header-height);
             overflow-y: auto;
+            overflow-x: hidden;
+            transition: width 0.3s ease;
+            z-index: 1001;
         }
         .sidebar .nav-link {
             color: #cbd5e0;
             padding: 0.75rem 1.5rem;
             border-left: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.3s ease;
         }
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             color: #fff;
             background: rgba(255, 255, 255, 0.1);
             border-left-color: #ff55a5;
+        }
+        .sidebar .nav-link i {
+            min-width: 24px;
+        }
+        .sidebar h5 {
+            transition: opacity 0.3s ease;
         }
         .admin-header {
             position: fixed;
@@ -45,12 +58,47 @@
             background: #fff;
             border-bottom: 1px solid #e2e8f0;
             z-index: 1000;
+            transition: left 0.3s ease;
         }
         .main-content {
             margin-left: var(--sidebar-width);
             padding-top: calc(var(--header-height) + 2rem);
             padding-bottom: 2rem;
             min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Collapsed state */
+        body.sidebar-collapsed .sidebar {
+            width: var(--sidebar-collapsed-width);
+        }
+        body.sidebar-collapsed .sidebar h5 {
+            opacity: 0;
+        }
+        body.sidebar-collapsed .sidebar .nav-link {
+            padding: 0.75rem 1rem;
+            justify-content: center;
+        }
+        body.sidebar-collapsed .sidebar .nav-link span {
+            display: none;
+        }
+        body.sidebar-collapsed .admin-header {
+            left: var(--sidebar-collapsed-width);
+        }
+        body.sidebar-collapsed .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .sidebar-toggle:hover {
+            color: #ff55a5;
         }
     </style>
 </head>
@@ -64,38 +112,41 @@
         </div>
         <nav class="nav flex-column">
             <a asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <i class="ti ti-dashboard me-2"></i> Dashboard
+                <i class="ti ti-dashboard me-2"></i><span>Dashboard</span>
             </a>
             <a asp-action="Movies" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Movies" ? "active" : "")">
-                <i class="ti ti-movie me-2"></i> Movies
+                <i class="ti ti-movie me-2"></i><span>Movies</span>
             </a>
             <a asp-action="Series" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Series" ? "active" : "")">
-                <i class="ti ti-device-tv me-2"></i> TV Series
+                <i class="ti ti-device-tv me-2"></i><span>TV Series</span>
             </a>
             <a asp-action="Episodes" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Episodes" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateEpisode" || ViewContext.RouteData.Values["action"]?.ToString() == "EditEpisode" ? "active" : "")">
-                <i class="ti ti-list me-2"></i> Episodes
+                <i class="ti ti-list me-2"></i><span>Episodes</span>
             </a>
             <a asp-action="Actors" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Actors" ? "active" : "")">
-                <i class="ti ti-users me-2"></i> Actors
+                <i class="ti ti-users me-2"></i><span>Actors</span>
             </a>
             <a asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
-                <i class="ti ti-user me-2"></i> Users
+                <i class="ti ti-user me-2"></i><span>Users</span>
             </a>
             <a asp-action="Settings" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" ? "active" : "")">
-                <i class="ti ti-settings me-2"></i> Settings
+                <i class="ti ti-settings me-2"></i><span>Settings</span>
             </a>
             <hr class="my-2" style="border-color: rgba(255,255,255,0.1);">
             <a asp-controller="Home" asp-action="Index" class="nav-link">
-                <i class="ti ti-world me-2"></i> View Site
+                <i class="ti ti-world me-2"></i><span>View Site</span>
             </a>
             <a asp-action="Logout" class="nav-link">
-                <i class="ti ti-logout me-2"></i> Logout
+                <i class="ti ti-logout me-2"></i><span>Logout</span>
             </a>
         </nav>
     </div>
 
     <!-- Header -->
     <header class="admin-header d-flex align-items-center px-4">
+        <button class="sidebar-toggle me-3" id="sidebarToggle" title="Toggle Sidebar">
+            <i class="ti ti-menu-2"></i>
+        </button>
         <h4 class="mb-0">@ViewData["Title"]</h4>
         <div class="ms-auto">
             <span class="text-muted">Welcome, @Context.Session.GetString("UserName")</span>
@@ -110,6 +161,40 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Sidebar Toggle Functionality
+        (function() {
+            'use strict';
+
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const body = document.body;
+
+            // Get saved state from localStorage
+            const savedState = localStorage.getItem('admin_sidebar_collapsed');
+            if (savedState === 'true') {
+                body.classList.add('sidebar-collapsed');
+            }
+
+            // Toggle sidebar on button click
+            sidebarToggle.addEventListener('click', function() {
+                body.classList.toggle('sidebar-collapsed');
+
+                // Save state to localStorage
+                const isCollapsed = body.classList.contains('sidebar-collapsed');
+                localStorage.setItem('admin_sidebar_collapsed', isCollapsed);
+            });
+
+            // Optional: Keyboard shortcut (Ctrl/Cmd + B)
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                    e.preventDefault();
+                    sidebarToggle.click();
+                }
+            });
+        })();
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

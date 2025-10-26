@@ -33,12 +33,12 @@
             </div>
         }
 
-        <div class="row g-3 g-md-4">
         @if (ViewBag.IsLoggedIn == true)
         {
             @* Logged-in users: Show server-side data *@
             @if (ViewBag.WatchlistItems != null && ViewBag.WatchlistItems.Count > 0)
             {
+                <div class="row g-3 g-md-4">
                     @foreach (var item in ViewBag.WatchlistItems)
                     {
                         var ratingClass = item.Rating >= 8 ? "item__rate--green" : item.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
@@ -85,20 +85,23 @@
                             </div>
                         </div>
                     }
+                </div>
             }
             else
             {
-                <div class="col-12">
-                    <div class="reviews__empty">
-                        <i class="ti ti-bookmark-off"></i>
-                        <p>Your watchlist is empty. Start adding movies and TV series you want to watch!</p>
-                        <div class="mt-4">
-                            <a asp-controller="Movie" asp-action="Catalog" class="btn btn-primary me-2">
-                                <i class="ti ti-movie"></i> Browse Movies
-                            </a>
-                            <a asp-controller="TVSeries" asp-action="Catalog" class="btn btn-primary">
-                                <i class="ti ti-device-tv"></i> Browse TV Series
-                            </a>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="reviews__empty">
+                            <i class="ti ti-bookmark-off"></i>
+                            <p>Your watchlist is empty. Start adding movies and TV series you want to watch!</p>
+                            <div class="mt-4">
+                                <a asp-controller="Movie" asp-action="Catalog" class="btn btn-primary me-2">
+                                    <i class="ti ti-movie"></i> Browse Movies
+                                </a>
+                                <a asp-controller="TVSeries" asp-action="Catalog" class="btn btn-primary">
+                                    <i class="ti ti-device-tv"></i> Browse TV Series
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,11 +110,10 @@
         else
         {
             @* Anonymous users: JavaScript will load from localStorage *@
-            <div id="watchlist-items-container">
+            <div class="row g-3 g-md-4" id="watchlist-items-container">
                 @* Items will be loaded by watchlist.js *@
             </div>
         }
-        </div>
     </div>
 </div>
 <!-- end catalog -->
