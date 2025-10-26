@@ -68,7 +68,7 @@ namespace MovizoneApp.Controllers
         /// </summary>
         [HttpGet("me")]
         [Authorize]
-        public async Task<ActionResult<User>> GetCurrentUser()
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
@@ -77,17 +77,15 @@ namespace MovizoneApp.Controllers
             }
 
             var userId = int.Parse(userIdClaim.Value);
-            var user = await _userService.GetUserByIdAsync(userId);
+            var userDto = await _userService.GetUserByIdAsync(userId);
 
-            if (user == null)
+            if (userDto == null)
             {
                 throw new NotFoundException("User", userId);
             }
 
-            // Don't return password
-            user.Password = string.Empty;
-
-            return Ok(user);
+            // UserDto already excludes password, so just return it
+            return Ok(userDto);
         }
     }
 }

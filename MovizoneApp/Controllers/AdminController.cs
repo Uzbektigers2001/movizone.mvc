@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Services;
 using MovizoneApp.Models;
 using MovizoneApp.Enums;
@@ -22,6 +24,7 @@ namespace MovizoneApp.Controllers
         private readonly IActorApplicationService _actorService;
         private readonly ISiteSettingsService _settingsService;
         private readonly ILogger<AdminController> _logger;
+        private readonly IMapper _mapper;
 
         public AdminController(
             IMovieApplicationService movieService,
@@ -30,7 +33,8 @@ namespace MovizoneApp.Controllers
             IUserApplicationService userService,
             IActorApplicationService actorService,
             ISiteSettingsService settingsService,
-            ILogger<AdminController> logger)
+            ILogger<AdminController> logger,
+            IMapper mapper)
         {
             _movieService = movieService;
             _seriesService = seriesService;
@@ -39,6 +43,7 @@ namespace MovizoneApp.Controllers
             _actorService = actorService;
             _settingsService = settingsService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         private bool IsAdmin()
@@ -91,13 +96,13 @@ namespace MovizoneApp.Controllers
         {
             _logger.LogInformation("Admin login attempt for email: {Email}", email);
 
-            var user = await _userService.AuthenticateAsync(email, password);
+            var userDto = await _userService.AuthenticateAsync(email, password);
 
-            if (user != null && user.Role == UserRole.Admin)
+            if (userDto != null && userDto.Role == UserRole.Admin)
             {
-                HttpContext.Session.SetString(SessionKeys.UserId, user.Id.ToString());
-                HttpContext.Session.SetString(SessionKeys.UserName, user.Name);
-                HttpContext.Session.SetString(SessionKeys.UserRole, user.Role);
+                HttpContext.Session.SetString(SessionKeys.UserId, userDto.Id.ToString());
+                HttpContext.Session.SetString(SessionKeys.UserName, userDto.Name);
+                HttpContext.Session.SetString(SessionKeys.UserRole, userDto.Role);
 
                 _logger.LogInformation("Admin logged in successfully: {Email}", email);
                 return RedirectToAction("Index");
@@ -121,7 +126,8 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin viewing movies list. Search: {Search}, Page: {Page}", search, page);
 
-            var allMovies = await _movieService.GetAllMoviesAsync();
+            var allMoviesDto = await _movieService.GetAllMoviesAsync();
+            var allMovies = _mapper.Map<List<Movie>>(allMoviesDto);
             var movies = allMovies.AsEnumerable();
 
             if (!string.IsNullOrEmpty(search))
@@ -243,7 +249,8 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _movieService.CreateMovieAsync(movie);
+                var createDto = _mapper.Map<CreateMovieDto>(movie);
+                await _movieService.CreateMovieAsync(createDto);
                 _logger.LogInformation("Movie created successfully: {Title}", movie.Title);
                 TempData[TempDataKeys.Success] = "Movie created successfully!";
             }
@@ -262,13 +269,14 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin editing movie ID: {MovieId}", id);
 
-            var movie = await _movieService.GetMovieByIdAsync(id);
-            if (movie == null)
+            var movieDto = await _movieService.GetMovieByIdAsync(id);
+            if (movieDto == null)
             {
                 _logger.LogWarning("Movie not found for editing: {MovieId}", id);
                 return NotFound();
             }
 
+            var movie = _mapper.Map<Movie>(movieDto);
             return View(movie);
         }
 
@@ -349,7 +357,8 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _movieService.UpdateMovieAsync(movie);
+                var updateDto = _mapper.Map<UpdateMovieDto>(movie);
+                await _movieService.UpdateMovieAsync(updateDto);
                 _logger.LogInformation("Movie updated successfully: {MovieId}", movie.Id);
                 TempData[TempDataKeys.Success] = "Movie updated successfully!";
             }
@@ -389,7 +398,8 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin viewing series list. Search: {Search}, Page: {Page}", search, page);
 
-            var allSeries = await _seriesService.GetAllSeriesAsync();
+            var allSeriesDto = await _seriesService.GetAllSeriesAsync();
+            var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
             var series = allSeries.AsEnumerable();
 
             if (!string.IsNullOrEmpty(search))
@@ -488,7 +498,8 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _seriesService.CreateSeriesAsync(series);
+                var createDto = _mapper.Map<CreateTVSeriesDto>(series);
+                await _seriesService.CreateSeriesAsync(createDto);
                 _logger.LogInformation("TV series created successfully: {Title}", series.Title);
                 TempData[TempDataKeys.Success] = "TV series created successfully!";
             }
@@ -507,13 +518,14 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin editing TV series ID: {SeriesId}", id);
 
-            var series = await _seriesService.GetSeriesByIdAsync(id);
-            if (series == null)
+            var seriesDto = await _seriesService.GetSeriesByIdAsync(id);
+            if (seriesDto == null)
             {
                 _logger.LogWarning("TV series not found for editing: {SeriesId}", id);
                 return NotFound();
             }
 
+            var series = _mapper.Map<TVSeries>(seriesDto);
             return View(series);
         }
 
@@ -592,7 +604,8 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _seriesService.UpdateSeriesAsync(series);
+                var updateDto = _mapper.Map<UpdateTVSeriesDto>(series);
+                await _seriesService.UpdateSeriesAsync(updateDto);
                 _logger.LogInformation("TV series updated successfully: {SeriesId}", series.Id);
                 TempData[TempDataKeys.Success] = "TV series updated successfully!";
             }
@@ -632,8 +645,9 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin viewing users list");
 
-            var users = await _userService.GetAllUsersAsync();
-            return View(users.ToList());
+            var usersDto = await _userService.GetAllUsersAsync();
+            var users = _mapper.Map<List<User>>(usersDto);
+            return View(users);
         }
 
         public async Task<IActionResult> EditUser(int id)
@@ -642,13 +656,14 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin editing user ID: {UserId}", id);
 
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
+            var userDto = await _userService.GetUserByIdAsync(id);
+            if (userDto == null)
             {
                 _logger.LogWarning("User not found for editing: {UserId}", id);
                 return NotFound();
             }
 
+            var user = _mapper.Map<User>(userDto);
             return View(user);
         }
 
@@ -661,7 +676,8 @@ namespace MovizoneApp.Controllers
             {
                 try
                 {
-                    await _userService.UpdateUserAsync(user);
+                    var updateDto = _mapper.Map<UpdateUserDto>(user);
+                    await _userService.UpdateUserAsync(updateDto);
                     _logger.LogInformation("User updated successfully: {UserId}", user.Id);
                     TempData[TempDataKeys.Success] = "User updated successfully!";
                     return RedirectToAction("Users");
@@ -702,8 +718,9 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin viewing actors list");
 
-            var actors = await _actorService.GetAllActorsAsync();
-            return View(actors.ToList());
+            var actorsDto = await _actorService.GetAllActorsAsync();
+            var actors = _mapper.Map<List<Actor>>(actorsDto);
+            return View(actors);
         }
 
         public IActionResult CreateActor()
@@ -742,7 +759,8 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _actorService.CreateActorAsync(actor);
+                var createDto = _mapper.Map<CreateActorDto>(actor);
+                await _actorService.CreateActorAsync(createDto);
                 _logger.LogInformation("Actor created successfully: {Name}", actor.Name);
                 TempData[TempDataKeys.Success] = "Actor created successfully!";
             }
@@ -761,13 +779,14 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin editing actor ID: {ActorId}", id);
 
-            var actor = await _actorService.GetActorByIdAsync(id);
-            if (actor == null)
+            var actorDto = await _actorService.GetActorByIdAsync(id);
+            if (actorDto == null)
             {
                 _logger.LogWarning("Actor not found for editing: {ActorId}", id);
                 return NotFound();
             }
 
+            var actor = _mapper.Map<Actor>(actorDto);
             return View(actor);
         }
 
@@ -801,7 +820,8 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _actorService.UpdateActorAsync(actor);
+                var updateDto = _mapper.Map<UpdateActorDto>(actor);
+                await _actorService.UpdateActorAsync(updateDto);
                 _logger.LogInformation("Actor updated successfully: {ActorId}", actor.Id);
                 TempData[TempDataKeys.Success] = "Actor updated successfully!";
             }
@@ -839,7 +859,8 @@ namespace MovizoneApp.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            var allSeries = await _seriesService.GetAllSeriesAsync();
+            var allSeriesDto = await _seriesService.GetAllSeriesAsync();
+            var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
             ViewBag.AllSeries = allSeries;
             ViewBag.SelectedSeriesId = seriesId;
 
@@ -847,8 +868,8 @@ namespace MovizoneApp.Controllers
             if (seriesId.HasValue)
             {
                 episodes = _episodeService.GetEpisodesBySeriesId(seriesId.Value);
-                var selectedSeries = await _seriesService.GetSeriesByIdAsync(seriesId.Value);
-                ViewBag.SelectedSeriesTitle = selectedSeries?.Title;
+                var selectedSeriesDto = await _seriesService.GetSeriesByIdAsync(seriesId.Value);
+                ViewBag.SelectedSeriesTitle = selectedSeriesDto?.Title;
             }
             else
             {
@@ -867,7 +888,9 @@ namespace MovizoneApp.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Login");
 
-            ViewBag.AllSeries = await _seriesService.GetAllSeriesAsync();
+            var allSeriesDto = await _seriesService.GetAllSeriesAsync();
+            var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
+            ViewBag.AllSeries = allSeries;
             ViewBag.SelectedSeriesId = seriesId;
 
             return View();
@@ -929,7 +952,9 @@ namespace MovizoneApp.Controllers
             var episode = _episodeService.GetEpisodeById(id);
             if (episode == null) return NotFound();
 
-            ViewBag.AllSeries = await _seriesService.GetAllSeriesAsync();
+            var allSeriesDto = await _seriesService.GetAllSeriesAsync();
+            var allSeries = _mapper.Map<List<TVSeries>>(allSeriesDto);
+            ViewBag.AllSeries = allSeries;
             return View(episode);
         }
 

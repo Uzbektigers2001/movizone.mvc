@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.DTOs;
+using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
 {
@@ -14,17 +17,20 @@ namespace MovizoneApp.Controllers
         private readonly IMovieApplicationService _movieService;
         private readonly ITVSeriesApplicationService _tvSeriesService;
         private readonly ILogger<WatchlistController> _logger;
+        private readonly IMapper _mapper;
 
         public WatchlistController(
             IWatchlistApplicationService watchlistService,
             IMovieApplicationService movieService,
             ITVSeriesApplicationService tvSeriesService,
-            ILogger<WatchlistController> logger)
+            ILogger<WatchlistController> logger,
+            IMapper mapper)
         {
             _watchlistService = watchlistService;
             _movieService = movieService;
             _tvSeriesService = tvSeriesService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -33,43 +39,43 @@ namespace MovizoneApp.Controllers
             int userId = 1;
             _logger.LogInformation("Fetching watchlist for user {UserId}", userId);
 
-            var watchlistItems = await _watchlistService.GetUserWatchlistAsync(userId);
+            var watchlistDtos = await _watchlistService.GetUserWatchlistAsync(userId);
 
             // Fetch movie details for each watchlist item
             var movies = new List<object>();
-            foreach (var item in watchlistItems)
+            foreach (var itemDto in watchlistDtos)
             {
-                var movie = await _movieService.GetMovieByIdAsync(item.MovieId);
-                if (movie != null)
+                var movieDto = await _movieService.GetMovieByIdAsync(itemDto.MovieId);
+                if (movieDto != null)
                 {
                     movies.Add(new
                     {
-                        WatchlistId = item.Id,
-                        MovieId = movie.Id,
-                        Title = movie.Title,
-                        CoverImage = movie.CoverImage,
-                        Rating = movie.Rating,
-                        Year = movie.Year,
-                        Genre = movie.Genre,
-                        AddedAt = item.AddedAt,
+                        WatchlistId = itemDto.Id,
+                        MovieId = movieDto.Id,
+                        Title = movieDto.Title,
+                        CoverImage = movieDto.CoverImage,
+                        Rating = movieDto.Rating,
+                        Year = movieDto.Year,
+                        Genre = movieDto.Genre,
+                        AddedAt = itemDto.AddedAt,
                         Type = "Movie"
                     });
                 }
                 else
                 {
-                    var series = await _tvSeriesService.GetSeriesByIdAsync(item.MovieId);
-                    if (series != null)
+                    var seriesDto = await _tvSeriesService.GetSeriesByIdAsync(itemDto.MovieId);
+                    if (seriesDto != null)
                     {
                         movies.Add(new
                         {
-                            WatchlistId = item.Id,
-                            MovieId = series.Id,
-                            Title = series.Title,
-                            CoverImage = series.CoverImage,
-                            Rating = series.Rating,
-                            Year = series.Year,
-                            Genre = series.Genre,
-                            AddedAt = item.AddedAt,
+                            WatchlistId = itemDto.Id,
+                            MovieId = seriesDto.Id,
+                            Title = seriesDto.Title,
+                            CoverImage = seriesDto.CoverImage,
+                            Rating = seriesDto.Rating,
+                            Year = seriesDto.Year,
+                            Genre = seriesDto.Genre,
+                            AddedAt = itemDto.AddedAt,
                             Type = "Series"
                         });
                     }
@@ -89,7 +95,12 @@ namespace MovizoneApp.Controllers
 
             try
             {
-                await _watchlistService.AddToWatchlistAsync(userId, movieId);
+                var createDto = new CreateWatchlistItemDto
+                {
+                    UserId = userId,
+                    MovieId = movieId
+                };
+                await _watchlistService.AddToWatchlistAsync(createDto);
                 TempData["Success"] = "Added to your watchlist!";
             }
             catch (Exception ex)

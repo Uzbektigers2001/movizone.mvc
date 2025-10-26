@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MovizoneApp.Application.Interfaces;
+using MovizoneApp.DTOs;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers;
@@ -12,15 +14,18 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IMovieApplicationService _movieService;
     private readonly ITVSeriesApplicationService _tvSeriesService;
+    private readonly IMapper _mapper;
 
     public HomeController(
         ILogger<HomeController> logger,
         IMovieApplicationService movieService,
-        ITVSeriesApplicationService tvSeriesService)
+        ITVSeriesApplicationService tvSeriesService,
+        IMapper mapper)
     {
         _logger = logger;
         _movieService = movieService;
         _tvSeriesService = tvSeriesService;
+        _mapper = mapper;
     }
 
     public async Task<IActionResult> Index(
@@ -35,8 +40,10 @@ public class HomeController : Controller
         try
         {
             // Get all movies and series async
-            var allMovies = await _movieService.GetAllMoviesAsync();
-            var allSeries = await _tvSeriesService.GetAllSeriesAsync();
+            var allMoviesDto = await _movieService.GetAllMoviesAsync();
+            var allMovies = _mapper.Map<IEnumerable<Movie>>(allMoviesDto);
+            var allSeriesDto = await _tvSeriesService.GetAllSeriesAsync();
+            var allSeries = _mapper.Map<IEnumerable<TVSeries>>(allSeriesDto);
 
             // Banner items (movies and series with ShowInBanner=true and not hidden)
             var bannerMovies = allMovies
