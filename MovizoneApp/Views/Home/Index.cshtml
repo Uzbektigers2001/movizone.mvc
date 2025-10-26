@@ -223,6 +223,155 @@
     </div>
 </section>
 
+<!-- Recently Updated -->
+<section class="content py-5" style="background-color: #0f0f1e; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <div class="content__head">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- content title -->
+                    <h2 class="content__title">Recently updated</h2>
+                    <!-- end content title -->
+
+                    <!-- content tabs nav -->
+                    <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button id="1-tab" class="active" data-bs-toggle="tab" data-bs-target="#tab-1" type="button" role="tab" aria-controls="tab-1" aria-selected="true">New items</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button id="2-tab" data-bs-toggle="tab" data-bs-target="#tab-2" type="button" role="tab" aria-controls="tab-2" aria-selected="false">Movies</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button id="3-tab" data-bs-toggle="tab" data-bs-target="#tab-3" type="button" role="tab" aria-controls="tab-3" aria-selected="false">TV Series</button>
+                        </li>
+                    </ul>
+                    <!-- end content tabs nav -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- content tabs -->
+        <div class="tab-content">
+            <!-- New items tab -->
+            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab" tabindex="0">
+                <div class="row g-3 g-md-4">
+                    @{
+                        var recentlyUpdatedAll = ViewBag.RecentlyUpdatedAll as List<(string Title, double Rating, string Genre, string CoverImage, string Type, int Id, DateTime Date)> ?? new List<(string, double, string, string, string, int, DateTime)>();
+                        foreach (var item in recentlyUpdatedAll)
+                        {
+                            var ratingClass = item.Rating >= 8 ? "item__rate--green" : item.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="@item.CoverImage" alt="@item.Title">
+                                <a asp-controller="@(item.Type == "movie" ? "Movie" : "TVSeries")" asp-action="Details" asp-route-id="@item.Id" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <span class="item__rate @ratingClass">@item.Rating.ToString("0.0")</span>
+                                <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                            </div>
+                            <div class="item__content">
+                                <h3 class="item__title">
+                                    <a asp-controller="@(item.Type == "movie" ? "Movie" : "TVSeries")" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                                </h3>
+                                <span class="item__category">
+                                    @foreach (var genre in item.Genre.Split(',').Take(2))
+                                    {
+                                        <a href="#">@genre.Trim()</a>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!-- end New items tab -->
+
+            <!-- Movies tab -->
+            <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab" tabindex="0">
+                <div class="row g-3 g-md-4">
+                    @{
+                        var recentlyUpdatedMovies = ViewBag.RecentlyUpdatedMovies as List<Movie> ?? new List<Movie>();
+                        foreach (var movie in recentlyUpdatedMovies)
+                        {
+                            var ratingClass = movie.Rating >= 8 ? "item__rate--green" : movie.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="@movie.CoverImage" alt="@movie.Title">
+                                <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <span class="item__rate @ratingClass">@movie.Rating.ToString("0.0")</span>
+                                <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                            </div>
+                            <div class="item__content">
+                                <h3 class="item__title">
+                                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.Id">@movie.Title</a>
+                                </h3>
+                                <span class="item__category">
+                                    @foreach (var genre in movie.Genre.Split(',').Take(2))
+                                    {
+                                        <a href="#">@genre.Trim()</a>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!-- end Movies tab -->
+
+            <!-- TV Series tab -->
+            <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab" tabindex="0">
+                <div class="row g-3 g-md-4">
+                    @{
+                        var recentlyUpdatedSeries = ViewBag.RecentlyUpdatedSeries as List<TVSeries> ?? new List<TVSeries>();
+                        foreach (var series in recentlyUpdatedSeries)
+                        {
+                            var ratingClass = series.Rating >= 8 ? "item__rate--green" : series.Rating >= 6 ? "item__rate--yellow" : "item__rate--red";
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="@series.CoverImage" alt="@series.Title">
+                                <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <span class="item__rate @ratingClass">@series.Rating.ToString("0.0")</span>
+                                <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                            </div>
+                            <div class="item__content">
+                                <h3 class="item__title">
+                                    <a asp-controller="TVSeries" asp-action="Details" asp-route-id="@series.Id">@series.Title</a>
+                                </h3>
+                                <span class="item__category">
+                                    @foreach (var genre in series.Genre.Split(',').Take(2))
+                                    {
+                                        <a href="#">@genre.Trim()</a>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!-- end TV Series tab -->
+        </div>
+        <!-- end content tabs -->
+    </div>
+</section>
+<!-- end Recently Updated -->
+
 <!-- Pricing Plans -->
 <section class="py-5" style="background-color: #0f0f1e; border-top: 1px solid rgba(255, 255, 255, 0.1);">
     <div class="container">

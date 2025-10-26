@@ -71,6 +71,38 @@ public class HomeController : Controller
         ViewBag.TotalMovies = _movieService.GetAllMovies().Where(m => !m.IsHidden).Count();
         ViewBag.TotalSeries = _tvSeriesService.GetAllSeries().Where(s => !s.IsHidden).Count();
 
+        // Recently Updated - ordered by release date/first aired
+        var recentlyUpdatedMovies = _movieService.GetAllMovies()
+            .Where(m => !m.IsHidden)
+            .OrderByDescending(m => m.ReleaseDate)
+            .Take(12)
+            .ToList();
+
+        var recentlyUpdatedSeries = _tvSeriesService.GetAllSeries()
+            .Where(s => !s.IsHidden)
+            .OrderByDescending(s => s.FirstAired)
+            .Take(12)
+            .ToList();
+
+        // Combine for "New items" tab
+        var recentlyUpdatedAll = new List<(string Title, double Rating, string Genre, string CoverImage, string Type, int Id, DateTime Date)>();
+
+        foreach (var movie in recentlyUpdatedMovies)
+        {
+            recentlyUpdatedAll.Add((movie.Title, movie.Rating, movie.Genre, movie.CoverImage, "movie", movie.Id, movie.ReleaseDate));
+        }
+        foreach (var series in recentlyUpdatedSeries)
+        {
+            recentlyUpdatedAll.Add((series.Title, series.Rating, series.Genre, series.CoverImage, "series", series.Id, series.FirstAired));
+        }
+
+        // Sort combined list by date
+        recentlyUpdatedAll = recentlyUpdatedAll.OrderByDescending(x => x.Date).Take(12).ToList();
+
+        ViewBag.RecentlyUpdatedAll = recentlyUpdatedAll;
+        ViewBag.RecentlyUpdatedMovies = recentlyUpdatedMovies;
+        ViewBag.RecentlyUpdatedSeries = recentlyUpdatedSeries;
+
         return View();
     }
 
