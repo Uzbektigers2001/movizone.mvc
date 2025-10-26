@@ -16,11 +16,11 @@
     <div class="card-body">
         <form asp-action="Series" method="get" class="row g-3">
             <div class="col-md-10">
-                <input type="text" name="search" class="form-control" placeholder="Search series by title or description..." value="@ViewBag.SearchQuery">
+                <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchSeriesByTitle")" value="@ViewBag.SearchQuery">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">
-                    <i class="ti ti-search"></i> Search
+                    <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
                 </button>
             </div>
         </form>
@@ -85,7 +85,7 @@
                                 </a>
                                 <form asp-action="DeleteSeries" asp-route-id="@series.Id" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger"
-                                            onclick="return confirm('Delete this series?')">
+                                            onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisSeries")')">
                                         <i class="ti ti-trash"></i>
                                     </button>
                                 </form>

@@ -7,7 +7,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>@Localizer.GetString("Movies")</h2>
     <a asp-action="CreateMovie" class="btn btn-primary">
-        <i class="ti ti-plus"></i> Add New Movie
+        <i class="ti ti-plus"></i> @Localizer.GetString("Admin", "AddNewMovie")
     </a>
 </div>
 
@@ -16,11 +16,11 @@
     <div class="card-body">
         <form asp-action="Movies" method="get" class="row g-3">
             <div class="col-md-10">
-                <input type="text" name="search" class="form-control" placeholder="Search movies by title or description..." value="@ViewBag.SearchQuery">
+                <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchMoviesByTitle")" value="@ViewBag.SearchQuery">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">
-                    <i class="ti ti-search"></i> Search
+                    <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
                 </button>
             </div>
         </form>
@@ -37,9 +37,9 @@
                         <th>@Localizer.GetString("Movie", "Title")</th>
                         <th>@Localizer.GetString("Year")</th>
                         <th>@Localizer.GetString("Movie", "Rating")</th>
-                        <th>Genre</th>
-                        <th>Duration</th>
-                        <th>Featured</th>
+                        <th>@Localizer.GetString("Admin", "Genre")</th>
+                        <th>@Localizer.GetString("Admin", "Duration")</th>
+                        <th>@Localizer.GetString("Admin", "Featured")</th>
                         <th>@Localizer.GetString("Actions")</th>
                     </tr>
                 </thead>
@@ -57,15 +57,15 @@
                                 <span class="badge bg-success">@movie.Rating</span>
                             </td>
                             <td>@movie.Genre</td>
-                            <td>@movie.Duration min</td>
+                            <td>@movie.Duration @Localizer.GetString("Admin", "Min")</td>
                             <td>
                                 @if (movie.IsFeatured)
                                 {
-                                    <span class="badge bg-primary">Yes</span>
+                                    <span class="badge bg-primary">@Localizer.GetString("Admin", "Yes")</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">No</span>
+                                    <span class="badge bg-secondary">@Localizer.GetString("Admin", "No")</span>
                                 }
                             </td>
                             <td>
@@ -74,7 +74,7 @@
                                 </a>
                                 <form asp-action="DeleteMovie" asp-route-id="@movie.Id" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger"
-                                            onclick="return confirm('Delete this movie?')">
+                                            onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisMovie")')">
                                         <i class="ti ti-trash"></i>
                                     </button>
                                 </form>

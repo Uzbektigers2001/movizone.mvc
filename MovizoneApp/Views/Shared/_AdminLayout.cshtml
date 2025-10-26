@@ -1,4 +1,9 @@
 @using Microsoft.AspNetCore.Http
+@inject MovizoneApp.Services.ILocalizationService Localizer
+@{
+    var currentCulture = Localizer.GetCurrentCulture();
+    var availableLanguages = Localizer.GetAvailableLanguages();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,44 +117,68 @@
         </div>
         <nav class="nav flex-column">
             <a asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <i class="ti ti-dashboard me-2"></i><span>Dashboard</span>
+                <i class="ti ti-dashboard me-2"></i><span>@Localizer.GetString("Admin", "Dashboard")</span>
             </a>
             <a asp-action="Movies" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Movies" ? "active" : "")">
-                <i class="ti ti-movie me-2"></i><span>Movies</span>
+                <i class="ti ti-movie me-2"></i><span>@Localizer.GetString("Movies")</span>
             </a>
             <a asp-action="Series" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Series" ? "active" : "")">
-                <i class="ti ti-device-tv me-2"></i><span>TV Series</span>
+                <i class="ti ti-device-tv me-2"></i><span>@Localizer.GetString("TVSeries")</span>
             </a>
             <a asp-action="Episodes" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Episodes" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateEpisode" || ViewContext.RouteData.Values["action"]?.ToString() == "EditEpisode" ? "active" : "")">
-                <i class="ti ti-list me-2"></i><span>Episodes</span>
+                <i class="ti ti-list me-2"></i><span>@Localizer.GetString("TVSeries", "Episodes")</span>
             </a>
             <a asp-action="Actors" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Actors" ? "active" : "")">
-                <i class="ti ti-users me-2"></i><span>Actors</span>
+                <i class="ti ti-users me-2"></i><span>@Localizer.GetString("Actors")</span>
             </a>
             <a asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
-                <i class="ti ti-user me-2"></i><span>Users</span>
+                <i class="ti ti-user me-2"></i><span>@Localizer.GetString("Admin", "ManageUsers")</span>
             </a>
             <a asp-action="Settings" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" ? "active" : "")">
-                <i class="ti ti-settings me-2"></i><span>Settings</span>
+                <i class="ti ti-settings me-2"></i><span>@Localizer.GetString("Admin", "SiteSettings")</span>
             </a>
             <hr class="my-2" style="border-color: rgba(255,255,255,0.1);">
             <a asp-controller="Home" asp-action="Index" class="nav-link">
-                <i class="ti ti-world me-2"></i><span>View Site</span>
+                <i class="ti ti-world me-2"></i><span>@Localizer.GetString("Admin", "ViewSite")</span>
             </a>
             <a asp-action="Logout" class="nav-link">
-                <i class="ti ti-logout me-2"></i><span>Logout</span>
+                <i class="ti ti-logout me-2"></i><span>@Localizer.GetString("Logout")</span>
             </a>
         </nav>
     </div>
 
     <!-- Header -->
     <header class="admin-header d-flex align-items-center px-4">
-        <button class="sidebar-toggle me-3" id="sidebarToggle" title="Toggle Sidebar">
+        <button class="sidebar-toggle me-3" id="sidebarToggle" title="@Localizer.GetString("Admin", "ToggleSidebar")">
             <i class="ti ti-menu-2"></i>
         </button>
         <h4 class="mb-0">@ViewData["Title"]</h4>
-        <div class="ms-auto">
-            <span class="text-muted">Welcome, @Context.Session.GetString("UserName")</span>
+        <div class="ms-auto d-flex align-items-center">
+            <!-- Language Selector -->
+            <div class="dropdown me-3">
+                <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="ti ti-world"></i>
+                    @{
+                        var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture)?.Name ?? "EN";
+                    }
+                    <span>@currentLangName</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    @foreach (var lang in availableLanguages)
+                    {
+                        <li>
+                            <form asp-controller="Language" asp-action="SetLanguage" method="post" class="language-form" data-culture="@lang.Code">
+                                <input type="hidden" name="culture" value="@lang.Code" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <a href="#" class="dropdown-item @(currentCulture == lang.Code ? "active" : "")" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    @lang.Name
+                                </a>
+                            </form>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <span class="text-muted">@Localizer.GetString("Admin", "Welcome"), @Context.Session.GetString("UserName")</span>
         </div>
     </header>
 

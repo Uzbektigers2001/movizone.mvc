@@ -14,7 +14,7 @@
                         <i class="ti ti-movie fs-3 text-primary"></i>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">Total Movies</h6>
+                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "TotalMovies")</h6>
                         <h3 class="mb-0">@Model.TotalMovies</h3>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         <i class="ti ti-device-tv fs-3 text-success"></i>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">TV Series</h6>
+                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "TotalSeries")</h6>
                         <h3 class="mb-0">@Model.TotalSeries</h3>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         <i class="ti ti-users fs-3 text-warning"></i>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">Total Users</h6>
+                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "TotalUsers")</h6>
                         <h3 class="mb-0">@Model.TotalUsers</h3>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                         <i class="ti ti-eye fs-3 text-info"></i>
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1">Monthly Views</h6>
+                        <h6 class="text-muted mb-1">@Localizer.GetString("Admin", "MonthlyViews")</h6>
                         <h3 class="mb-0">@Model.MonthlyViews.ToString("N0")</h3>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
     <div class="col-md-8">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-0 py-3">
-                <h5 class="mb-0">Recent Activities</h5>
+                <h5 class="mb-0">@Localizer.GetString("Admin", "RecentActivities")</h5>
             </div>
             <div class="card-body">
                 @if (Model.RecentActivities.Any())
@@ -97,7 +97,7 @@
                 }
                 else
                 {
-                    <p class="text-muted mb-0">No recent activities</p>
+                    <p class="text-muted mb-0">@Localizer.GetString("Admin", "NoRecentActivities")</p>
                 }
             </div>
         </div>
@@ -106,19 +106,19 @@
     <div class="col-md-4">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-0 py-3">
-                <h5 class="mb-0">Quick Stats</h5>
+                <h5 class="mb-0">@Localizer.GetString("Admin", "QuickStats")</h5>
             </div>
             <div class="card-body">
                 <div class="mb-3 pb-3 border-bottom">
-                    <p class="text-muted mb-1">Today's Views</p>
+                    <p class="text-muted mb-1">@Localizer.GetString("Admin", "TodayViews")</p>
                     <h4 class="mb-0">@Model.TodayViews.ToString("N0")</h4>
                 </div>
                 <div class="mb-3 pb-3 border-bottom">
-                    <p class="text-muted mb-1">Monthly Revenue</p>
+                    <p class="text-muted mb-1">@Localizer.GetString("Admin", "MonthlyRevenue")</p>
                     <h4 class="mb-0">$@Model.MonthlyRevenue.ToString("N2")</h4>
                 </div>
                 <div>
-                    <p class="text-muted mb-1">Total Actors</p>
+                    <p class="text-muted mb-1">@Localizer.GetString("Admin", "TotalActors")</p>
                     <h4 class="mb-0">@Model.TotalActors</h4>
                 </div>
             </div>
