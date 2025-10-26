@@ -89,6 +89,12 @@ try
         options.Cookie.IsEssential = true;
     });
 
+    // Add HttpContextAccessor for LocalizationService
+    builder.Services.AddHttpContextAccessor();
+
+    // Add Localization Service
+    builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
+
     // Register Repositories (Infrastructure Layer)
     builder.Services.AddScoped<IMovieRepository, MovieRepository>();
     builder.Services.AddScoped<ITVSeriesRepository, TVSeriesRepository>();
