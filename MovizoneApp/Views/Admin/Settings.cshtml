@@ -1,11 +1,11 @@
 @model MovizoneApp.Models.SiteSettings
 @{
-    ViewData["Title"] = "Site Settings";
+    ViewData["Title"] = "@Localizer.GetString("Admin", "SiteSettings")";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="ti ti-settings"></i> Site Settings</h2>
+    <h2><i class="ti ti-settings"></i> @Localizer.GetString("Admin", "SiteSettings")</h2>
 </div>
 
 @if (TempData["Success"] != null)
@@ -18,11 +18,11 @@
 
 <form asp-action="Settings" method="post">
     <div class="row">
-        <!-- Banner & Hero Section -->
+        <!-- @Localizer.GetString("Admin", "BannerHeroSection") -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="ti ti-photo"></i> Banner & Hero Section</h5>
+                    <h5 class="mb-0"><i class="ti ti-photo"></i> @Localizer.GetString("Admin", "BannerHeroSection")</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-check form-switch mb-3">
@@ -36,11 +36,11 @@
             </div>
         </div>
 
-        <!-- Home Page Sections -->
+        <!-- @Localizer.GetString("Admin", "HomePageSections") -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="ti ti-layout"></i> Home Page Sections</h5>
+                    <h5 class="mb-0"><i class="ti ti-layout"></i> @Localizer.GetString("Admin", "HomePageSections")</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-check form-switch mb-3">
@@ -82,7 +82,7 @@
         <div class="col-md-12">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="ti ti-menu"></i> Navigation Menu Items</h5>
+                    <h5 class="mb-0"><i class="ti ti-menu"></i> @Localizer.GetString("Admin", "NavigationMenuItems")</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-3">@Localizer.GetString("Admin", "ControlMenuItems")</p>
@@ -159,7 +159,7 @@
         <div class="col-md-12">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-warning text-white">
-                    <h5 class="mb-0"><i class="ti ti-user"></i> Authentication Elements</h5>
+                    <h5 class="mb-0"><i class="ti ti-user"></i> @Localizer.GetString("Admin", "AuthenticationElements")</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-3">@Localizer.GetString("Admin", "ControlAuthElements")</p>
@@ -181,7 +181,7 @@
 
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary btn-lg">
-            <i class="ti ti-device-floppy"></i> Save Settings
+            <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "SaveSettings")
         </button>
         <a asp-action="Index" class="btn btn-outline-secondary btn-lg">@Localizer.GetString("Cancel")</a>
     </div>

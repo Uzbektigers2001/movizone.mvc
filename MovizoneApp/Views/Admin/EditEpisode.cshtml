@@ -6,13 +6,13 @@
 
 <div class="mb-4">
     <a asp-action="Episodes" asp-route-seriesId="@Model.TVSeriesId" class="btn btn-outline-secondary">
-        <i class="ti ti-arrow-left"></i> Back to Episodes
+        <i class="ti ti-arrow-left"></i> @Localizer.GetString("Admin", "BackToEpisodes")
     </a>
 </div>
 
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0">Edit Episode: @Model.Title</h5>
+        <h5 class="mb-0">@Localizer.GetString("Admin", "EditEpisode"): @Model.Title</h5>
     </div>
     <div class="card-body">
         <form asp-action="EditEpisode" method="post" enctype="multipart/form-data">
@@ -31,34 +31,34 @@
                     </select>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label class="form-label">Season Number *</label>
+                    <label class="form-label">@Localizer.GetString("Admin", "SeasonNumberRequired")</label>
                     <input asp-for="SeasonNumber" type="number" class="form-control" min="1" required>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <label class="form-label">Episode Number *</label>
+                    <label class="form-label">@Localizer.GetString("Admin", "EpisodeNumberRequired")</label>
                     <input asp-for="EpisodeNumber" type="number" class="form-control" min="1" required>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-8 mb-3">
-                    <label class="form-label">Episode Title *</label>
+                    <label class="form-label">@Localizer.GetString("Admin", "EpisodeTitleRequired")</label>
                     <input asp-for="Title" class="form-control" required>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Duration (minutes) *</label>
+                    <label class="form-label">@Localizer.GetString("Admin", "DurationMinutesRequired")</label>
                     <input asp-for="Duration" type="number" class="form-control" min="1" required>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Description *</label>
+                <label class="form-label">@Localizer.GetString("Admin", "DescriptionRequired")</label>
                 <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Current Thumbnail</label>
+                    <label class="form-label">@Localizer.GetString("Admin", "CurrentThumbnail")</label>
                     <div class="mb-2">
                         @if (!string.IsNullOrEmpty(Model.ThumbnailImage))
                         {
@@ -81,12 +81,12 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">@Localizer.GetString("Admin", "VideoURL")</label>
                     <input asp-for="VideoUrl" class="form-control">
-                    <small class="text-muted">Or upload new video file below</small>
+                    <small class="text-muted">@Localizer.GetString("Admin", "OrUploadNewVideoBelow")</small>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">@Localizer.GetString("UploadVideoFile")</label>
                     <input type="file" name="videoFile" class="form-control" accept="video/*">
-                    <small class="text-muted">Supported formats: MP4, WebM, AVI (max 500MB)</small>
+                    <small class="text-muted">@Localizer.GetString("Admin", "SupportedFormats")</small>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="ti ti-device-floppy"></i> Update Episode
+                    <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "UpdateEpisode")
                 </button>
                 <a asp-action="Episodes" asp-route-seriesId="@Model.TVSeriesId" class="btn btn-outline-secondary">@Localizer.GetString("Cancel")</a>
             </div>
