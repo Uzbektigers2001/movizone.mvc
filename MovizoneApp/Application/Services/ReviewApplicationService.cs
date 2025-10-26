@@ -86,36 +86,43 @@ namespace MovizoneApp.Application.Services
 
         public async Task UpdateReviewAsync(UpdateReviewDto updateReviewDto)
         {
-            _logger.LogInformation("Updating review with ID: {ReviewId}", updateReviewDto.Id);
-
-            // Check if review exists
-            var existing = await _reviewRepository.GetByIdAsync(updateReviewDto.Id);
-            if (existing == null)
+            try
             {
-                throw new NotFoundException("Review", updateReviewDto.Id);
+                _logger.LogInformation("Updating review with ID: {ReviewId}", updateReviewDto.Id);
+
+                // Check if review exists
+                var existing = await _reviewRepository.GetByIdAsync(updateReviewDto.Id);
+                if (existing == null)
+                {
+                    throw new NotFoundException("Review", updateReviewDto.Id);
+                }
+
+                // Map DTO properties to existing tracked entity
+                _mapper.Map(updateReviewDto, existing);
+
+                // Business validation
+                if (string.IsNullOrWhiteSpace(existing.Comment))
+                {
+                    throw new BadRequestException("Review comment is required");
+                }
+
+                if (existing.Rating < 1 || existing.Rating > 10)
+                {
+                    throw new BadRequestException("Rating must be between 1 and 10");
+                }
+
+                // Set update time (CreatedAt already preserved in existing entity)
+                existing.UpdatedAt = DateTime.UtcNow;
+
+                // Update in repository
+                await _reviewRepository.UpdateAsync(existing);
+                _logger.LogInformation("Review updated successfully: {ReviewId}", existing.Id);
             }
-
-            // Map DTO to Model
-            var review = _mapper.Map<Review>(updateReviewDto);
-
-            // Business validation
-            if (string.IsNullOrWhiteSpace(review.Comment))
+            catch (Exception ex)
             {
-                throw new BadRequestException("Review comment is required");
+                _logger.LogError(ex, "Error updating review with ID: {ReviewId}", updateReviewDto.Id);
+                throw;
             }
-
-            if (review.Rating < 1 || review.Rating > 10)
-            {
-                throw new BadRequestException("Rating must be between 1 and 10");
-            }
-
-            // Preserve creation date and set update time
-            review.CreatedAt = existing.CreatedAt;
-            review.UpdatedAt = DateTime.UtcNow;
-
-            // Update in repository
-            await _reviewRepository.UpdateAsync(review);
-            _logger.LogInformation("Review updated successfully: {ReviewId}", review.Id);
         }
 
         public async Task DeleteReviewAsync(int id)

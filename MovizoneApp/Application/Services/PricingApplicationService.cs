@@ -95,31 +95,38 @@ namespace MovizoneApp.Application.Services
 
         public async Task UpdatePlanAsync(UpdatePricingPlanDto updatePlanDto)
         {
-            _logger.LogInformation("Updating pricing plan with ID: {PlanId}", updatePlanDto.Id);
-
-            // Check if plan exists
-            var existing = await _pricingRepository.GetByIdAsync(updatePlanDto.Id);
-            if (existing == null)
+            try
             {
-                throw new NotFoundException("PricingPlan", updatePlanDto.Id);
+                _logger.LogInformation("Updating pricing plan with ID: {PlanId}", updatePlanDto.Id);
+
+                // Check if plan exists
+                var existing = await _pricingRepository.GetByIdAsync(updatePlanDto.Id);
+                if (existing == null)
+                {
+                    throw new NotFoundException("PricingPlan", updatePlanDto.Id);
+                }
+
+                // Map DTO properties to existing tracked entity
+                _mapper.Map(updatePlanDto, existing);
+
+                // Business validation
+                if (existing.Price < 0)
+                {
+                    throw new BadRequestException("Price must be non-negative");
+                }
+
+                // Set update time (CreatedAt already preserved in existing entity)
+                existing.UpdatedAt = DateTime.UtcNow;
+
+                // Update in repository
+                await _pricingRepository.UpdateAsync(existing);
+                _logger.LogInformation("Pricing plan updated successfully: {PlanId}", existing.Id);
             }
-
-            // Map DTO to Model
-            var pricingPlan = _mapper.Map<PricingPlan>(updatePlanDto);
-
-            // Business validation
-            if (pricingPlan.Price < 0)
+            catch (Exception ex)
             {
-                throw new BadRequestException("Price must be non-negative");
+                _logger.LogError(ex, "Error updating pricing plan with ID: {PlanId}", updatePlanDto.Id);
+                throw;
             }
-
-            // Preserve creation date and set update time
-            pricingPlan.CreatedAt = existing.CreatedAt;
-            pricingPlan.UpdatedAt = DateTime.UtcNow;
-
-            // Update in repository
-            await _pricingRepository.UpdateAsync(pricingPlan);
-            _logger.LogInformation("Pricing plan updated successfully: {PlanId}", pricingPlan.Id);
         }
 
         public async Task DeletePlanAsync(int id)
