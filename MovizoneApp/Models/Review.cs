@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using MovizoneApp.Core.Models;
 
 namespace MovizoneApp.Models
 {
-    public class Review
+    public class Review : BaseAuditableEntity
     {
-        public int Id { get; set; }
 
         public int MovieId { get; set; }
 
@@ -21,7 +21,5 @@ namespace MovizoneApp.Models
 
         [Range(1, 10)]
         public int Rating { get; set; } // 1-10
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

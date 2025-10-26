@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MovizoneApp.Core.Models;
 
 namespace MovizoneApp.Models
 {
-    public class Movie
+    public class Movie : BaseAuditableEntity
     {
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(200)]
@@ -52,8 +52,5 @@ namespace MovizoneApp.Models
         public bool IsHidden { get; set; } // Hide from public listings
         public bool ShowInBanner { get; set; } // Show in home page banner carousel
         public DateTime ReleaseDate { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        public bool IsDeleted { get; set; } = false;
     }
 }

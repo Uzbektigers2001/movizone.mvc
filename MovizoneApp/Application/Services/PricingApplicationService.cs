@@ -134,6 +134,9 @@ namespace MovizoneApp.Application.Services
 
             // Soft delete
             pricingPlan.IsDeleted = true;
+            pricingPlan.DeletedAt = DateTime.UtcNow;
+            // TODO: Set DeletedBy from current user context when authentication is available
+            // entity.DeletedBy = currentUserId;
             pricingPlan.UpdatedAt = DateTime.UtcNow;
             await _pricingRepository.UpdateAsync(pricingPlan);
 

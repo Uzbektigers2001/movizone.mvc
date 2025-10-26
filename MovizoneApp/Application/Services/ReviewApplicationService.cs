@@ -128,8 +128,15 @@ namespace MovizoneApp.Application.Services
                 throw new NotFoundException("Review", id);
             }
 
-            await _reviewRepository.DeleteAsync(review);
-            _logger.LogInformation("Review deleted successfully: {ReviewId}", id);
+            // Soft delete
+            review.IsDeleted = true;
+            review.DeletedAt = DateTime.UtcNow;
+            // TODO: Set DeletedBy from current user context when authentication is available
+            // entity.DeletedBy = currentUserId;
+            review.UpdatedAt = DateTime.UtcNow;
+            await _reviewRepository.UpdateAsync(review);
+
+            _logger.LogInformation("Review soft-deleted successfully: {ReviewId}", id);
         }
 
         public async Task<double> GetAverageRatingAsync(int movieId)

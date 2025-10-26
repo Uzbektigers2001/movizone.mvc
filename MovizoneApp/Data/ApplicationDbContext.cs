@@ -1,11 +1,14 @@
 using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovizoneApp.Models;
 
 namespace MovizoneApp.Data
 {
     /// <summary>
-    /// Main database context for the application
+    /// Main database context for the application with auditing and soft delete support
     /// </summary>
     public class ApplicationDbContext : DbContext
     {
@@ -21,6 +24,8 @@ namespace MovizoneApp.Data
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<WatchlistItem> WatchlistItems { get; set; } = null!;
         public DbSet<PricingPlan> PricingPlans { get; set; } = null!;
+        public DbSet<Episode> Episodes { get; set; } = null!;
+        public DbSet<SiteSettings> SiteSettings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,51 +34,79 @@ namespace MovizoneApp.Data
             // Apply configurations
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-            // Global query filter for soft deletes
+            // Global query filter for soft deletes - applies to ALL entities that inherit from BaseAuditableEntity
             modelBuilder.Entity<Movie>().HasQueryFilter(m => !m.IsDeleted);
             modelBuilder.Entity<TVSeries>().HasQueryFilter(t => !t.IsDeleted);
             modelBuilder.Entity<Actor>().HasQueryFilter(a => !a.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
+            modelBuilder.Entity<WatchlistItem>().HasQueryFilter(w => !w.IsDeleted);
+            modelBuilder.Entity<PricingPlan>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<Episode>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<SiteSettings>().HasQueryFilter(s => !s.IsDeleted);
 
             // Indexes for better performance
             modelBuilder.Entity<Movie>().HasIndex(m => m.Title);
             modelBuilder.Entity<Movie>().HasIndex(m => m.Genre);
+            modelBuilder.Entity<Movie>().HasIndex(m => m.IsDeleted);
+            modelBuilder.Entity<Movie>().HasIndex(m => m.CreatedAt);
+
             modelBuilder.Entity<TVSeries>().HasIndex(t => t.Title);
             modelBuilder.Entity<TVSeries>().HasIndex(t => t.Genre);
+            modelBuilder.Entity<TVSeries>().HasIndex(t => t.IsDeleted);
+            modelBuilder.Entity<TVSeries>().HasIndex(t => t.CreatedAt);
+
+            modelBuilder.Entity<Actor>().HasIndex(a => a.Name);
+            modelBuilder.Entity<Actor>().HasIndex(a => a.IsDeleted);
+            modelBuilder.Entity<Actor>().HasIndex(a => a.CreatedAt);
+
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(u => u.IsDeleted);
+            modelBuilder.Entity<User>().HasIndex(u => u.CreatedAt);
+
             modelBuilder.Entity<Review>().HasIndex(r => r.MovieId);
+            modelBuilder.Entity<Review>().HasIndex(r => r.UserId);
+            modelBuilder.Entity<Review>().HasIndex(r => r.IsDeleted);
+
             modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.UserId);
+            modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.MovieId);
+            modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.IsDeleted);
+
+            modelBuilder.Entity<Episode>().HasIndex(e => e.TVSeriesId);
+            modelBuilder.Entity<Episode>().HasIndex(e => e.IsDeleted);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            // Automatically set timestamps
+            // Automatically set audit timestamps for all BaseAuditableEntity entities
             var entries = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+                .Where(e => e.Entity is Core.Models.BaseAuditableEntity &&
+                           (e.State == EntityState.Added || e.State == EntityState.Modified));
 
             foreach (var entry in entries)
             {
+                var entity = (Core.Models.BaseAuditableEntity)entry.Entity;
+                var now = DateTime.UtcNow;
+
                 if (entry.State == EntityState.Added)
                 {
-                    if (entry.Entity is Movie movie)
-                        movie.CreatedAt = DateTime.UtcNow;
-                    if (entry.Entity is TVSeries series)
-                        series.CreatedAt = DateTime.UtcNow;
-                    if (entry.Entity is Actor actor)
-                        actor.CreatedAt = DateTime.UtcNow;
-                    if (entry.Entity is User user && user.CreatedAt == default)
-                        user.CreatedAt = DateTime.UtcNow;
+                    // Set creation timestamp if not already set
+                    if (entity.CreatedAt == default || entity.CreatedAt == DateTime.MinValue)
+                    {
+                        entity.CreatedAt = now;
+                    }
+                    // Note: CreatedBy should be set by the service layer from the current user context
+                    // We don't set it here because DbContext doesn't have access to HTTP context
                 }
                 else if (entry.State == EntityState.Modified)
                 {
-                    if (entry.Entity is Movie movie)
-                        movie.UpdatedAt = DateTime.UtcNow;
-                    if (entry.Entity is TVSeries series)
-                        series.UpdatedAt = DateTime.UtcNow;
-                    if (entry.Entity is Actor actor)
-                        actor.UpdatedAt = DateTime.UtcNow;
-                    if (entry.Entity is User user)
-                        user.UpdatedAt = DateTime.UtcNow;
+                    // Always update the modification timestamp
+                    entity.UpdatedAt = now;
+                    // Note: UpdatedBy should be set by the service layer from the current user context
+
+                    // Prevent modification of creation audit fields
+                    entry.Property(nameof(Core.Models.BaseAuditableEntity.CreatedAt)).IsModified = false;
+                    entry.Property(nameof(Core.Models.BaseAuditableEntity.CreatedBy)).IsModified = false;
                 }
             }
 

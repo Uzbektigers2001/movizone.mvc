@@ -146,6 +146,9 @@ namespace MovizoneApp.Application.Services
 
             // Soft delete
             user.IsDeleted = true;
+            user.DeletedAt = DateTime.UtcNow;
+            // TODO: Set DeletedBy from current user context when authentication is available
+            // entity.DeletedBy = currentUserId;
             user.IsActive = false;
             user.UpdatedAt = DateTime.UtcNow;
             await _userRepository.UpdateAsync(user);

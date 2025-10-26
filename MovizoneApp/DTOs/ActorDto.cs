@@ -17,8 +17,17 @@ namespace MovizoneApp.DTOs
         public string Photo { get; set; } = string.Empty;
         public List<string> Movies { get; set; } = new List<string>();
         public List<string> TVSeries { get; set; } = new List<string>();
+
+        // Audit fields
         public DateTime CreatedAt { get; set; }
+        public int? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+
+        // Soft delete fields (for admin visibility)
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public int? DeletedBy { get; set; }
     }
 
     /// <summary>

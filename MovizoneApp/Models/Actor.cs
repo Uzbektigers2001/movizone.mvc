@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MovizoneApp.Core.Models;
 
 namespace MovizoneApp.Models
 {
-    public class Actor
+    public class Actor : BaseAuditableEntity
     {
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(200)]
@@ -26,10 +26,6 @@ namespace MovizoneApp.Models
 
         public List<string> Movies { get; set; } = new List<string>();
         public List<string> TVSeries { get; set; } = new List<string>();
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        public bool IsDeleted { get; set; } = false;
 
         [NotMapped]
         public int Age => DateTime.UtcNow.Year - BirthDate.Year;

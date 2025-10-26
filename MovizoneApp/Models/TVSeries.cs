@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MovizoneApp.Core.Models;
 
 namespace MovizoneApp.Models
 {
-    public class TVSeries
+    public class TVSeries : BaseAuditableEntity
     {
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(200)]
@@ -56,9 +56,5 @@ namespace MovizoneApp.Models
 
         [MaxLength(50)]
         public string Status { get; set; } = string.Empty; // "Ongoing" or "Completed"
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        public bool IsDeleted { get; set; } = false;
     }
 }

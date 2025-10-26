@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using MovizoneApp.Core.Models;
 
 namespace MovizoneApp.Models
 {
-    public class User
+    public class User : BaseAuditableEntity
     {
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -22,10 +22,7 @@ namespace MovizoneApp.Models
         [MaxLength(50)]
         public string Role { get; set; } = "User"; // User, Admin
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
         public bool IsActive { get; set; } = true;
-        public bool IsDeleted { get; set; } = false;
 
         [MaxLength(500)]
         public string Avatar { get; set; } = "/img/user.svg";
