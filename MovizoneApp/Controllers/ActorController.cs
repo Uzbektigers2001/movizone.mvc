@@ -1,47 +1,33 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MovizoneApp.Services;
+using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 
 namespace MovizoneApp.Controllers
 {
     public class ActorController : Controller
     {
-        private readonly IActorService _actorService;
-        private readonly IMovieService _movieService;
-        private readonly ITVSeriesService _tvSeriesService;
+        private readonly IActorApplicationService _actorService;
+        private readonly ILogger<ActorController> _logger;
 
-        public ActorController(IActorService actorService, IMovieService movieService, ITVSeriesService tvSeriesService)
+        public ActorController(
+            IActorApplicationService actorService,
+            ILogger<ActorController> logger)
         {
             _actorService = actorService;
-            _movieService = movieService;
-            _tvSeriesService = tvSeriesService;
+            _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Details(int id)
         {
-            var actors = _actorService.GetAllActors();
-            return View(actors);
-        }
+            _logger.LogInformation("Fetching actor details for ID: {ActorId}", id);
 
-        public IActionResult Details(int id)
-        {
-            var actor = _actorService.GetActorById(id);
+            var actor = await _actorService.GetActorWithDetailsAsync(id);
             if (actor == null)
             {
+                _logger.LogWarning("Actor not found: {ActorId}", id);
                 return NotFound();
             }
-
-            // Get movies featuring this actor
-            var movies = _movieService.GetAllMovies()
-                .Where(m => m.Actors.Contains(actor.Name))
-                .ToList();
-
-            // Get TV series featuring this actor
-            var series = _tvSeriesService.GetAllSeries()
-                .Where(s => s.Actors.Contains(actor.Name))
-                .ToList();
-
-            ViewBag.Movies = movies;
-            ViewBag.TVSeries = series;
 
             return View(actor);
         }

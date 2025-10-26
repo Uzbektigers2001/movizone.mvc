@@ -1,14 +1,49 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace MovizoneApp.Models
 {
     public class User
     {
         public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        [MaxLength(255)]
         public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        public string Password { get; set; } = string.Empty; // Hashed password
+
+        [MaxLength(50)]
         public string Role { get; set; } = "User"; // User, Admin
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
         public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
+
+        [MaxLength(500)]
         public string Avatar { get; set; } = "/img/user.svg";
+
+        /// <summary>
+        /// Sets the password with BCrypt hashing
+        /// </summary>
+        public void SetPassword(string plainPassword)
+        {
+            Password = BCrypt.Net.BCrypt.HashPassword(plainPassword);
+        }
+
+        /// <summary>
+        /// Verifies if the provided password matches the hashed password
+        /// </summary>
+        public bool VerifyPassword(string plainPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(plainPassword, Password);
+        }
     }
 }

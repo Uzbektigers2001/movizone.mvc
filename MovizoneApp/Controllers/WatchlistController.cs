@@ -1,35 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MovizoneApp.Services;
+using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 
 namespace MovizoneApp.Controllers
 {
     public class WatchlistController : Controller
     {
-        private readonly IWatchlistService _watchlistService;
-        private readonly IMovieService _movieService;
-        private readonly ITVSeriesService _tvSeriesService;
+        private readonly IWatchlistApplicationService _watchlistService;
+        private readonly IMovieApplicationService _movieService;
+        private readonly ITVSeriesApplicationService _tvSeriesService;
+        private readonly ILogger<WatchlistController> _logger;
 
         public WatchlistController(
-            IWatchlistService watchlistService,
-            IMovieService movieService,
-            ITVSeriesService tvSeriesService)
+            IWatchlistApplicationService watchlistService,
+            IMovieApplicationService movieService,
+            ITVSeriesApplicationService tvSeriesService,
+            ILogger<WatchlistController> logger)
         {
             _watchlistService = watchlistService;
             _movieService = movieService;
             _tvSeriesService = tvSeriesService;
+            _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             // In real app, get userId from authenticated user
             int userId = 1;
-            var watchlistItems = _watchlistService.GetUserWatchlist(userId);
+            _logger.LogInformation("Fetching watchlist for user {UserId}", userId);
+
+            var watchlistItems = await _watchlistService.GetUserWatchlistAsync(userId);
 
             // Fetch movie details for each watchlist item
             var movies = new List<object>();
             foreach (var item in watchlistItems)
             {
-                var movie = _movieService.GetMovieById(item.MovieId);
+                var movie = await _movieService.GetMovieByIdAsync(item.MovieId);
                 if (movie != null)
                 {
                     movies.Add(new
@@ -47,7 +57,7 @@ namespace MovizoneApp.Controllers
                 }
                 else
                 {
-                    var series = _tvSeriesService.GetSeriesById(item.MovieId);
+                    var series = await _tvSeriesService.GetSeriesByIdAsync(item.MovieId);
                     if (series != null)
                     {
                         movies.Add(new
@@ -71,12 +81,22 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(int movieId, string returnUrl)
+        public async Task<IActionResult> Add(int movieId, string returnUrl)
         {
             // In real app, get userId from authenticated user
             int userId = 1;
-            _watchlistService.AddToWatchlist(userId, movieId);
-            TempData["Success"] = "Added to your watchlist!";
+            _logger.LogInformation("Adding movie {MovieId} to watchlist for user {UserId}", movieId, userId);
+
+            try
+            {
+                await _watchlistService.AddToWatchlistAsync(userId, movieId);
+                TempData["Success"] = "Added to your watchlist!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding to watchlist for user {UserId}", userId);
+                TempData["Error"] = "Failed to add to watchlist.";
+            }
 
             if (!string.IsNullOrEmpty(returnUrl))
             {
@@ -86,12 +106,22 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Remove(int movieId, string returnUrl)
+        public async Task<IActionResult> Remove(int movieId, string returnUrl)
         {
             // In real app, get userId from authenticated user
             int userId = 1;
-            _watchlistService.RemoveFromWatchlist(userId, movieId);
-            TempData["Success"] = "Removed from your watchlist!";
+            _logger.LogInformation("Removing movie {MovieId} from watchlist for user {UserId}", movieId, userId);
+
+            try
+            {
+                await _watchlistService.RemoveFromWatchlistAsync(userId, movieId);
+                TempData["Success"] = "Removed from your watchlist!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing from watchlist for user {UserId}", userId);
+                TempData["Error"] = "Failed to remove from watchlist.";
+            }
 
             if (!string.IsNullOrEmpty(returnUrl))
             {
@@ -101,11 +131,11 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult IsInWatchlist(int movieId)
+        public async Task<IActionResult> IsInWatchlist(int movieId)
         {
             // In real app, get userId from authenticated user
             int userId = 1;
-            var isInWatchlist = _watchlistService.IsInWatchlist(userId, movieId);
+            var isInWatchlist = await _watchlistService.IsInWatchlistAsync(userId, movieId);
             return Json(new { isInWatchlist });
         }
     }

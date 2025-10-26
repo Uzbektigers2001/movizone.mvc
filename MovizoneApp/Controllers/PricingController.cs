@@ -1,20 +1,28 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MovizoneApp.Services;
+using Microsoft.Extensions.Logging;
+using MovizoneApp.Application.Interfaces;
 
 namespace MovizoneApp.Controllers
 {
     public class PricingController : Controller
     {
-        private readonly IPricingService _pricingService;
+        private readonly IPricingApplicationService _pricingService;
+        private readonly ILogger<PricingController> _logger;
 
-        public PricingController(IPricingService pricingService)
+        public PricingController(
+            IPricingApplicationService pricingService,
+            ILogger<PricingController> logger)
         {
             _pricingService = pricingService;
+            _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var plans = _pricingService.GetAllPlans();
+            _logger.LogInformation("Fetching pricing plans");
+
+            var plans = await _pricingService.GetAllPlansAsync();
             return View(plans);
         }
     }
