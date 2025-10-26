@@ -18,6 +18,14 @@ namespace MovizoneApp.Controllers
             _logger = logger;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            _logger.LogInformation("Fetching all actors");
+
+            var actors = await _actorService.GetAllActorsAsync();
+            return View(actors.ToList());
+        }
+
         public async Task<IActionResult> Details(int id)
         {
             _logger.LogInformation("Fetching actor details for ID: {ActorId}", id);

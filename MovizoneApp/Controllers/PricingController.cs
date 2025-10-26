@@ -23,7 +23,7 @@ namespace MovizoneApp.Controllers
             _logger.LogInformation("Fetching pricing plans");
 
             var plans = await _pricingService.GetAllPlansAsync();
-            return View(plans);
+            return View(plans.ToList());
         }
     }
 }
