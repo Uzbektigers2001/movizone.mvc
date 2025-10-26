@@ -64,90 +64,113 @@ namespace MovizoneApp.Controllers
 
             _logger.LogInformation("Admin accessing dashboard");
 
-            // Get all data
-            var movies = await _movieService.GetAllMoviesAsync();
-            var series = await _seriesService.GetAllSeriesAsync();
-            var users = await _userService.GetAllUsersAsync();
-            var actors = await _actorService.GetAllActorsAsync();
+            // Get all data as DTOs
+            var moviesDto = await _movieService.GetAllMoviesAsync();
+            var seriesDto = await _seriesService.GetAllSeriesAsync();
+            var usersDto = await _userService.GetAllUsersAsync();
+            var actorsDto = await _actorService.GetAllActorsAsync();
             var comments = _commentService.GetAllComments();
             var reviews = _reviewService.GetAllReviews();
 
             // Calculate monthly statistics
-            var moviesThisMonth = movies.Count(m => m.CreatedAt.Month == DateTime.Now.Month);
-            var seriesThisMonth = series.Count(s => s.CreatedAt.Month == DateTime.Now.Month);
-            var itemsAddedThisMonth = moviesThisMonth + seriesThisMonth;
-            var reviewsThisMonth = reviews.Count(r => r.CreatedAt.Month == DateTime.Now.Month);
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
+            var previousMonth = currentMonth == 1 ? 12 : currentMonth - 1;
+            var previousMonthYear = currentMonth == 1 ? currentYear - 1 : currentYear;
 
-            // Get top items (by rating)
-            var topMovies = movies.OrderByDescending(m => m.Rating).Take(3)
-                .Select(m => new TopItem { Id = m.Id, Title = m.Title, Category = "Movie", Rating = m.Rating });
-            var topSeries = series.OrderByDescending(s => s.Rating).Take(2)
-                .Select(s => new TopItem { Id = s.Id, Title = s.Title, Category = "TV Series", Rating = s.Rating });
+            var moviesThisMonth = moviesDto.Count(m => m.CreatedAt.Month == currentMonth && m.CreatedAt.Year == currentYear);
+            var seriesThisMonth = seriesDto.Count(s => s.CreatedAt.Month == currentMonth && s.CreatedAt.Year == currentYear);
+            var itemsAddedThisMonth = moviesThisMonth + seriesThisMonth;
+
+            var moviesPreviousMonth = moviesDto.Count(m => m.CreatedAt.Month == previousMonth && m.CreatedAt.Year == previousMonthYear);
+            var seriesPreviousMonth = seriesDto.Count(s => s.CreatedAt.Month == previousMonth && s.CreatedAt.Year == previousMonthYear);
+            var itemsAddedPreviousMonth = moviesPreviousMonth + seriesPreviousMonth;
+            var itemsAddedChange = itemsAddedThisMonth - itemsAddedPreviousMonth;
+
+            var reviewsThisMonth = reviews.Count(r => r.CreatedAt.Month == currentMonth && r.CreatedAt.Year == currentYear);
+            var reviewsPreviousMonth = reviews.Count(r => r.CreatedAt.Month == previousMonth && r.CreatedAt.Year == previousMonthYear);
+            var reviewsChange = reviewsThisMonth - reviewsPreviousMonth;
+
+            var subscriptionsThisMonth = usersDto.Count(u => u.CreatedAt.Month == currentMonth && u.CreatedAt.Year == currentYear);
+            var subscriptionsPreviousMonth = usersDto.Count(u => u.CreatedAt.Month == previousMonth && u.CreatedAt.Year == previousMonthYear);
+            var subscriptionsChange = subscriptionsThisMonth - subscriptionsPreviousMonth;
+
+            // Get top items (by rating) - combining movies and series
+            var topMovies = moviesDto.OrderByDescending(m => m.Rating).Take(3)
+                .Select(m => new TopItemDto { Id = m.Id, Title = m.Title, Category = "Movie", Rating = m.Rating });
+            var topSeries = seriesDto.OrderByDescending(s => s.Rating).Take(2)
+                .Select(s => new TopItemDto { Id = s.Id, Title = s.Title, Category = "TV Series", Rating = s.Rating });
             var topItems = topMovies.Concat(topSeries).OrderByDescending(i => i.Rating).Take(5).ToList();
 
-            // Get latest items
-            var latestMovies = movies.OrderByDescending(m => m.CreatedAt).Take(3)
-                .Select(m => new LatestItem { Id = m.Id, Title = m.Title, Category = "Movie", Rating = m.Rating });
-            var latestSeries = series.OrderByDescending(s => s.CreatedAt).Take(2)
-                .Select(s => new LatestItem { Id = s.Id, Title = s.Title, Category = "TV Series", Rating = s.Rating });
-            var latestItems = latestMovies.Concat(latestSeries).OrderByDescending(i => i.Id).Take(5).ToList();
+            // Get latest items (by creation date)
+            var latestMovies = moviesDto.OrderByDescending(m => m.CreatedAt).Take(3)
+                .Select(m => new LatestItemDto { Id = m.Id, Title = m.Title, Category = "Movie", Rating = m.Rating, CreatedAt = m.CreatedAt });
+            var latestSeries = seriesDto.OrderByDescending(s => s.CreatedAt).Take(2)
+                .Select(s => new LatestItemDto { Id = s.Id, Title = s.Title, Category = "TV Series", Rating = s.Rating, CreatedAt = s.CreatedAt });
+            var latestItems = latestMovies.Concat(latestSeries).OrderByDescending(i => i.CreatedAt).Take(5).ToList();
 
             // Get latest users
-            var latestUsers = users.OrderByDescending(u => u.CreatedAt).Take(5)
-                .Select(u => new LatestUser
+            var latestUsers = usersDto.OrderByDescending(u => u.CreatedAt).Take(5)
+                .Select(u => new LatestUserDto
                 {
                     Id = u.Id,
                     Name = u.Name,
                     Email = u.Email,
-                    Username = u.Email.Split('@')[0] // Extract username from email
+                    Username = u.Email.Split('@')[0], // Extract username from email
+                    CreatedAt = u.CreatedAt
                 }).ToList();
 
             // Get latest reviews
             var latestReviews = reviews.OrderByDescending(r => r.CreatedAt).Take(5)
                 .Select(r => {
-                    var movie = movies.FirstOrDefault(m => m.Id == r.MovieId);
-                    return new LatestReview
+                    var movie = moviesDto.FirstOrDefault(m => m.Id == r.MovieId);
+                    return new LatestReviewDto
                     {
                         Id = r.Id,
                         ItemTitle = movie?.Title ?? "Unknown",
                         Author = r.UserName,
                         Rating = r.Rating,
-                        MovieId = r.MovieId
+                        MovieId = r.MovieId,
+                        CreatedAt = r.CreatedAt
                     };
                 }).ToList();
 
-            var stats = new DashboardStatistics
+            // Calculate views statistics (mock data for now - would need View tracking implementation)
+            var viewsThisMonth = 0; // TODO: Implement view tracking
+            var viewsChangePercent = 0.0; // TODO: Calculate from previous month
+
+            var statsDto = new DashboardStatisticsDto
             {
                 // Main statistics
-                TotalMovies = movies.Count(),
-                TotalSeries = series.Count(),
-                TotalUsers = users.Count(),
-                TotalActors = actors.Count(),
+                TotalMovies = moviesDto.Count(),
+                TotalSeries = seriesDto.Count(),
+                TotalUsers = usersDto.Count(),
+                TotalActors = actorsDto.Count(),
                 TotalComments = comments.Count,
                 TotalReviews = reviews.Count,
 
-                // Monthly statistics
-                SubscriptionsThisMonth = users.Count(u => u.CreatedAt.Month == DateTime.Now.Month),
-                SubscriptionsChange = 15, // Mock data - would need previous month data
+                // Monthly statistics with real change tracking
+                SubscriptionsThisMonth = subscriptionsThisMonth,
+                SubscriptionsChange = subscriptionsChange,
                 ItemsAddedThisMonth = itemsAddedThisMonth,
-                ItemsAddedChange = -44, // Mock data
-                ViewsThisMonth = 509573, // Mock data
-                ViewsChangePercent = 3.1, // Mock data
+                ItemsAddedChange = itemsAddedChange,
+                ViewsThisMonth = viewsThisMonth,
+                ViewsChangePercent = viewsChangePercent,
                 ReviewsThisMonth = reviewsThisMonth,
-                ReviewsChange = 8, // Mock data
+                ReviewsChange = reviewsChange,
 
-                // Today statistics
-                TodayViews = 1247,
-                MonthlyRevenue = 12500.50m,
+                // Additional statistics
+                TodayViews = 0, // TODO: Implement today's view tracking
+                MonthlyRevenue = usersDto.Count(u => u.SubscriptionType != "Free") * 9.99m, // Calculate based on paid subscriptions
 
-                // Lists
+                // Dashboard widgets
                 TopItems = topItems,
                 LatestItems = latestItems,
                 LatestUsers = latestUsers,
                 LatestReviews = latestReviews
             };
 
-            return View(stats);
+            return View(statsDto);
         }
 
         public IActionResult Login()
