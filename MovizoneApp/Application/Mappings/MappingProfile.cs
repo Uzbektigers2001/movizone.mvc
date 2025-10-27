@@ -40,8 +40,12 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate ?? DateTime.UtcNow));
             // Reverse mappings for AdminController
-            CreateMap<Movie, CreateMovieDto>();
-            CreateMap<Movie, UpdateMovieDto>();
+            CreateMap<Movie, CreateMovieDto>()
+                .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Actor.Name).ToList()));
+            CreateMap<Movie, UpdateMovieDto>()
+                .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Actor.Name).ToList()));
             CreateMap<MovieDto, UpdateMovieDto>(); // DTO to DTO mapping for EditMovie
 
             // TVSeries mappings
@@ -88,10 +92,14 @@ namespace MovizoneApp.Application.Mappings
             // Reverse mappings for AdminController
             CreateMap<TVSeries, CreateTVSeriesDto>()
                 .ForMember(dest => dest.TotalSeasons, opt => opt.MapFrom(src => src.Seasons))
-                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator));
+                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator))
+                .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.Actor.Name).ToList()));
             CreateMap<TVSeries, UpdateTVSeriesDto>()
                 .ForMember(dest => dest.TotalSeasons, opt => opt.MapFrom(src => src.Seasons))
-                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator));
+                .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Creator))
+                .ForMember(dest => dest.Actors, opt => opt.MapFrom(src =>
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.Actor.Name).ToList()));
             CreateMap<TVSeriesDto, UpdateTVSeriesDto>(); // DTO to DTO mapping for EditSeries
 
             // Actor mappings
@@ -127,8 +135,16 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate ?? DateTime.UtcNow.AddYears(-30)));
             // Reverse mappings for AdminController
-            CreateMap<Actor, CreateActorDto>();
-            CreateMap<Actor, UpdateActorDto>();
+            CreateMap<Actor, CreateActorDto>()
+                .ForMember(dest => dest.Movies, opt => opt.MapFrom(src =>
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Movie.Title).ToList()))
+                .ForMember(dest => dest.TVSeries, opt => opt.MapFrom(src =>
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.TVSeries.Title).ToList()));
+            CreateMap<Actor, UpdateActorDto>()
+                .ForMember(dest => dest.Movies, opt => opt.MapFrom(src =>
+                    src.MovieActors.OrderBy(ma => ma.DisplayOrder).Select(ma => ma.Movie.Title).ToList()))
+                .ForMember(dest => dest.TVSeries, opt => opt.MapFrom(src =>
+                    src.TVSeriesActors.OrderBy(tsa => tsa.DisplayOrder).Select(tsa => tsa.TVSeries.Title).ToList()));
             CreateMap<ActorDto, UpdateActorDto>(); // DTO to DTO mapping for EditActor
 
             // User mappings
