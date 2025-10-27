@@ -28,7 +28,7 @@
                 type,
                 title,
                 coverImage: coverImage || '',
-                rating: rating || 'N/A',
+                rating: rating ?? 'N/A', // Use nullish coalescing to preserve 0
                 year: year || '',
                 genre: genre || '',
                 addedAt: new Date().toISOString()
