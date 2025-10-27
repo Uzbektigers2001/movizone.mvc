@@ -131,6 +131,7 @@
             const ratingClass = item.rating >= 8 ? 'item__rate--green' : item.rating >= 6 ? 'item__rate--yellow' : 'item__rate--red';
             const removeIcon = isFavoritesPage ? 'ti-heart-minus' : 'ti-bookmark-minus';
             const removeText = isFavoritesPage ? 'Remove from Favorites' : 'Remove from Watchlist';
+            const displayRating = item.rating !== null && item.rating !== undefined ? item.rating : 'N/A';
 
             return `
                 <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
@@ -140,7 +141,7 @@
                             <a href="${detailsUrl}" class="item__play">
                                 <i class="ti ti-player-play-filled"></i>
                             </a>
-                            <span class="item__rate ${ratingClass}">${item.rating || 'N/A'}</span>
+                            <span class="item__rate ${ratingClass}">${displayRating}</span>
                             <button type="button"
                                     class="item__favorite item__favorite--active remove-item-btn"
                                     data-id="${item.id}"
@@ -249,7 +250,7 @@
             const type = button.dataset.type || 'movie'; // 'movie' or 'series'
             const title = button.dataset.title || '';
             const coverImage = button.dataset.coverImage || button.dataset.cover || '';
-            const rating = button.dataset.rating || 'N/A';
+            const rating = button.dataset.rating !== undefined && button.dataset.rating !== '' ? button.dataset.rating : 'N/A';
             const year = button.dataset.year || '';
             const genre = button.dataset.genre || '';
 
