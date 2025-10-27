@@ -212,8 +212,8 @@ namespace MovizoneApp.Application.Services
             try
             {
                 _logger.LogInformation("Fetching all TV series genres");
-                var series = await _seriesRepository.GetAllAsync();
-                return series.Select(s => s.Genre).Distinct().OrderBy(g => g).ToList();
+                // Use database-level distinct query instead of fetching all series
+                return await _seriesRepository.GetDistinctGenresAsync();
             }
             catch (Exception ex)
             {

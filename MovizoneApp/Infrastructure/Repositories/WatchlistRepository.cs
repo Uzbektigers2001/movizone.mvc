@@ -17,6 +17,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public async Task<IEnumerable<WatchlistItem>> GetUserWatchlistAsync(int userId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(w => w.UserId == userId)
                 .OrderByDescending(w => w.CreatedAt)
                 .ToListAsync();

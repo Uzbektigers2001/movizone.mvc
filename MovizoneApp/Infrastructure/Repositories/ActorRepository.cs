@@ -28,6 +28,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public override async Task<System.Collections.Generic.IEnumerable<Actor>> GetAllAsync()
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(a => a.MovieActors)
                     .ThenInclude(ma => ma.Movie)
                 .Include(a => a.TVSeriesActors)

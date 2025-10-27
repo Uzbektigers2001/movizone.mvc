@@ -28,12 +28,15 @@ namespace MovizoneApp.Core.Interfaces
     {
         Task<IEnumerable<Movie>> GetFeaturedMoviesAsync();
         Task<IEnumerable<Movie>> SearchMoviesAsync(string? searchTerm, string? genre);
+        Task<IEnumerable<string>> GetDistinctGenresAsync();
+        Task<IEnumerable<Movie>> GetSimilarMoviesByGenreAsync(int movieId, string genre, int take = 6);
     }
 
     public interface ITVSeriesRepository : IRepository<TVSeries>
     {
         Task<IEnumerable<TVSeries>> GetFeaturedSeriesAsync();
         Task<IEnumerable<TVSeries>> SearchSeriesAsync(string? searchTerm, string? genre);
+        Task<IEnumerable<string>> GetDistinctGenresAsync();
     }
 
     public interface IActorRepository : IRepository<Actor>

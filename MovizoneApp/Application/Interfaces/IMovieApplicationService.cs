@@ -19,5 +19,6 @@ namespace MovizoneApp.Application.Interfaces
         Task DeleteMovieAsync(int id);
         Task<IEnumerable<string>> GetAllGenresAsync();
         Task<bool> ExistsAsync(int id);
+        Task<IEnumerable<MovieDto>> GetSimilarMoviesByGenreAsync(int movieId, string genre, int take = 6);
     }
 }
