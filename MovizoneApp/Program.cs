@@ -35,14 +35,27 @@ try
     // Add Serilog
     builder.Host.UseSerilog();
 
-    // Add DbContext with PostgreSQL
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(
-            builder.Configuration.GetConnectionString("DefaultConnection"),
-            npgsqlOptions => npgsqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(30),
-                errorCodesToAdd: null)));
+    // Add DbContext - Choose between PostgreSQL and InMemory based on environment
+    // Set USE_POSTGRES=true environment variable to use PostgreSQL
+    var usePostgres = builder.Configuration.GetValue<bool>("USE_POSTGRES", false);
+
+    if (usePostgres)
+    {
+        Log.Information("Using PostgreSQL database");
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(
+                builder.Configuration.GetConnectionString("DefaultConnection"),
+                npgsqlOptions => npgsqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorCodesToAdd: null)));
+    }
+    else
+    {
+        Log.Information("Using InMemory database (set USE_POSTGRES=true to use PostgreSQL)");
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseInMemoryDatabase("MovizoneDb"));
+    }
 
     // Add JWT Authentication
     var jwtSettings = builder.Configuration.GetSection("Jwt");
