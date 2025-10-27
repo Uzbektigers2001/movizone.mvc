@@ -143,7 +143,7 @@ namespace MovizoneApp.Data
                     CoverImage = "/img/covers/cover1.jpg",
                     VideoUrl = "https://example.com/video1.mp4",
                     IsFeatured = true,
-                    ReleaseDate = new DateTime(1994, 9, 23)
+                    ReleaseDate = DateTime.SpecifyKind(new DateTime(1994, 9, 23), DateTimeKind.Utc)
                 },
                 new Movie
                 {
@@ -158,7 +158,7 @@ namespace MovizoneApp.Data
                     CoverImage = "/img/covers/cover2.jpg",
                     VideoUrl = "https://example.com/video2.mp4",
                     IsFeatured = true,
-                    ReleaseDate = new DateTime(1972, 3, 24)
+                    ReleaseDate = DateTime.SpecifyKind(new DateTime(1972, 3, 24), DateTimeKind.Utc)
                 },
                 new Movie
                 {
@@ -173,7 +173,7 @@ namespace MovizoneApp.Data
                     CoverImage = "/img/covers/cover3.jpg",
                     VideoUrl = "https://example.com/video3.mp4",
                     IsFeatured = true,
-                    ReleaseDate = new DateTime(2008, 7, 18)
+                    ReleaseDate = DateTime.SpecifyKind(new DateTime(2008, 7, 18), DateTimeKind.Utc)
                 },
                 new Movie
                 {
@@ -188,7 +188,7 @@ namespace MovizoneApp.Data
                     CoverImage = "/img/covers/cover4.jpg",
                     VideoUrl = "https://example.com/video4.mp4",
                     IsFeatured = false,
-                    ReleaseDate = new DateTime(2010, 7, 16)
+                    ReleaseDate = DateTime.SpecifyKind(new DateTime(2010, 7, 16), DateTimeKind.Utc)
                 }
             };
         }
@@ -210,7 +210,7 @@ namespace MovizoneApp.Data
                     Creator = "Vince Gilligan",
                     CoverImage = "/img/covers/cover5.jpg",
                     IsFeatured = true,
-                    FirstAired = new DateTime(2008, 1, 20),
+                    FirstAired = DateTime.SpecifyKind(new DateTime(2008, 1, 20), DateTimeKind.Utc),
                     Status = "Completed"
                 },
                 new TVSeries
@@ -226,7 +226,7 @@ namespace MovizoneApp.Data
                     Creator = "David Benioff, D.B. Weiss",
                     CoverImage = "/img/covers/cover6.jpg",
                     IsFeatured = true,
-                    FirstAired = new DateTime(2011, 4, 17),
+                    FirstAired = DateTime.SpecifyKind(new DateTime(2011, 4, 17), DateTimeKind.Utc),
                     Status = "Completed"
                 }
             };
@@ -240,7 +240,7 @@ namespace MovizoneApp.Data
                 {
                     Name = "Leonardo DiCaprio",
                     Bio = "American actor and film producer known for his work in biographical and period films.",
-                    BirthDate = new DateTime(1974, 11, 11),
+                    BirthDate = DateTime.SpecifyKind(new DateTime(1974, 11, 11), DateTimeKind.Utc),
                     Country = "USA",
                     Photo = "/img/covers/actor.jpg"
                 },
@@ -248,7 +248,7 @@ namespace MovizoneApp.Data
                 {
                     Name = "Bryan Cranston",
                     Bio = "American actor, director, and producer best known for portraying Walter White in Breaking Bad.",
-                    BirthDate = new DateTime(1956, 3, 7),
+                    BirthDate = DateTime.SpecifyKind(new DateTime(1956, 3, 7), DateTimeKind.Utc),
                     Country = "USA",
                     Photo = "/img/covers/actor.jpg"
                 },
@@ -256,7 +256,7 @@ namespace MovizoneApp.Data
                 {
                     Name = "Christian Bale",
                     Bio = "English actor known for his versatility and intensive method acting.",
-                    BirthDate = new DateTime(1974, 1, 30),
+                    BirthDate = DateTime.SpecifyKind(new DateTime(1974, 1, 30), DateTimeKind.Utc),
                     Country = "UK",
                     Photo = "/img/covers/actor.jpg"
                 },
@@ -264,7 +264,7 @@ namespace MovizoneApp.Data
                 {
                     Name = "Tim Robbins",
                     Bio = "American actor, screenwriter, director, and producer.",
-                    BirthDate = new DateTime(1958, 10, 16),
+                    BirthDate = DateTime.SpecifyKind(new DateTime(1958, 10, 16), DateTimeKind.Utc),
                     Country = "USA",
                     Photo = "/img/covers/actor.jpg"
                 },
@@ -272,7 +272,7 @@ namespace MovizoneApp.Data
                 {
                     Name = "Morgan Freeman",
                     Bio = "American actor and film narrator known for his distinctive deep voice.",
-                    BirthDate = new DateTime(1937, 6, 1),
+                    BirthDate = DateTime.SpecifyKind(new DateTime(1937, 6, 1), DateTimeKind.Utc),
                     Country = "USA",
                     Photo = "/img/covers/actor.jpg"
                 },
@@ -280,7 +280,7 @@ namespace MovizoneApp.Data
                 {
                     Name = "Aaron Paul",
                     Bio = "American actor best known for his role as Jesse Pinkman in Breaking Bad.",
-                    BirthDate = new DateTime(1979, 8, 27),
+                    BirthDate = DateTime.SpecifyKind(new DateTime(1979, 8, 27), DateTimeKind.Utc),
                     Country = "USA",
                     Photo = "/img/covers/actor.jpg"
                 }
