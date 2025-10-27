@@ -18,7 +18,7 @@
 	<meta name="description" content="Online Movies, TV Shows & Cinema HTML Template">
 	<meta name="keywords" content="">
 	<meta name="author" content="">
-	<title>@ViewData["Title"] - HotFlix</title>
+	<title>@ViewData["Title"] - PlayGo</title>
 </head>
 
 @inject MovizoneApp.Services.ISiteSettingsService SettingsService
@@ -38,7 +38,7 @@
 					<div class="header__content">
 						<!-- header logo -->
 						<a asp-controller="Home" asp-action="Index" class="header__logo">
-							<span>HotFlix</span>
+							<span>PlayGo</span>
 						</a>
 						<!-- end header logo -->
 
@@ -228,10 +228,10 @@
 				<div class="col-12">
 					<div class="footer__content">
 						<a asp-controller="Home" asp-action="Index" class="footer__logo">
-							<span>HotFlix</span>
+							<span>PlayGo</span>
 						</a>
 
-						<span class="footer__copyright">© HOTFLIX, @DateTime.Now.Year <br> Powered by ASP.NET Core MVC</span>
+						<span class="footer__copyright">© PLAYGO, @DateTime.Now.Year <br> Powered by ASP.NET Core MVC</span>
 
 						<nav class="footer__nav">
 							<a asp-controller="Home" asp-action="About">@Localizer.GetString("AboutUs")</a>
