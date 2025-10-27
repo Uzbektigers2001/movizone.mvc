@@ -17,6 +17,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public async Task<IEnumerable<Review>> GetReviewsByMovieIdAsync(int movieId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(r => r.MovieId == movieId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
@@ -24,16 +25,19 @@ namespace MovizoneApp.Infrastructure.Repositories
 
         public async Task<double> GetAverageRatingAsync(int movieId)
         {
-            var reviews = await _dbSet.Where(r => r.MovieId == movieId).ToListAsync();
-            if (!reviews.Any())
+            // Use database-level aggregation instead of fetching all reviews
+            var reviews = _dbSet.Where(r => r.MovieId == movieId);
+
+            if (!await reviews.AnyAsync())
                 return 0;
 
-            return reviews.Average(r => r.Rating);
+            return await reviews.AverageAsync(r => r.Rating);
         }
 
         public async Task<IEnumerable<Review>> GetReviewsByTVSeriesIdAsync(int tvSeriesId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(r => r.TVSeriesId == tvSeriesId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
@@ -41,11 +45,13 @@ namespace MovizoneApp.Infrastructure.Repositories
 
         public async Task<double> GetAverageRatingByTVSeriesIdAsync(int tvSeriesId)
         {
-            var reviews = await _dbSet.Where(r => r.TVSeriesId == tvSeriesId).ToListAsync();
-            if (!reviews.Any())
+            // Use database-level aggregation instead of fetching all reviews
+            var reviews = _dbSet.Where(r => r.TVSeriesId == tvSeriesId);
+
+            if (!await reviews.AnyAsync())
                 return 0;
 
-            return reviews.Average(r => r.Rating);
+            return await reviews.AverageAsync(r => r.Rating);
         }
     }
 }

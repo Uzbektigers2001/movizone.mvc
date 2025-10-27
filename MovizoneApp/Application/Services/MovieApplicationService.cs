@@ -212,8 +212,8 @@ namespace MovizoneApp.Application.Services
             try
             {
                 _logger.LogInformation("Fetching all movie genres");
-                var movies = await _movieRepository.GetAllAsync();
-                return movies.Select(m => m.Genre).Distinct().OrderBy(g => g).ToList();
+                // Use database-level distinct query instead of fetching all movies
+                return await _movieRepository.GetDistinctGenresAsync();
             }
             catch (Exception ex)
             {
@@ -231,6 +231,21 @@ namespace MovizoneApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking if movie exists with ID: {MovieId}", id);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<MovieDto>> GetSimilarMoviesByGenreAsync(int movieId, string genre, int take = 6)
+        {
+            try
+            {
+                _logger.LogInformation("Fetching similar movies for movie ID: {MovieId} with genre: {Genre}", movieId, genre);
+                var movies = await _movieRepository.GetSimilarMoviesByGenreAsync(movieId, genre, take);
+                return _mapper.Map<IEnumerable<MovieDto>>(movies);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching similar movies for movie ID: {MovieId}", movieId);
                 throw;
             }
         }

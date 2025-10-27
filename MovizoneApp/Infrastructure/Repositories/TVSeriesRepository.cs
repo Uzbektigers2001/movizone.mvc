@@ -27,6 +27,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public override async Task<IEnumerable<TVSeries>> GetAllAsync()
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(s => s.TVSeriesActors)
                     .ThenInclude(tsa => tsa.Actor)
                 .ToListAsync();
@@ -35,6 +36,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public async Task<IEnumerable<TVSeries>> GetFeaturedSeriesAsync()
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(s => s.TVSeriesActors)
                     .ThenInclude(tsa => tsa.Actor)
                 .Where(s => s.IsFeatured)
@@ -50,11 +52,12 @@ namespace MovizoneApp.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var lowerSearchTerm = searchTerm.ToLower();
+                // Use PostgreSQL ILike for case-insensitive search (optimized for indexes)
+                var pattern = $"%{searchTerm}%";
                 query = query.Where(s =>
-                    s.Title.ToLower().Contains(lowerSearchTerm) ||
-                    s.Description.ToLower().Contains(lowerSearchTerm) ||
-                    s.Genre.ToLower().Contains(lowerSearchTerm));
+                    EF.Functions.ILike(s.Title, pattern) ||
+                    EF.Functions.ILike(s.Description, pattern) ||
+                    EF.Functions.ILike(s.Genre, pattern));
             }
 
             if (!string.IsNullOrWhiteSpace(genre))
@@ -63,6 +66,17 @@ namespace MovizoneApp.Infrastructure.Repositories
             }
 
             return await query.OrderByDescending(s => s.Rating).ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> GetDistinctGenresAsync()
+        {
+            // Use database-level distinct instead of fetching all series
+            return await _dbSet
+                .AsNoTracking()
+                .Select(s => s.Genre)
+                .Distinct()
+                .OrderBy(g => g)
+                .ToListAsync();
         }
     }
 }

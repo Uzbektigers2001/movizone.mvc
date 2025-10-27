@@ -14,12 +14,14 @@ namespace MovizoneApp.Infrastructure.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            // Use PostgreSQL ILike for case-insensitive search (optimized for indexes)
+            return await _dbSet.FirstOrDefaultAsync(u => EF.Functions.ILike(u.Email, email));
         }
 
         public async Task<bool> EmailExistsAsync(string email)
         {
-            return await _dbSet.AnyAsync(u => u.Email.ToLower() == email.ToLower());
+            // Use PostgreSQL ILike for case-insensitive search (optimized for indexes)
+            return await _dbSet.AnyAsync(u => EF.Functions.ILike(u.Email, email));
         }
     }
 }

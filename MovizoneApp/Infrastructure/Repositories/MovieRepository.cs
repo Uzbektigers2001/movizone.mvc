@@ -26,6 +26,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public override async Task<IEnumerable<Movie>> GetAllAsync()
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(m => m.MovieActors)
                     .ThenInclude(ma => ma.Actor)
                 .ToListAsync();
@@ -34,6 +35,7 @@ namespace MovizoneApp.Infrastructure.Repositories
         public async Task<IEnumerable<Movie>> GetFeaturedMoviesAsync()
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(m => m.MovieActors)
                     .ThenInclude(ma => ma.Actor)
                 .Where(m => m.IsFeatured)
@@ -49,11 +51,12 @@ namespace MovizoneApp.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var lowerSearchTerm = searchTerm.ToLower();
+                // Use PostgreSQL ILike for case-insensitive search (optimized for indexes)
+                var pattern = $"%{searchTerm}%";
                 query = query.Where(m =>
-                    m.Title.ToLower().Contains(lowerSearchTerm) ||
-                    m.Description.ToLower().Contains(lowerSearchTerm) ||
-                    m.Genre.ToLower().Contains(lowerSearchTerm));
+                    EF.Functions.ILike(m.Title, pattern) ||
+                    EF.Functions.ILike(m.Description, pattern) ||
+                    EF.Functions.ILike(m.Genre, pattern));
             }
 
             if (!string.IsNullOrWhiteSpace(genre))
@@ -62,6 +65,30 @@ namespace MovizoneApp.Infrastructure.Repositories
             }
 
             return await query.OrderByDescending(m => m.Rating).ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> GetDistinctGenresAsync()
+        {
+            // Use database-level distinct instead of fetching all movies
+            return await _dbSet
+                .AsNoTracking()
+                .Select(m => m.Genre)
+                .Distinct()
+                .OrderBy(g => g)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Movie>> GetSimilarMoviesByGenreAsync(int movieId, string genre, int take = 6)
+        {
+            // Use database-level filtering instead of fetching all movies
+            return await _dbSet
+                .AsNoTracking()
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .Where(m => m.Id != movieId && m.Genre == genre)
+                .OrderByDescending(m => m.Rating)
+                .Take(take)
+                .ToListAsync();
         }
     }
 }

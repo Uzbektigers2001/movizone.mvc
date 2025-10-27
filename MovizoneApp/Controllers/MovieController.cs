@@ -71,13 +71,8 @@ namespace MovizoneApp.Controllers
             ViewBag.ReviewCount = reviewCount;
             ViewBag.IsInWatchlist = isInWatchlist;
 
-            // Get similar movies based on genre (exclude current movie)
-            var allMoviesDto = await _movieService.GetAllMoviesAsync();
-            var similarMovies = allMoviesDto
-                .Where(m => m.Id != id && m.Genre == movieDto.Genre)
-                .OrderByDescending(m => m.Rating)
-                .Take(6)
-                .ToList();
+            // Get similar movies based on genre (exclude current movie) - optimized query
+            var similarMovies = await _movieService.GetSimilarMoviesByGenreAsync(id, movieDto.Genre, 6);
             ViewBag.SimilarMovies = similarMovies;
 
             return View(movieDto);
