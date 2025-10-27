@@ -7,7 +7,7 @@ on:
     branches: [ main ]
  
 env:
-  REPO_NAME: ${{ github.repository }}
+  REPO_NAME: uzbektigers2001/movizone.mvc
   CONTAINER_NAME: playgo
   REGISTRY: ghcr.io
   SSH_HOST: ${{ secrets.SERVER_IP }}
