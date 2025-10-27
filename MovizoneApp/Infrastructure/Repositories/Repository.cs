@@ -59,17 +59,8 @@ namespace MovizoneApp.Infrastructure.Repositories
 
         public virtual async Task UpdateAsync(T entity)
         {
-            // Check if entity is already tracked
-            var entry = _context.Entry(entity);
-            if (entry.State == EntityState.Detached)
-            {
-                _dbSet.Attach(entity);
-                entry.State = EntityState.Modified;
-            }
-            else
-            {
-                _dbSet.Update(entity);
-            }
+            _dbSet.Update(entity);
+            
             await _context.SaveChangesAsync();
         }
 

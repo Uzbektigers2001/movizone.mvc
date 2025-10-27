@@ -47,12 +47,6 @@ namespace MovizoneApp.Core.Interfaces
         Task<bool> EmailExistsAsync(string email);
     }
 
-    public interface IReviewRepository : IRepository<Review>
-    {
-        Task<IEnumerable<Review>> GetReviewsByMovieIdAsync(int movieId);
-        Task<double> GetAverageRatingAsync(int movieId);
-    }
-
     public interface IWatchlistRepository : IRepository<WatchlistItem>
     {
         Task<IEnumerable<WatchlistItem>> GetUserWatchlistAsync(int userId);

@@ -43,10 +43,10 @@
                             <td>@($"{actor.Age} years")</td>
                             <td>@actor.Country</td>
                             <td>
-                                <span class="badge bg-primary">@actor.Movies.Count</span>
+                                <span class="badge bg-primary">@actor.MovieActors.Count</span>
                             </td>
                             <td>
-                                <span class="badge bg-success">@actor.TVSeries.Count</span>
+                                <span class="badge bg-success">@actor.TVSeriesActors.Count</span>
                             </td>
                             <td>
                                 <a asp-action="EditActor" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-primary">

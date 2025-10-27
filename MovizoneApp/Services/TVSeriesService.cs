@@ -28,7 +28,6 @@ namespace MovizoneApp.Services
                     CoverImage = "/img/covers/cover10.jpg",
                     PosterImage = "/img/posters/poster10.jpg",
                     BannerImage = "/img/banners/banner10.jpg",
-                    Actors = new List<string> { "Bryan Cranston", "Aaron Paul" },
                     Episodes = new List<Episode>
                     {
                         new Episode { Id = 1, TVSeriesId = 1, SeasonNumber = 1, EpisodeNumber = 1, Title = "Pilot", Description = "Diagnosed with terminal lung cancer, chemistry teacher Walter White teams up with former student Jesse Pinkman to cook and sell crystal meth.", Duration = 58, VideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", AirDate = new DateTime(2008, 1, 20) },
@@ -61,7 +60,6 @@ namespace MovizoneApp.Services
                     CoverImage = "/img/covers/cover11.jpg",
                     PosterImage = "/img/posters/poster11.jpg",
                     BannerImage = "/img/banners/banner11.jpg",
-                    Actors = new List<string> { "Emilia Clarke", "Kit Harington" },
                     IsFeatured = true,
                     FirstAired = new DateTime(2011, 4, 17),
                     Status = "Completed"
@@ -81,7 +79,6 @@ namespace MovizoneApp.Services
                     CoverImage = "/img/covers/cover13.jpg",
                     PosterImage = "/img/posters/poster13.jpg",
                     BannerImage = "/img/banners/banner13.jpg",
-                    Actors = new List<string> { "Millie Bobby Brown", "Finn Wolfhard" },
                     IsFeatured = true,
                     FirstAired = new DateTime(2016, 7, 15),
                     Status = "Ongoing"
@@ -101,7 +98,6 @@ namespace MovizoneApp.Services
                     CoverImage = "/img/covers/cover14.jpg",
                     PosterImage = "/img/posters/poster14.jpg",
                     BannerImage = "/img/banners/banner14.jpg",
-                    Actors = new List<string> { "Claire Foy", "Olivia Colman" },
                     IsFeatured = false,
                     FirstAired = new DateTime(2016, 11, 4),
                     Status = "Completed"
@@ -138,7 +134,6 @@ namespace MovizoneApp.Services
                 existingSeries.CoverImage = series.CoverImage;
                 existingSeries.PosterImage = series.PosterImage;
                 existingSeries.BannerImage = series.BannerImage;
-                existingSeries.Actors = series.Actors;
                 existingSeries.IsFeatured = series.IsFeatured;
                 existingSeries.FirstAired = series.FirstAired;
                 existingSeries.Status = series.Status;

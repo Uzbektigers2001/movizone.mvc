@@ -138,8 +138,8 @@
                         {
                             @foreach (var review in userReviews.OrderByDescending(r => r.CreatedAt))
                             {
-                                var movie = MovieService.GetMovieById(review.MovieId);
-                                var series = movie == null ? TVSeriesService.GetSeriesById(review.MovieId) : null;
+                                var movie = MovieService.GetMovieById(review.MovieId.Value);
+                                var series = movie == null ? TVSeriesService.GetSeriesById(review.MovieId.Value) : null;
                                 var title = movie?.Title ?? series?.Title ?? "Unknown";
 
                                 <div class="card bg-dark mb-3">

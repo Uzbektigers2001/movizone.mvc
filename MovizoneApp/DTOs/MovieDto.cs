@@ -75,16 +75,16 @@ namespace MovizoneApp.DTOs
         public string Director { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string CoverImage { get; set; } = string.Empty;
+        public string? CoverImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string PosterImage { get; set; } = string.Empty;
+        public string? PosterImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string BannerImage { get; set; } = string.Empty;
+        public string? BannerImage { get; set; } = string.Empty;
 
         [MaxLength(1000)]
-        public string VideoUrl { get; set; } = string.Empty;
+        public string? VideoUrl { get; set; } = string.Empty;
 
         public List<string> Actors { get; set; } = new List<string>();
         public bool IsFeatured { get; set; }
@@ -131,16 +131,16 @@ namespace MovizoneApp.DTOs
         public string Director { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string CoverImage { get; set; } = string.Empty;
+        public string? CoverImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string PosterImage { get; set; } = string.Empty;
+        public string? PosterImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string BannerImage { get; set; } = string.Empty;
+        public string? BannerImage { get; set; } = string.Empty;
 
         [MaxLength(1000)]
-        public string VideoUrl { get; set; } = string.Empty;
+        public string? VideoUrl { get; set; } = string.Empty;
 
         public List<string> Actors { get; set; } = new List<string>();
         public bool IsFeatured { get; set; }

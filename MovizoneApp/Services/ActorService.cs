@@ -20,9 +20,7 @@ namespace MovizoneApp.Services
                     Bio = "Leonardo Wilhelm DiCaprio is an American actor and film producer. Known for his work in biopics and period films, he is the recipient of numerous accolades.",
                     BirthDate = new DateTime(1974, 11, 11),
                     Country = "USA",
-                    Photo = "/img/covers/actor.jpg",
-                    Movies = new List<string> { "Inception", "Titanic", "The Revenant" },
-                    TVSeries = new List<string>()
+                    Photo = "/img/covers/actor.jpg"
                 },
                 new Actor
                 {
@@ -31,9 +29,7 @@ namespace MovizoneApp.Services
                     Bio = "Thomas Cruise Mapother IV is an American actor and producer. One of the world's highest-paid actors, he has received various accolades.",
                     BirthDate = new DateTime(1962, 7, 3),
                     Country = "USA",
-                    Photo = "/img/covers/actor.jpg",
-                    Movies = new List<string> { "The Edge of Tomorrow", "Top Gun", "Mission: Impossible" },
-                    TVSeries = new List<string>()
+                    Photo = "/img/covers/actor.jpg"
                 },
                 new Actor
                 {
@@ -42,9 +38,7 @@ namespace MovizoneApp.Services
                     Bio = "Bryan Lee Cranston is an American actor, director, producer, and screenwriter. He is best known for his roles as Walter White in Breaking Bad.",
                     BirthDate = new DateTime(1956, 3, 7),
                     Country = "USA",
-                    Photo = "/img/covers/actor.jpg",
-                    Movies = new List<string> { "Argo", "Godzilla" },
-                    TVSeries = new List<string> { "Breaking Bad", "Malcolm in the Middle" }
+                    Photo = "/img/covers/actor.jpg"
                 }
             };
         }
@@ -69,8 +63,8 @@ namespace MovizoneApp.Services
                 existingActor.BirthDate = actor.BirthDate;
                 existingActor.Country = actor.Country;
                 existingActor.Photo = actor.Photo;
-                existingActor.Movies = actor.Movies;
-                existingActor.TVSeries = actor.TVSeries;
+                existingActor.MovieActors = actor.MovieActors;
+                existingActor.TVSeriesActors = actor.TVSeriesActors;
             }
         }
 

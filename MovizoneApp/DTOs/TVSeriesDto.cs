@@ -75,13 +75,13 @@ namespace MovizoneApp.DTOs
         public string Director { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string CoverImage { get; set; } = string.Empty;
+        public string? CoverImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string PosterImage { get; set; } = string.Empty;
+        public string? PosterImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string BannerImage { get; set; } = string.Empty;
+        public string? BannerImage { get; set; } = string.Empty;
 
         public List<string> Actors { get; set; } = new List<string>();
 

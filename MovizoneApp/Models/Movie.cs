@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using MovizoneApp.Core.Models;
 
 namespace MovizoneApp.Models
@@ -35,17 +36,19 @@ namespace MovizoneApp.Models
         [MaxLength(200)]
         public string Director { get; set; } = string.Empty;
 
+        
         [MaxLength(500)]
-        public string CoverImage { get; set; } = string.Empty;
+        public string? CoverImage { get; set; } = string.Empty;
+
+        
+        [MaxLength(500)]
+        public string? PosterImage { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string PosterImage { get; set; } = string.Empty;
-
-        [MaxLength(500)]
-        public string BannerImage { get; set; } = string.Empty;
+        public string? BannerImage { get; set; } = string.Empty;
 
         [MaxLength(1000)]
-        public string VideoUrl { get; set; } = string.Empty;
+        public string? VideoUrl { get; set; } = string.Empty;
 
         // Many-to-many relationship with Actor through MovieActor join entity
         public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();

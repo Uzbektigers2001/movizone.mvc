@@ -93,7 +93,7 @@
 									<li><span>@Localizer.GetString("TVSeries", "Episodes"):</span> @Model.TotalEpisodes</li>
 									<li><span>@Localizer.GetString("Movie", "Country"):</span> <a href="#">@Model.Country</a></li>
 									<li><span>@Localizer.GetString("Status"):</span> <span class="badge @(Model.Status == "Completed" ? "bg-success" : "bg-primary")">@Model.Status</span></li>
-									<li><span>@Localizer.GetString("TVSeries", "FirstAired"):</span> @Model.FirstAired.ToString("MMMM dd, yyyy")</li>
+									<li><span>@Localizer.GetString("TVSeries", "FirstAired"):</span> @Model.FirstAired?.ToString("MMMM dd, yyyy")</li>
 								</ul>
 
 								<div class="item__description">
@@ -178,10 +178,7 @@
 													<span class="episode-duration">@episode.Duration @Localizer.GetString("Movie", "Minutes")</span>
 												</div>
 												<p class="episode-description">@episode.Description</p>
-												@if (episode.AirDate.HasValue)
-												{
-													<small class="episode-date"><i class="ti ti-calendar"></i> @episode.AirDate.Value.ToString("MMM dd, yyyy")</small>
-												}
+												<small class="episode-date"><i class="ti ti-calendar"></i> @episode.AirDate.ToString("MMM dd, yyyy")</small>
 											</div>
 											<div class="episode-action">
 												<button class="btn-play-episode" title="@Localizer.GetString("TVSeries", "PlayEpisode")">
@@ -379,7 +376,7 @@
 									</div>
 									<div class="info-list__item">
 										<span class="info-list__label">@Localizer.GetString("TVSeries", "FirstAired"):</span>
-										<span class="info-list__value">@Model.FirstAired.ToString("MMMM dd, yyyy")</span>
+										<span class="info-list__value">@Model.FirstAired?.ToString("MMMM dd, yyyy")</span>
 									</div>
 									@if (Model.Actors.Any())
 									{

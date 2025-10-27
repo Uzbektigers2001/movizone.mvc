@@ -165,7 +165,7 @@
                 <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ti ti-world"></i>
                     @{
-                        var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture)?.Name ?? "EN";
+                        var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture).Name ?? "EN";
                     }
                     <span>@currentLangName</span>
                 </a>

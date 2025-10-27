@@ -81,7 +81,7 @@ namespace MovizoneApp.DTOs
         public string ItemTitle { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
         public double Rating { get; set; }
-        public int MovieId { get; set; }
+        public int? MovieId { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

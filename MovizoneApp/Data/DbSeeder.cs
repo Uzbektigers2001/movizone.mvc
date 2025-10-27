@@ -14,9 +14,9 @@ namespace MovizoneApp.Data
     public class DbSeeder
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<DbSeeder> _logger;
+        private readonly ILogger _logger;
 
-        public DbSeeder(ApplicationDbContext context, ILogger<DbSeeder> logger)
+        public DbSeeder(ApplicationDbContext context, ILogger logger)
         {
             _context = context;
             _logger = logger;
