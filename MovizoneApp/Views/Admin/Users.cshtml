@@ -1,28 +1,33 @@
 @model List<MovizoneApp.Models.User>
+@inject MovizoneApp.Services.ILocalizationService Localizer
 @{
     ViewData["Title"] = Localizer.GetString("Admin", "UsersManagement");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>@Localizer.GetString("Admin", "UsersManagement")</h2>
-    <a asp-action="CreateUser" class="btn btn-primary" style="display:none;">
-        <i class="ti ti-plus"></i> @Localizer.GetString("Admin", "AddNewUser")
-    </a>
+<!-- main title -->
+<div class="row">
+    <div class="col-12">
+        <div class="main__title">
+            <h2>@Localizer.GetString("Admin", "UsersManagement")</h2>
+        </div>
+    </div>
 </div>
+<!-- end main title -->
 
-<div class="card border-0 shadow-sm">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
+<div class="row">
+    <div class="col-12">
+        <div class="dashbox">
+            <div class="dashbox__table-wrap">
+                <table class="dashbox__table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>@Localizer.GetString("Admin", "ID")</th>
                         <th>@Localizer.GetString("Common", "Name")</th>
                         <th>@Localizer.GetString("Common", "Email")</th>
                         <th>@Localizer.GetString("Common", "Role")</th>
-                        <th>Created</th>
-                        <th>Status</th>
+                        <th>@Localizer.GetString("Admin", "Created")</th>
+                        <th>@Localizer.GetString("Common", "Status")</th>
                         <th>@Localizer.GetString("Common", "Actions")</th>
                     </tr>
                 </thead>
@@ -30,45 +35,48 @@
                     @foreach (var user in Model)
                     {
                         <tr>
-                            <td>@user.Id</td>
+                            <td><div class="dashbox__table-text dashbox__table-text--grey">@user.Id</div></td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="@user.Avatar" alt="Avatar" class="rounded-circle me-2"
-                                         style="width: 32px; height: 32px; object-fit: cover;">
+                                <div class="dashbox__table-text" style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="@user.Avatar" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
                                     <strong>@user.Name</strong>
                                 </div>
                             </td>
-                            <td>@user.Email</td>
+                            <td><div class="dashbox__table-text dashbox__table-text--grey">@user.Email</div></td>
                             <td>
-                                @if (user.Role == "Admin")
-                                {
-                                    <span class="badge bg-danger">@user.Role</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">@user.Role</span>
-                                }
+                                <div class="dashbox__table-text">
+                                    @if (user.Role == "Admin")
+                                    {
+                                        <span style="color: var(--danger-color); background: rgba(220,53,69,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">@user.Role</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">@user.Role</span>
+                                    }
+                                </div>
                             </td>
-                            <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td><div class="dashbox__table-text">@user.CreatedAt.ToString("MMM dd, yyyy")</div></td>
                             <td>
-                                @if (user.IsActive)
-                                {
-                                    <span class="badge bg-success">Active</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-warning">Inactive</span>
-                                }
+                                <div class="dashbox__table-text">
+                                    @if (user.IsActive)
+                                    {
+                                        <span style="color: var(--success-color); background: rgba(40,167,69,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">@Localizer.GetString("Common", "Active")</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: var(--warning-color); background: rgba(255,193,7,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">@Localizer.GetString("Common", "Inactive")</span>
+                                    }
+                                </div>
                             </td>
                             <td>
-                                <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">
+                                <a asp-action="EditUser" asp-route-id="@user.Id" style="display: inline-block; padding: 6px 12px; background: rgba(255,255,255,0.05); border-radius: 6px; color: var(--text-color); text-decoration: none; margin-right: 5px;">
                                     <i class="ti ti-edit"></i>
                                 </a>
                                 @if (user.Role != "Admin")
                                 {
-                                    <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisUser")')">
+                                    <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" style="display: inline-block;">
+                                        <button type="submit" onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisUser")')"
+                                                style="padding: 6px 12px; background: rgba(220,53,69,0.1); border: none; border-radius: 6px; color: var(--danger-color); cursor: pointer;">
                                             <i class="ti ti-trash"></i>
                                         </button>
                                     </form>

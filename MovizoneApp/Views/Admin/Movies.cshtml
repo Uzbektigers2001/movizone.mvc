@@ -5,33 +5,45 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>@Localizer.GetString("Common", "Movies")</h2>
-    <a asp-action="CreateMovie" class="btn btn-primary">
-        <i class="ti ti-plus"></i> @Localizer.GetString("Admin", "AddNewMovie")
-    </a>
+<!-- main title -->
+<div class="row">
+    <div class="col-12">
+        <div class="main__title">
+            <h2>@Localizer.GetString("Common", "Movies")</h2>
+            <a asp-action="CreateMovie" class="main__title-link">@Localizer.GetString("Admin", "AddNewMovie")</a>
+        </div>
+    </div>
 </div>
+<!-- end main title -->
 
 <!-- Search Form -->
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-body">
-        <form asp-action="Movies" method="get" class="row g-3">
-            <div class="col-md-10">
-                <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchMoviesByTitle")" value="@ViewBag.SearchQuery">
+<div class="row">
+    <div class="col-12">
+        <div class="dashbox">
+            <div class="dashbox__title">
+                <h3><i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")</h3>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
-                </button>
+            <div style="padding: 20px;">
+                <form asp-action="Movies" method="get" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchMoviesByTitle")" value="@ViewBag.SearchQuery" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100" style="background: var(--primary-color); border: none;">
+                            <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
+<div class="row">
+    <div class="col-12">
+        <div class="dashbox">
+            <div class="dashbox__table-wrap">
+                <table class="dashbox__table">
                 <thead>
                     <tr>
                         <th>@Localizer.GetString("Admin", "ID")</th>
@@ -48,34 +60,40 @@
                     @foreach (var movie in Model)
                     {
                         <tr>
-                            <td>@movie.Id</td>
+                            <td><div class="dashbox__table-text dashbox__table-text--grey">@movie.Id</div></td>
                             <td>
-                                <strong>@movie.Title</strong><br>
-                                <small class="text-muted">@movie.Director</small>
+                                <div class="dashbox__table-text">
+                                    <a asp-action="EditMovie" asp-route-id="@movie.Id">@movie.Title</a><br>
+                                    <small style="color: var(--text-muted);">@movie.Director</small>
+                                </div>
                             </td>
-                            <td>@movie.Year</td>
+                            <td><div class="dashbox__table-text">@movie.Year</div></td>
                             <td>
-                                <span class="badge bg-success">@movie.Rating</span>
+                                <div class="dashbox__table-text dashbox__table-text--rate">
+                                    <i class="ti ti-star"></i> @movie.Rating.ToString("0.0")
+                                </div>
                             </td>
-                            <td>@movie.Genre</td>
-                            <td>@movie.Duration @Localizer.GetString("Admin", "Min")</td>
+                            <td><div class="dashbox__table-text">@movie.Genre</div></td>
+                            <td><div class="dashbox__table-text">@movie.Duration min</div></td>
                             <td>
-                                @if (movie.IsFeatured)
-                                {
-                                    <span class="badge bg-primary">@Localizer.GetString("Admin", "Yes")</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">@Localizer.GetString("Admin", "No")</span>
-                                }
+                                <div class="dashbox__table-text">
+                                    @if (movie.IsFeatured)
+                                    {
+                                        <span style="color: var(--success-color);">✓ @Localizer.GetString("Admin", "Yes")</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: var(--text-muted);">—</span>
+                                    }
+                                </div>
                             </td>
                             <td>
-                                <a asp-action="EditMovie" asp-route-id="@movie.Id" class="btn btn-sm btn-outline-primary">
+                                <a asp-action="EditMovie" asp-route-id="@movie.Id" style="display: inline-block; padding: 6px 12px; background: rgba(255,255,255,0.05); border-radius: 6px; color: var(--text-color); text-decoration: none; margin-right: 5px;">
                                     <i class="ti ti-edit"></i>
                                 </a>
-                                <form asp-action="DeleteMovie" asp-route-id="@movie.Id" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                            onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisMovie")')">
+                                <form asp-action="DeleteMovie" asp-route-id="@movie.Id" method="post" style="display: inline-block;">
+                                    <button type="submit" onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisMovie")')"
+                                            style="padding: 6px 12px; background: rgba(220,53,69,0.1); border: none; border-radius: 6px; color: var(--danger-color); cursor: pointer;">
                                         <i class="ti ti-trash"></i>
                                     </button>
                                 </form>
