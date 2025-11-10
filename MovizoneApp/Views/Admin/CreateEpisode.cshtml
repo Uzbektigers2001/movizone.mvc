@@ -1,6 +1,7 @@
 @model MovizoneApp.DTOs.CreateEpisodeDto
+@inject MovizoneApp.Services.ILocalizationService Localizer
 @{
-    ViewData["Title"] = "Add New Episode";
+    ViewData["Title"] = Localizer.GetString("Admin", "AddNewEpisode");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 

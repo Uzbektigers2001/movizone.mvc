@@ -501,7 +501,9 @@
     "NoItemsAvailable": "Hech qanday element mavjud emas",
     "NoUsersAvailable": "Hech qanday foydalanuvchi mavjud emas",
     "NoReviewsAvailable": "Hech qanday sharh mavjud emas",
-    "AddItem": "Element qo'shish"
+    "AddItem": "Element qo'shish",
+    "Previous": "Oldingi",
+    "Next": "Keyingi"
   },
   "Auth": {
     "EmailAddress": "Email manzil",
