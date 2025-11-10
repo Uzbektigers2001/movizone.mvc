@@ -531,6 +531,8 @@ button, .btn, input[type="submit"], input[type="button"] {
 	transition: all 0.3s ease;
 	z-index: 2;
 	text-decoration: none;
+	flex-shrink: 0; /* Prevent distortion */
+	aspect-ratio: 1 / 1; /* Ensure perfect circle */
 }
 
 .item:hover .item__play {
@@ -539,7 +541,10 @@ button, .btn, input[type="submit"], input[type="button"] {
 }
 
 .item__play i {
-	margin-left: 3px;
+	margin-left: 2px; /* Subtle adjustment for play icon visual centering */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .item__rate {
