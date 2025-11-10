@@ -224,26 +224,6 @@ namespace MovizoneApp.Application.Mappings
             // Reverse mappings for AdminController
             CreateMap<Episode, UpdateEpisodeDto>();
             CreateMap<EpisodeDto, UpdateEpisodeDto>(); // DTO to DTO mapping for EditEpisode
-
-            // PricingPlan mappings
-            CreateMap<PricingPlan, PricingPlanDto>();
-            CreateMap<CreatePricingPlanDto, PricingPlan>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
-            CreateMap<UpdatePricingPlanDto, PricingPlan>()
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
         }
     }
 }

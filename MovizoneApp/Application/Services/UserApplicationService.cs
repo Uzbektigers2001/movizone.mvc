@@ -281,8 +281,7 @@ namespace MovizoneApp.Application.Services
                     Name = registerDto.Name,
                     Email = registerDto.Email,
                     Password = registerDto.Password,
-                    Role = "User",
-                    SubscriptionType = "Free"
+                    Role = "User"
                 };
 
                 var createdDto = await CreateUserAsync(createUserDto);

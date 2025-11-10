@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using MovizoneApp.Enums;
 using MovizoneApp.Services;
 
 namespace MovizoneApp.Controllers
