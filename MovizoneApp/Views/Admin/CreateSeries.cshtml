@@ -77,7 +77,7 @@
                     <input asp-for="CoverImage" class="form-control" placeholder="/img/covers/cover10.jpg">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadCoverImage")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadCoverImage")</label>
                     <input type="file" name="coverFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -89,7 +89,7 @@
                     <small class="text-muted">@Localizer.GetString("Admin", "OrUploadBelow"). Falls back to cover image if not set.</small>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadPosterImage")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadPosterImage")</label>
                     <input type="file" name="posterFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -101,7 +101,7 @@
                     <small class="text-muted">@Localizer.GetString("Admin", "BannerUsageHint")</small>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadBannerImage")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadBannerImage")</label>
                     <input type="file" name="bannerFile" class="form-control" accept="image/*">
                     <small class="text-muted">@Localizer.GetString("Admin", "RecommendedSize")</small>
                 </div>
@@ -142,7 +142,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "SaveSeries")
                 </button>
-                <a asp-action="Series" class="btn btn-outline-secondary">@Localizer.GetString("Cancel")</a>
+                <a asp-action="Series" class="btn btn-outline-secondary">@Localizer.GetString("Common", "Cancel")</a>
             </div>
         </form>
     </div>

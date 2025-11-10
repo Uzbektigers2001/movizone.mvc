@@ -85,7 +85,7 @@
                     <input asp-for="CoverImage" class="form-control">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadNewCover")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadNewCover")</label>
                     <input type="file" name="coverFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -106,7 +106,7 @@
                     <input asp-for="PosterImage" class="form-control">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadNewPoster")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadNewPoster")</label>
                     <input type="file" name="posterFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -127,7 +127,7 @@
                     <input asp-for="BannerImage" class="form-control" placeholder="/img/banners/banner10.jpg">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadNewBanner")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadNewBanner")</label>
                     <input type="file" name="bannerFile" class="form-control" accept="image/*">
                     <small class="text-muted">@Localizer.GetString("Admin", "RecommendedSize")</small>
                 </div>
@@ -168,7 +168,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "UpdateSeries")
                 </button>
-                <a asp-action="Series" class="btn btn-outline-secondary">@Localizer.GetString("Cancel")</a>
+                <a asp-action="Series" class="btn btn-outline-secondary">@Localizer.GetString("Common", "Cancel")</a>
             </div>
         </form>
     </div>

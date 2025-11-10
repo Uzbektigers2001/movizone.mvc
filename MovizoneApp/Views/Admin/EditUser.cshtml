@@ -41,7 +41,7 @@
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("NewPassword") (@Localizer.GetString("LeaveEmptyToKeep"))</label>
+                    <label class="form-label">@Localizer.GetString("NewPassword") (@Localizer.GetString("Common", "LeaveEmptyToKeep"))</label>
                     <input asp-for="Password" type="password" class="form-control" placeholder="••••••••">
                     <small class="text-muted">@Localizer.GetString("Admin", "OnlyFillToChangePassword")</small>
                 </div>
@@ -63,7 +63,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "UpdateUser")
                 </button>
-                <a asp-action="Users" class="btn btn-outline-secondary">@Localizer.GetString("Cancel")</a>
+                <a asp-action="Users" class="btn btn-outline-secondary">@Localizer.GetString("Common", "Cancel")</a>
             </div>
         </form>
     </div>

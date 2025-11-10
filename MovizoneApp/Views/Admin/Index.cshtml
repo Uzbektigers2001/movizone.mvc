@@ -1,7 +1,7 @@
 @model MovizoneApp.DTOs.DashboardStatisticsDto
 @inject MovizoneApp.Services.ILocalizationService Localizer
 @{
-    ViewData["Title"] = Localizer.GetString("Dashboard");
+    ViewData["Title"] = Localizer.GetString("Admin", "Dashboard");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -237,9 +237,9 @@
                     <thead>
                         <tr>
                             <th>@Localizer.GetString("Admin", "ID")</th>
-                            <th>@Localizer.GetString("Movie.Title")</th>
+                            <th>@Localizer.GetString("Movie", "Title")</th>
                             <th>@Localizer.GetString("Admin", "Category")</th>
-                            <th>@Localizer.GetString("Movie.Rating")</th>
+                            <th>@Localizer.GetString("Movie", "Rating")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -283,9 +283,9 @@
                     <thead>
                         <tr>
                             <th>@Localizer.GetString("Admin", "ID")</th>
-                            <th>@Localizer.GetString("Movie.Title")</th>
+                            <th>@Localizer.GetString("Movie", "Title")</th>
                             <th>@Localizer.GetString("Admin", "Category")</th>
-                            <th>@Localizer.GetString("Movie.Rating")</th>
+                            <th>@Localizer.GetString("Movie", "Rating")</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -332,7 +332,7 @@
                         <tr>
                             <th>@Localizer.GetString("Admin", "ID")</th>
                             <th>@Localizer.GetString("Admin", "FullName")</th>
-                            <th>@Localizer.GetString("Common.Email")</th>
+                            <th>@Localizer.GetString("Common", "Email")</th>
                             <th>@Localizer.GetString("Admin", "Username")</th>
                         </tr>
                     </thead>
@@ -379,7 +379,7 @@
                             <th>@Localizer.GetString("Admin", "ID")</th>
                             <th>@Localizer.GetString("Admin", "Item")</th>
                             <th>@Localizer.GetString("Admin", "Author")</th>
-                            <th>@Localizer.GetString("Movie.Rating")</th>
+                            <th>@Localizer.GetString("Movie", "Rating")</th>
                         </tr>
                     </thead>
                     <tbody>
