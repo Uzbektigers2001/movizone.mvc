@@ -32,6 +32,12 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    // Configure Kestrel for large file uploads (500MB limit)
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.Limits.MaxRequestBodySize = 524_288_000; // 500MB
+    });
+
     // Add Serilog
     builder.Host.UseSerilog();
 

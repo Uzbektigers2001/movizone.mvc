@@ -242,6 +242,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> CreateMovie(CreateMovieDto movieDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -388,6 +390,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> EditMovie(UpdateMovieDto movieDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, IFormFile? videoFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -569,6 +573,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> CreateSeries(CreateTVSeriesDto seriesDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -683,6 +689,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> EditSeries(UpdateTVSeriesDto seriesDto, IFormFile? coverFile, IFormFile? posterFile, IFormFile? bannerFile, string? actorsList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -890,6 +898,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> CreateActor(CreateActorDto actorDto, IFormFile? photoFile, string? moviesList, string? seriesList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -950,6 +960,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> EditActor(UpdateActorDto actorDto, IFormFile? photoFile, string? moviesList, string? seriesList)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -1055,6 +1067,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> CreateEpisode(CreateEpisodeDto episodeDto, IFormFile? thumbnailFile, IFormFile? videoFile)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
@@ -1134,6 +1148,8 @@ namespace MovizoneApp.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(524_288_000)] // 500MB limit
+        [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
         public async Task<IActionResult> EditEpisode(UpdateEpisodeDto episodeDto, IFormFile? thumbnailFile, IFormFile? videoFile)
         {
             if (!IsAdmin()) return RedirectToAction("Login");
