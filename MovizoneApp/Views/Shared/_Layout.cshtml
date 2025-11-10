@@ -80,63 +80,6 @@
 								</li>
 							}
 							<!-- end Catalog Items -->
-
-							@if (navSettings.ShowPricingPlanInNav)
-							{
-								<li class="header__nav-item">
-									<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">@Localizer.GetString("PricingPlan")</a>
-								</li>
-							}
-
-							@if (navSettings.ShowPagesInNav)
-							{
-								<!-- dropdown -->
-								<li class="header__nav-item">
-									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@Localizer.GetString("Pages") <i class="ti ti-chevron-down"></i></a>
-
-									<ul class="dropdown-menu header__dropdown-menu">
-										<li><a asp-controller="Home" asp-action="About">@Localizer.GetString("AboutUs")</a></li>
-										@if (Context.Session.GetInt32("UserId").HasValue)
-										{
-											<li><a asp-controller="Auth" asp-action="Profile">@Localizer.GetString("Profile")</a></li>
-										}
-										<li><a asp-controller="Home" asp-action="Contacts">@Localizer.GetString("Contacts")</a></li>
-										<li><a asp-controller="Home" asp-action="Faq">@Localizer.GetString("HelpCenter")</a></li>
-										<li><a asp-controller="Home" asp-action="Privacy">@Localizer.GetString("PrivacyPolicy")</a></li>
-										@if (Context.Session.GetString("UserName") == "admin")
-										{
-											<li><a asp-controller="Admin" asp-action="Index">@Localizer.GetString("Admin")</a></li>
-										}
-									</ul>
-								</li>
-								<!-- end dropdown -->
-							}
-
-							@if (navSettings.ShowMoreMenuInNav)
-							{
-								<!-- dropdown -->
-								<li class="header__nav-item">
-									<a class="header__nav-link header__nav-link--more" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots"></i></a>
-
-									<ul class="dropdown-menu header__dropdown-menu">
-										<li><a asp-controller="Watchlist" asp-action="Index"><i class="ti ti-bookmark"></i> @Localizer.GetString("Watchlist")</a></li>
-										<li><a asp-controller="Watchlist" asp-action="Favorites"><i class="ti ti-heart"></i> @Localizer.GetString("Favorites")</a></li>
-										@if (!Context.Session.GetInt32("UserId").HasValue)
-										{
-											<li><hr class="dropdown-divider"></li>
-											<li><a asp-controller="Auth" asp-action="SignIn">@Localizer.GetString("SignIn")</a></li>
-											<li><a asp-controller="Auth" asp-action="SignUp">@Localizer.GetString("SignUp")</a></li>
-											<li><a asp-controller="Auth" asp-action="ForgotPassword">@Localizer.GetString("ForgotPassword")</a></li>
-										}
-										else
-										{
-											<li><hr class="dropdown-divider"></li>
-											<li><a asp-controller="Auth" asp-action="Logout">@Localizer.GetString("Logout")</a></li>
-										}
-									</ul>
-								</li>
-								<!-- end dropdown -->
-							}
 						</ul>
 						<!-- end header nav -->
 
@@ -182,23 +125,6 @@
 						</div>
 						<!-- end language selector -->
 
-					@if (navSettings.ShowSignInButton)
-					{
-								@if (Context.Session.GetInt32("UserId").HasValue)
-								{
-									<a asp-controller="Auth" asp-action="Profile" class="header__sign-in">
-										<i class="ti ti-user"></i>
-										<span>@Context.Session.GetString("UserName")</span>
-									</a>
-								}
-								else
-								{
-									<a asp-controller="Auth" asp-action="SignIn" class="header__sign-in">
-										<i class="ti ti-login"></i>
-										<span>@Localizer.GetString("SignIn").ToLower()</span>
-									</a>
-								}
-					}
 						<!-- end header auth -->
 
 						<!-- header menu btn -->

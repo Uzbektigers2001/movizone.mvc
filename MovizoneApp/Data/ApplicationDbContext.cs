@@ -23,7 +23,6 @@ namespace MovizoneApp.Data
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<WatchlistItem> WatchlistItems { get; set; } = null!;
-        public DbSet<PricingPlan> PricingPlans { get; set; } = null!;
         public DbSet<Episode> Episodes { get; set; } = null!;
         public DbSet<SiteSettings> SiteSettings { get; set; } = null!;
 
@@ -45,7 +44,6 @@ namespace MovizoneApp.Data
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
             modelBuilder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
             modelBuilder.Entity<WatchlistItem>().HasQueryFilter(w => !w.IsDeleted);
-            modelBuilder.Entity<PricingPlan>().HasQueryFilter(p => !p.IsDeleted);
             modelBuilder.Entity<Episode>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<SiteSettings>().HasQueryFilter(s => !s.IsDeleted);
 

@@ -59,7 +59,20 @@ try
 
     // Add JWT Authentication
     var jwtSettings = builder.Configuration.GetSection("Jwt");
-    var secretKey = jwtSettings["SecretKey"] ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!";
+    var secretKey = jwtSettings["SecretKey"];
+
+    if (string.IsNullOrEmpty(secretKey))
+    {
+        throw new InvalidOperationException(
+            "JWT SecretKey is not configured. Set Jwt__SecretKey environment variable or configure it in appsettings.json");
+    }
+
+    if (secretKey.Length < 32)
+    {
+        throw new InvalidOperationException(
+            "JWT SecretKey must be at least 32 characters long for security");
+    }
+
     var key = Encoding.ASCII.GetBytes(secretKey);
 
     builder.Services.AddAuthentication(options =>
@@ -69,7 +82,7 @@ try
     })
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false;
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -110,7 +123,6 @@ try
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
     builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
-    builder.Services.AddScoped<IPricingPlanRepository, PricingPlanRepository>();
 
     // Register Infrastructure Services
     builder.Services.AddScoped<IJwtService, JwtService>();
@@ -122,13 +134,11 @@ try
     builder.Services.AddScoped<IUserApplicationService, UserApplicationService>();
     builder.Services.AddScoped<IReviewApplicationService, ReviewApplicationService>();
     builder.Services.AddScoped<IWatchlistApplicationService, WatchlistApplicationService>();
-    builder.Services.AddScoped<IPricingApplicationService, PricingApplicationService>();
 
     // Keep old services for backward compatibility (will be removed after migration)
     builder.Services.AddSingleton<IMovieService, MovieService>();
     builder.Services.AddSingleton<ITVSeriesService, TVSeriesService>();
     builder.Services.AddSingleton<IActorService, ActorService>();
-    builder.Services.AddSingleton<IPricingService, PricingService>();
     builder.Services.AddSingleton<IUserService, UserService>();
     builder.Services.AddSingleton<IReviewService, ReviewService>();
     builder.Services.AddSingleton<ICommentService, CommentService>();
@@ -142,11 +152,32 @@ try
     // Add CORS (for API endpoints if needed)
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AllowAll", policy =>
+        options.AddPolicy("AllowSpecificOrigins", policy =>
         {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
+            var allowedOrigins = builder.Configuration.GetValue<string>("CORS:AllowedOrigins")
+                ?.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(o => o.Trim())
+                .ToArray();
+
+            if (allowedOrigins != null && allowedOrigins.Length > 0)
+            {
+                policy.WithOrigins(allowedOrigins)
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials();
+            }
+            else if (builder.Environment.IsDevelopment())
+            {
+                // Allow all origins only in development
+                Log.Warning("CORS: No specific origins configured. Allowing all origins (Development mode only)");
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            }
+            else
+            {
+                Log.Error("CORS: No allowed origins configured for production. CORS will block all requests.");
+            }
         });
     });
 
@@ -183,7 +214,7 @@ try
 
     app.UseRouting();
 
-    app.UseCors("AllowAll");
+    app.UseCors("AllowSpecificOrigins");
 
     app.UseAuthentication();
     app.UseAuthorization();

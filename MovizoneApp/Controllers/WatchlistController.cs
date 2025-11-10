@@ -11,7 +11,7 @@ using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
 {
-    public class WatchlistController : Controller
+    public class WatchlistController : BaseController
     {
         private readonly IWatchlistApplicationService _watchlistService;
         private readonly IMovieApplicationService _movieService;
@@ -115,15 +115,20 @@ namespace MovizoneApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(int movieId, string returnUrl)
         {
-            // In real app, get userId from authenticated user
-            int userId = 1;
-            _logger.LogInformation("Adding movie {MovieId} to watchlist for user {UserId}", movieId, userId);
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+            {
+                TempData["Error"] = "You must be logged in to add to watchlist";
+                return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index") : Redirect(returnUrl);
+            }
+
+            _logger.LogInformation("Adding movie {MovieId} to watchlist for user {UserId}", movieId, userId.Value);
 
             try
             {
                 var createDto = new CreateWatchlistItemDto
                 {
-                    UserId = userId,
+                    UserId = userId.Value,
                     MovieId = movieId
                 };
                 await _watchlistService.AddToWatchlistAsync(createDto);
@@ -131,7 +136,7 @@ namespace MovizoneApp.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error adding to watchlist for user {UserId}", userId);
+                _logger.LogError(ex, "Error adding to watchlist for user {UserId}", userId.Value);
                 TempData["Error"] = "Failed to add to watchlist.";
             }
 
@@ -145,18 +150,23 @@ namespace MovizoneApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int movieId, string returnUrl)
         {
-            // In real app, get userId from authenticated user
-            int userId = 1;
-            _logger.LogInformation("Removing movie {MovieId} from watchlist for user {UserId}", movieId, userId);
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+            {
+                TempData["Error"] = "You must be logged in to remove from watchlist";
+                return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index") : Redirect(returnUrl);
+            }
+
+            _logger.LogInformation("Removing movie {MovieId} from watchlist for user {UserId}", movieId, userId.Value);
 
             try
             {
-                await _watchlistService.RemoveFromWatchlistAsync(userId, movieId);
+                await _watchlistService.RemoveFromWatchlistAsync(userId.Value, movieId);
                 TempData["Success"] = "Removed from your watchlist!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error removing from watchlist for user {UserId}", userId);
+                _logger.LogError(ex, "Error removing from watchlist for user {UserId}", userId.Value);
                 TempData["Error"] = "Failed to remove from watchlist.";
             }
 
@@ -170,9 +180,13 @@ namespace MovizoneApp.Controllers
         [HttpGet]
         public async Task<IActionResult> IsInWatchlist(int movieId)
         {
-            // In real app, get userId from authenticated user
-            int userId = 1;
-            var isInWatchlist = await _watchlistService.IsInWatchlistAsync(userId, movieId);
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+            {
+                return Json(new { isInWatchlist = false });
+            }
+
+            var isInWatchlist = await _watchlistService.IsInWatchlistAsync(userId.Value, movieId);
             return Json(new { isInWatchlist });
         }
     }
