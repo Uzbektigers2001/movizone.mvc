@@ -95,3 +95,22 @@ MovizoneApp/wwwroot/img/covers/cover_*
 # Temporary extraction folder
 temp_extract/
 temp_extract_full/
+
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+appsettings.Production.json
+**/appsettings.*.json
+!**/appsettings.Development.json
+
+# Node modules and Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Production build files
+*.tsbuildinfo
+next-env.d.ts

@@ -10,7 +10,7 @@ using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
 {
-    public class TVSeriesController : Controller
+    public class TVSeriesController : BaseController
     {
         private readonly ITVSeriesApplicationService _tvSeriesService;
         private readonly IReviewApplicationService _reviewService;
@@ -65,7 +65,10 @@ namespace MovizoneApp.Controllers
             var reviews = _mapper.Map<IEnumerable<Review>>(reviewsDto);
             var averageRating = await _reviewService.GetAverageRatingByTVSeriesIdAsync(id);
             var reviewCount = await _reviewService.GetReviewCountByTVSeriesIdAsync(id);
-            var isInWatchlist = await _watchlistService.IsInWatchlistAsync(1, id); // userId = 1 for demo
+
+            // Check if series is in watchlist for authenticated user
+            var userId = GetCurrentUserId();
+            var isInWatchlist = userId.HasValue && await _watchlistService.IsInWatchlistAsync(userId.Value, id);
 
             ViewBag.Reviews = reviews;
             ViewBag.AverageRating = averageRating;
@@ -97,10 +100,17 @@ namespace MovizoneApp.Controllers
 
             try
             {
+                var userId = GetCurrentUserId();
+                if (!userId.HasValue)
+                {
+                    TempData["Error"] = "You must be logged in to add a review";
+                    return RedirectToAction("Details", new { id = seriesId });
+                }
+
                 var createReviewDto = new CreateReviewDto
                 {
                     TVSeriesId = seriesId, // Use TVSeriesId for series reviews
-                    UserId = 1,
+                    UserId = userId.Value,
                     Comment = comment,
                     Rating = rating
                 };

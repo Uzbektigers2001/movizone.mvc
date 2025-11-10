@@ -9,7 +9,7 @@ using MovizoneApp.Models;
 
 namespace MovizoneApp.Controllers
 {
-    public class MovieController : Controller
+    public class MovieController : BaseController
     {
         private readonly IMovieApplicationService _movieService;
         private readonly IReviewApplicationService _reviewService;
@@ -64,7 +64,10 @@ namespace MovizoneApp.Controllers
             var reviews = _mapper.Map<IEnumerable<Review>>(reviewsDto);
             var averageRating = await _reviewService.GetAverageRatingAsync(id);
             var reviewCount = await _reviewService.GetReviewCountAsync(id);
-            var isInWatchlist = await _watchlistService.IsInWatchlistAsync(1, id); // userId = 1 for demo
+
+            // Check if movie is in watchlist for authenticated user
+            var userId = GetCurrentUserId();
+            var isInWatchlist = userId.HasValue && await _watchlistService.IsInWatchlistAsync(userId.Value, id);
 
             ViewBag.Reviews = reviews;
             ViewBag.AverageRating = averageRating;
@@ -91,10 +94,17 @@ namespace MovizoneApp.Controllers
 
             try
             {
+                var userId = GetCurrentUserId();
+                if (!userId.HasValue)
+                {
+                    TempData["Error"] = "You must be logged in to add a review";
+                    return RedirectToAction("Details", new { id = movieId });
+                }
+
                 var createReviewDto = new CreateReviewDto
                 {
                     MovieId = movieId,
-                    UserId = 1, // In real app, get from authenticated user
+                    UserId = userId.Value,
                     Comment = comment,
                     Rating = rating
                 };
