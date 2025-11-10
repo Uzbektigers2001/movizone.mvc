@@ -1,0 +1,125 @@
+/* Asilmedia.org style layout */
+/* Desktop: 70% center content, 15% ads on each side */
+/* Mobile: 100% width, no ads */
+
+body {
+    background-color: #0f0f0f;
+    margin: 0;
+    padding: 0;
+}
+
+/* Page wrapper - full width */
+.page-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content area with sidebars */
+.main-content-wrapper {
+    display: flex;
+    width: 100%;
+    flex: 1;
+}
+
+/* Left ad zone - 15% */
+.ad-zone-left {
+    width: 15%;
+    background-color: #0a0a0a;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 10px;
+}
+
+/* Center content zone - 70% */
+.content-zone {
+    width: 70%;
+    background-color: #1a1a1a;
+    min-height: 100vh;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Right ad zone - 15% */
+.ad-zone-right {
+    width: 15%;
+    background-color: #0a0a0a;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 10px;
+}
+
+/* Ad placeholder styling */
+.ad-placeholder {
+    width: 100%;
+    max-width: 200px;
+    height: 600px;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    border: 1px solid #333;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Mobile responsive - hide ads, make content 100% */
+@media (max-width: 1024px) {
+    .ad-zone-left,
+    .ad-zone-right {
+        display: none;
+    }
+    
+    .content-zone {
+        width: 100%;
+    }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1400px) and (min-width: 1025px) {
+    .ad-zone-left,
+    .ad-zone-right {
+        width: 12%;
+    }
+    
+    .content-zone {
+        width: 76%;
+    }
+}
+
+/* Extra small ads on very wide screens */
+@media (min-width: 1920px) {
+    .ad-zone-left,
+    .ad-zone-right {
+        width: 15%;
+    }
+    
+    .content-zone {
+        width: 70%;
+    }
+    
+    .ad-placeholder {
+        max-width: 250px;
+        height: 800px;
+    }
+}
+
+/* Make header and footer stay inside content zone */
+.content-zone .header {
+    background-color: #1a1a1a;
+}
+
+.content-zone .footer {
+    background-color: #141414;
+}
