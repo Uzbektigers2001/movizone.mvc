@@ -520,6 +520,10 @@ button, .btn, input[type="submit"], input[type="button"] {
 	transform: translate(-50%, -50%);
 	width: 60px;
 	height: 60px;
+	min-width: 60px;
+	min-height: 60px;
+	max-width: 60px;
+	max-height: 60px;
 	background: linear-gradient(135deg, var(--main-color), var(--second-color));
 	border-radius: 50%;
 	display: flex;
@@ -531,8 +535,11 @@ button, .btn, input[type="submit"], input[type="button"] {
 	transition: all 0.3s ease;
 	z-index: 2;
 	text-decoration: none;
-	flex-shrink: 0; /* Prevent distortion */
-	aspect-ratio: 1 / 1; /* Ensure perfect circle */
+	padding: 0;
+	margin: 0;
+	border: none;
+	box-sizing: border-box;
+	flex-shrink: 0;
 }
 
 .item:hover .item__play {
@@ -541,10 +548,9 @@ button, .btn, input[type="submit"], input[type="button"] {
 }
 
 .item__play i {
-	margin-left: 2px; /* Subtle adjustment for play icon visual centering */
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: block;
+	line-height: 1;
+	transform: translateX(1px); /* Play icon optical centering */
 }
 
 .item__rate {

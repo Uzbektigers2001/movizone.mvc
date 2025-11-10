@@ -501,7 +501,9 @@
     "NoItemsAvailable": "Нет доступных элементов",
     "NoUsersAvailable": "Нет доступных пользователей",
     "NoReviewsAvailable": "Нет доступных отзывов",
-    "AddItem": "Добавить элемент"
+    "AddItem": "Добавить элемент",
+    "Previous": "Предыдущая",
+    "Next": "Следующая"
   },
   "Auth": {
     "EmailAddress": "Email адрес",

@@ -1,6 +1,7 @@
 @model MovizoneApp.DTOs.UpdateUserDto
+@inject MovizoneApp.Services.ILocalizationService Localizer
 @{
-    ViewData["Title"] = "Edit User";
+    ViewData["Title"] = Localizer.GetString("Admin", "EditUser");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 

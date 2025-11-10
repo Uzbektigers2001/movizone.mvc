@@ -501,7 +501,9 @@
     "NoItemsAvailable": "No items available",
     "NoUsersAvailable": "No users available",
     "NoReviewsAvailable": "No reviews available",
-    "AddItem": "Add Item"
+    "AddItem": "Add Item",
+    "Previous": "Previous",
+    "Next": "Next"
   },
   "Auth": {
     "EmailAddress": "Email Address",

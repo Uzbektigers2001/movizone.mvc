@@ -1,12 +1,12 @@
 @model List<MovizoneApp.Models.Review>
 @inject MovizoneApp.Services.ILocalizationService Localizer
 @{
-    ViewData["Title"] = "Reviews Management";
+    ViewData["Title"] = Localizer.GetString("Admin", "ReviewsManagement");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="ti ti-star-half-filled"></i> Reviews Management</h2>
+    <h2><i class="ti ti-star-half-filled"></i> @Localizer.GetString("Admin", "ReviewsManagement")</h2>
 </div>
 
 <!-- Search Form -->
@@ -14,11 +14,11 @@
     <div class="card-body">
         <form asp-action="Reviews" method="get" class="row g-3">
             <div class="col-md-10">
-                <input type="text" name="search" class="form-control" placeholder="Search reviews by user or comment..." value="@ViewBag.SearchQuery">
+                <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchReviewsByUserOrComment")" value="@ViewBag.SearchQuery">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">
-                    <i class="ti ti-search"></i> Search
+                    <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
                 </button>
             </div>
         </form>
@@ -41,13 +41,13 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Movie ID</th>
-                            <th>Rating</th>
-                            <th>Comment</th>
-                            <th>Date</th>
-                            <th>Actions</th>
+                            <th>@Localizer.GetString("Admin", "ID")</th>
+                            <th>@Localizer.GetString("Admin", "User")</th>
+                            <th>@Localizer.GetString("Admin", "MovieID")</th>
+                            <th>@Localizer.GetString("Movie", "Rating")</th>
+                            <th>@Localizer.GetString("Admin", "Comment")</th>
+                            <th>@Localizer.GetString("Admin", "Date")</th>
+                            <th>@Localizer.GetString("Common", "Actions")</th>
                         </tr>
                     </thead>
                     <tbody>

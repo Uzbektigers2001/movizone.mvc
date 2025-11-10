@@ -1,6 +1,7 @@
 @model List<MovizoneApp.Models.Movie>
+@inject MovizoneApp.Services.ILocalizationService Localizer
 @{
-    ViewData["Title"] = "Movies Management";
+    ViewData["Title"] = Localizer.GetString("Admin", "MoviesManagement");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -33,14 +34,14 @@
             <table class="table table-hover align-middle">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>@Localizer.GetString("Admin", "ID")</th>
                         <th>@Localizer.GetString("Movie", "Title")</th>
-                        <th>@Localizer.GetString("Year")</th>
+                        <th>@Localizer.GetString("Common", "Year")</th>
                         <th>@Localizer.GetString("Movie", "Rating")</th>
                         <th>@Localizer.GetString("Admin", "Genre")</th>
                         <th>@Localizer.GetString("Admin", "Duration")</th>
                         <th>@Localizer.GetString("Admin", "Featured")</th>
-                        <th>@Localizer.GetString("Actions")</th>
+                        <th>@Localizer.GetString("Common", "Actions")</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,7 +98,7 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item @(currentPage == 1 ? "disabled" : "")">
                         <a class="page-link" asp-action="Movies" asp-route-page="@(currentPage - 1)" asp-route-search="@searchQuery">
-                            <i class="ti ti-chevron-left"></i> Previous
+                            <i class="ti ti-chevron-left"></i> @Localizer.GetString("Admin", "Previous")
                         </a>
                     </li>
 
@@ -110,7 +111,7 @@
 
                     <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
                         <a class="page-link" asp-action="Movies" asp-route-page="@(currentPage + 1)" asp-route-search="@searchQuery">
-                            Next <i class="ti ti-chevron-right"></i>
+                            @Localizer.GetString("Admin", "Next") <i class="ti ti-chevron-right"></i>
                         </a>
                     </li>
                 </ul>
