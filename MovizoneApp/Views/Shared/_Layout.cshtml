@@ -58,16 +58,9 @@
 						<ul class="header__nav">
 							@if (navSettings.ShowHomeInNav)
 							{
-								<!-- dropdown -->
 								<li class="header__nav-item">
-									<a class="header__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@Localizer.GetString("Home") <i class="ti ti-chevron-down"></i></a>
-
-									<ul class="dropdown-menu header__dropdown-menu">
-										<li><a asp-controller="Home" asp-action="Index">@Localizer.GetString("Home")</a></li>
-										<li><a asp-controller="Statistics" asp-action="Index">@Localizer.GetString("Statistics")</a></li>
-									</ul>
+									<a asp-controller="Home" asp-action="Index" class="header__nav-link">@Localizer.GetString("Home")</a>
 								</li>
-								<!-- end dropdown -->
 							}
 
 							<!-- Catalog Items -->
