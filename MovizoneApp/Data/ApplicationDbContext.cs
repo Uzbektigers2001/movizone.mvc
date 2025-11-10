@@ -22,7 +22,6 @@ namespace MovizoneApp.Data
         public DbSet<Actor> Actors { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
-        public DbSet<WatchlistItem> WatchlistItems { get; set; } = null!;
         public DbSet<Episode> Episodes { get; set; } = null!;
         public DbSet<SiteSettings> SiteSettings { get; set; } = null!;
 
@@ -43,7 +42,6 @@ namespace MovizoneApp.Data
             modelBuilder.Entity<Actor>().HasQueryFilter(a => !a.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
             modelBuilder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
-            modelBuilder.Entity<WatchlistItem>().HasQueryFilter(w => !w.IsDeleted);
             modelBuilder.Entity<Episode>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<SiteSettings>().HasQueryFilter(s => !s.IsDeleted);
 
@@ -69,10 +67,6 @@ namespace MovizoneApp.Data
             modelBuilder.Entity<Review>().HasIndex(r => r.MovieId);
             modelBuilder.Entity<Review>().HasIndex(r => r.UserId);
             modelBuilder.Entity<Review>().HasIndex(r => r.IsDeleted);
-
-            modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.UserId);
-            modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.MovieId);
-            modelBuilder.Entity<WatchlistItem>().HasIndex(w => w.IsDeleted);
 
             modelBuilder.Entity<Episode>().HasIndex(e => e.TVSeriesId);
             modelBuilder.Entity<Episode>().HasIndex(e => e.IsDeleted);

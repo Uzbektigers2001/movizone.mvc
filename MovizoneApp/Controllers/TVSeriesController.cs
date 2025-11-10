@@ -14,20 +14,17 @@ namespace MovizoneApp.Controllers
     {
         private readonly ITVSeriesApplicationService _tvSeriesService;
         private readonly IReviewApplicationService _reviewService;
-        private readonly IWatchlistApplicationService _watchlistService;
         private readonly ILogger<TVSeriesController> _logger;
         private readonly IMapper _mapper;
 
         public TVSeriesController(
             ITVSeriesApplicationService tvSeriesService,
             IReviewApplicationService reviewService,
-            IWatchlistApplicationService watchlistService,
             ILogger<TVSeriesController> logger,
             IMapper mapper)
         {
             _tvSeriesService = tvSeriesService;
             _reviewService = reviewService;
-            _watchlistService = watchlistService;
             _logger = logger;
             _mapper = mapper;
         }
@@ -66,14 +63,9 @@ namespace MovizoneApp.Controllers
             var averageRating = await _reviewService.GetAverageRatingByTVSeriesIdAsync(id);
             var reviewCount = await _reviewService.GetReviewCountByTVSeriesIdAsync(id);
 
-            // Check if series is in watchlist for authenticated user
-            var userId = GetCurrentUserId();
-            var isInWatchlist = userId.HasValue && await _watchlistService.IsInWatchlistAsync(userId.Value, id);
-
             ViewBag.Reviews = reviews;
             ViewBag.AverageRating = averageRating;
             ViewBag.ReviewCount = reviewCount;
-            ViewBag.IsInWatchlist = isInWatchlist;
 
             // Get similar series based on genre (exclude current series)
             var allSeriesDto = await _tvSeriesService.GetAllSeriesAsync();
