@@ -73,7 +73,7 @@
                     <input asp-for="ThumbnailImage" class="form-control" placeholder="/img/episodes/thumbnail1.jpg">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadNewThumbnail")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadNewThumbnail")</label>
                     <input type="file" name="thumbnailFile" class="form-control" accept="image/*">
                 </div>
             </div>
@@ -85,7 +85,7 @@
                     <small class="text-muted">@Localizer.GetString("Admin", "OrUploadNewVideoBelow")</small>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">@Localizer.GetString("UploadVideoFile")</label>
+                    <label class="form-label">@Localizer.GetString("Common", "UploadVideoFile")</label>
                     <input type="file" name="videoFile" class="form-control" accept="video/*">
                     <small class="text-muted">@Localizer.GetString("Admin", "SupportedFormats")</small>
                 </div>
@@ -100,7 +100,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "UpdateEpisode")
                 </button>
-                <a asp-action="Episodes" asp-route-seriesId="@Model.TVSeriesId" class="btn btn-outline-secondary">@Localizer.GetString("Cancel")</a>
+                <a asp-action="Episodes" asp-route-seriesId="@Model.TVSeriesId" class="btn btn-outline-secondary">@Localizer.GetString("Common", "Cancel")</a>
             </div>
         </form>
     </div>
