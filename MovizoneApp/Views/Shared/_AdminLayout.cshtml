@@ -3,233 +3,275 @@
 @{
     var currentCulture = Localizer.GetCurrentCulture();
     var availableLanguages = Localizer.GetAvailableLanguages();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@currentCulture">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewData["Title"] - PlayGo Admin</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <style>
-        :root {
-            --sidebar-width: 250px;
-            --sidebar-collapsed-width: 70px;
-            --header-height: 60px;
-        }
-        body {
-            background: #f8f9fa;
-            transition: all 0.3s ease;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: var(--sidebar-width);
-            background: #2d3748;
-            padding-top: var(--header-height);
-            overflow-y: auto;
-            overflow-x: hidden;
-            transition: width 0.3s ease;
-            z-index: 1001;
-        }
-        .sidebar .nav-link {
-            color: #cbd5e0;
-            padding: 0.75rem 1.5rem;
-            border-left: 3px solid transparent;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            border-left-color: #ff55a5;
-        }
-        .sidebar .nav-link i {
-            min-width: 24px;
-        }
-        .sidebar h5 {
-            transition: opacity 0.3s ease;
-        }
-        .admin-header {
-            position: fixed;
-            top: 0;
-            left: var(--sidebar-width);
-            right: 0;
-            height: var(--header-height);
-            background: #fff;
-            border-bottom: 1px solid #e2e8f0;
-            z-index: 1000;
-            transition: left 0.3s ease;
-        }
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding-top: calc(var(--header-height) + 2rem);
-            padding-bottom: 2rem;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        /* Collapsed state */
-        body.sidebar-collapsed .sidebar {
-            width: var(--sidebar-collapsed-width);
-        }
-        body.sidebar-collapsed .sidebar h5 {
-            opacity: 0;
-        }
-        body.sidebar-collapsed .sidebar .nav-link {
-            padding: 0.75rem 1rem;
-            justify-content: center;
-        }
-        body.sidebar-collapsed .sidebar .nav-link span {
-            display: none;
-        }
-        body.sidebar-collapsed .admin-header {
-            left: var(--sidebar-collapsed-width);
-        }
-        body.sidebar-collapsed .main-content {
-            margin-left: var(--sidebar-collapsed-width);
-        }
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/css/admin.css">
 
-        .sidebar-toggle {
-            background: none;
-            border: none;
-            color: #6b7280;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .sidebar-toggle:hover {
-            color: #ff55a5;
-        }
-    </style>
+	<!-- Icon font -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+	<!-- Favicons -->
+	<link rel="icon" type="image/png" href="~/favicon.ico">
+
+	<title>@ViewData["Title"] - PlayGo Admin</title>
 </head>
+
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="px-3 py-2">
-            <h5 class="text-white mb-3">
-                <i class="ti ti-flame" style="color: #ff55a5;"></i> PlayGo
-            </h5>
-        </div>
-        <nav class="nav flex-column">
-            <a asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <i class="ti ti-dashboard me-2"></i><span>@Localizer.GetString("Admin", "Dashboard")</span>
-            </a>
-            <a asp-action="Movies" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Movies" ? "active" : "")">
-                <i class="ti ti-movie me-2"></i><span>@Localizer.GetString("Movies")</span>
-            </a>
-            <a asp-action="Series" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Series" ? "active" : "")">
-                <i class="ti ti-device-tv me-2"></i><span>@Localizer.GetString("TVSeries")</span>
-            </a>
-            <a asp-action="Episodes" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Episodes" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateEpisode" || ViewContext.RouteData.Values["action"]?.ToString() == "EditEpisode" ? "active" : "")">
-                <i class="ti ti-list me-2"></i><span>@Localizer.GetString("TVSeries", "Episodes")</span>
-            </a>
-            <a asp-action="Actors" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Actors" ? "active" : "")">
-                <i class="ti ti-users me-2"></i><span>@Localizer.GetString("Actors")</span>
-            </a>
-            <a asp-action="Comments" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Comments" ? "active" : "")">
-                <i class="ti ti-message me-2"></i><span>@Localizer.GetString("Comments")</span>
-            </a>
-            <a asp-action="Reviews" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reviews" ? "active" : "")">
-                <i class="ti ti-star-half-filled me-2"></i><span>@Localizer.GetString("Reviews")</span>
-            </a>
-            <a asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
-                <i class="ti ti-user me-2"></i><span>@Localizer.GetString("Admin", "ManageUsers")</span>
-            </a>
-            <a asp-action="Settings" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Settings" ? "active" : "")">
-                <i class="ti ti-settings me-2"></i><span>@Localizer.GetString("Admin", "SiteSettings")</span>
-            </a>
-            <hr class="my-2" style="border-color: rgba(255,255,255,0.1);">
-            <a asp-controller="Home" asp-action="Index" class="nav-link">
-                <i class="ti ti-world me-2"></i><span>@Localizer.GetString("Admin", "ViewSite")</span>
-            </a>
-            <a asp-action="Logout" class="nav-link">
-                <i class="ti ti-logout me-2"></i><span>@Localizer.GetString("Logout")</span>
-            </a>
-        </nav>
-    </div>
+	<!-- header (mobile) -->
+	<header class="header">
+		<div class="header__content">
+			<!-- header logo -->
+			<a asp-action="Index" class="header__logo">
+				<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M16 4L4 28h24L16 4z" fill="#ff55a5"/>
+				</svg>
+			</a>
+			<!-- end header logo -->
 
-    <!-- Header -->
-    <header class="admin-header d-flex align-items-center px-4">
-        <button class="sidebar-toggle me-3" id="sidebarToggle" title="@Localizer.GetString("Admin", "ToggleSidebar")">
-            <i class="ti ti-menu-2"></i>
-        </button>
-        <h4 class="mb-0">@ViewData["Title"]</h4>
-        <div class="ms-auto d-flex align-items-center">
-            <!-- Language Selector -->
-            <div class="dropdown me-3">
-                <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="ti ti-world"></i>
-                    @{
-                        var currentLangName = availableLanguages.FirstOrDefault(l => l.Code == currentCulture).Name ?? "EN";
-                    }
-                    <span>@currentLangName</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    @foreach (var lang in availableLanguages)
-                    {
-                        <li>
-                            <form asp-controller="Language" asp-action="SetLanguage" method="post" class="language-form" data-culture="@lang.Code">
-                                <input type="hidden" name="culture" value="@lang.Code" />
-                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                <a href="#" class="dropdown-item @(currentCulture == lang.Code ? "active" : "")" onclick="event.preventDefault(); this.closest('form').submit();">
-                                    @lang.Name
-                                </a>
-                            </form>
-                        </li>
-                    }
-                </ul>
-            </div>
-            <span class="text-muted">@Localizer.GetString("Admin", "Welcome"), @Context.Session.GetString("UserName")</span>
-        </div>
-    </header>
+			<!-- header menu btn -->
+			<button class="header__btn" type="button" id="headerMenuBtn">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+			<!-- end header menu btn -->
+		</div>
+	</header>
+	<!-- end header -->
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container-fluid px-4">
-            @RenderBody()
-        </div>
-    </main>
+	<!-- sidebar -->
+	<div class="sidebar">
+		<!-- sidebar logo -->
+		<a asp-action="Index" class="sidebar__logo">
+			<svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M16 4L4 28h24L16 4z" fill="#ff55a5"/>
+				<text x="35" y="24" fill="#fff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">PlayGo</text>
+			</svg>
+		</a>
+		<!-- end sidebar logo -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- sidebar user -->
+		<div class="sidebar__user">
+			<div class="sidebar__user-img">
+				<svg viewBox="0 0 24 24" fill="#ff55a5" xmlns="http://www.w3.org/2000/svg">
+					<circle cx="12" cy="8" r="4"/>
+					<path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+				</svg>
+			</div>
 
-    <script>
-        // Sidebar Toggle Functionality
-        (function() {
-            'use strict';
+			<div class="sidebar__user-title">
+				<span>Admin</span>
+				<p>@(Context.Session.GetString("UserName") ?? "Administrator")</p>
+			</div>
 
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const body = document.body;
+			<a asp-action="Logout" class="sidebar__user-btn" type="button" title="@Localizer.GetString("Common", "Logout")">
+				<i class="ti ti-logout"></i>
+			</a>
+		</div>
+		<!-- end sidebar user -->
 
-            // Get saved state from localStorage
-            const savedState = localStorage.getItem('admin_sidebar_collapsed');
-            if (savedState === 'true') {
-                body.classList.add('sidebar-collapsed');
-            }
+		<!-- sidebar nav -->
+		<div class="sidebar__nav-wrap">
+			<ul class="sidebar__nav">
+				<li class="sidebar__nav-item">
+					<a asp-action="Index" class="sidebar__nav-link @(currentAction == "Index" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-layout-grid"></i>
+						<span>@Localizer.GetString("Admin", "Dashboard")</span>
+					</a>
+				</li>
 
-            // Toggle sidebar on button click
-            sidebarToggle.addEventListener('click', function() {
-                body.classList.toggle('sidebar-collapsed');
+				<li class="sidebar__nav-item">
+					<a asp-action="Movies" class="sidebar__nav-link @(currentAction == "Movies" || currentAction == "CreateMovie" || currentAction == "EditMovie" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-movie"></i>
+						<span>@Localizer.GetString("Common", "Movies")</span>
+					</a>
+				</li>
 
-                // Save state to localStorage
-                const isCollapsed = body.classList.contains('sidebar-collapsed');
-                localStorage.setItem('admin_sidebar_collapsed', isCollapsed);
-            });
+				<li class="sidebar__nav-item">
+					<a asp-action="Series" class="sidebar__nav-link @(currentAction == "Series" || currentAction == "CreateSeries" || currentAction == "EditSeries" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-device-tv"></i>
+						<span>@Localizer.GetString("Common", "TVSeries")</span>
+					</a>
+				</li>
 
-            // Optional: Keyboard shortcut (Ctrl/Cmd + B)
-            document.addEventListener('keydown', function(e) {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                    e.preventDefault();
-                    sidebarToggle.click();
-                }
-            });
-        })();
-    </script>
+				<li class="sidebar__nav-item">
+					<a asp-action="Episodes" class="sidebar__nav-link @(currentAction == "Episodes" || currentAction == "CreateEpisode" || currentAction == "EditEpisode" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-list"></i>
+						<span>@Localizer.GetString("TVSeries", "Episodes")</span>
+					</a>
+				</li>
 
-    @await RenderSectionAsync("Scripts", required: false)
+				<li class="sidebar__nav-item">
+					<a asp-action="Actors" class="sidebar__nav-link @(currentAction == "Actors" || currentAction == "CreateActor" || currentAction == "EditActor" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-users"></i>
+						<span>@Localizer.GetString("Common", "Actors")</span>
+					</a>
+				</li>
+
+				<li class="sidebar__nav-item">
+					<a asp-action="Comments" class="sidebar__nav-link @(currentAction == "Comments" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-message"></i>
+						<span>@Localizer.GetString("Comments")</span>
+					</a>
+				</li>
+
+				<li class="sidebar__nav-item">
+					<a asp-action="Reviews" class="sidebar__nav-link @(currentAction == "Reviews" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-star-half-filled"></i>
+						<span>@Localizer.GetString("Reviews")</span>
+					</a>
+				</li>
+
+				<li class="sidebar__nav-item">
+					<a asp-action="Users" class="sidebar__nav-link @(currentAction == "Users" || currentAction == "EditUser" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-user"></i>
+						<span>@Localizer.GetString("Admin", "ManageUsers")</span>
+					</a>
+				</li>
+
+				<li class="sidebar__nav-item">
+					<a asp-action="Settings" class="sidebar__nav-link @(currentAction == "Settings" ? "sidebar__nav-link--active" : "")">
+						<i class="ti ti-settings"></i>
+						<span>@Localizer.GetString("Admin", "SiteSettings")</span>
+					</a>
+				</li>
+
+				<!-- Language dropdown -->
+				<li class="sidebar__nav-item">
+					<a class="sidebar__nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="ti ti-world"></i>
+						<span>@Localizer.GetString("Common", "Language")</span>
+						<i class="ti ti-chevron-down" style="margin-left: auto;"></i>
+					</a>
+
+					<ul class="dropdown-menu sidebar__dropdown-menu">
+						@foreach (var lang in availableLanguages)
+						{
+							<li>
+								<form asp-controller="Language" asp-action="SetLanguage" method="post" class="language-form">
+									<input type="hidden" name="culture" value="@lang.Code" />
+									<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+									<a href="#" class="@(currentCulture == lang.Code ? "active" : "")" onclick="event.preventDefault(); this.closest('form').submit();">
+										@lang.Name
+									</a>
+								</form>
+							</li>
+						}
+					</ul>
+				</li>
+
+				<li class="sidebar__nav-item">
+					<a asp-controller="Home" asp-action="Index" class="sidebar__nav-link">
+						<i class="ti ti-arrow-left"></i>
+						<span>@Localizer.GetString("Admin", "ViewSite")</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<!-- end sidebar nav -->
+
+		<!-- sidebar copyright -->
+		<div class="sidebar__copyright">
+			© PlayGo, @DateTime.Now.Year. <br>
+			Built with <i class="ti ti-heart" style="color: #ff55a5;"></i>
+		</div>
+		<!-- end sidebar copyright -->
+	</div>
+	<!-- end sidebar -->
+
+	<!-- main content -->
+	<main class="main">
+		<div class="container-fluid">
+			@RenderBody()
+		</div>
+	</main>
+	<!-- end main content -->
+
+	<!-- JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		// Admin Panel Scripts
+		(function() {
+			'use strict';
+
+			// Sidebar Toggle
+			const body = document.body;
+			const headerMenuBtn = document.getElementById('headerMenuBtn');
+			const sidebarToggle = document.querySelectorAll('[data-sidebar-toggle]');
+
+			// Get saved state from localStorage
+			const savedState = localStorage.getItem('admin_sidebar_collapsed');
+			if (savedState === 'true' && window.innerWidth > 991) {
+				body.classList.add('sidebar-collapsed');
+			}
+
+			// Mobile menu toggle
+			if (headerMenuBtn) {
+				headerMenuBtn.addEventListener('click', function() {
+					body.classList.toggle('sidebar-open');
+				});
+			}
+
+			// Desktop sidebar collapse toggle
+			sidebarToggle.forEach(function(btn) {
+				btn.addEventListener('click', function() {
+					if (window.innerWidth > 991) {
+						body.classList.toggle('sidebar-collapsed');
+						const isCollapsed = body.classList.contains('sidebar-collapsed');
+						localStorage.setItem('admin_sidebar_collapsed', isCollapsed);
+					}
+				});
+			});
+
+			// Close mobile menu when clicking outside
+			document.addEventListener('click', function(e) {
+				if (window.innerWidth <= 991) {
+					const sidebar = document.querySelector('.sidebar');
+					const isClickInsideSidebar = sidebar && sidebar.contains(e.target);
+					const isClickOnMenuBtn = headerMenuBtn && headerMenuBtn.contains(e.target);
+
+					if (!isClickInsideSidebar && !isClickOnMenuBtn && body.classList.contains('sidebar-open')) {
+						body.classList.remove('sidebar-open');
+					}
+				}
+			});
+
+			// Keyboard shortcut (Ctrl/Cmd + B) to toggle sidebar
+			document.addEventListener('keydown', function(e) {
+				if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+					e.preventDefault();
+					if (window.innerWidth > 991) {
+						body.classList.toggle('sidebar-collapsed');
+						const isCollapsed = body.classList.contains('sidebar-collapsed');
+						localStorage.setItem('admin_sidebar_collapsed', isCollapsed);
+					}
+				}
+			});
+
+			// Handle window resize
+			let resizeTimer;
+			window.addEventListener('resize', function() {
+				clearTimeout(resizeTimer);
+				resizeTimer = setTimeout(function() {
+					if (window.innerWidth > 991) {
+						body.classList.remove('sidebar-open');
+					} else {
+						body.classList.remove('sidebar-collapsed');
+					}
+				}, 250);
+			});
+		})();
+	</script>
+
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -5,218 +5,87 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<style>
-    /* Dashboard Statistics Cards */
-    .stats-card {
-        background: #fff;
-        border-radius: 10px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-        transition: transform 0.2s;
-    }
-    .stats-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-    .stats-card__title {
-        font-size: 0.875rem;
-        color: #6c757d;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-    .stats-card__value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #212529;
-        margin-bottom: 0.25rem;
-    }
-    .stats-card__change {
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-    .stats-card__change.positive {
-        color: #28a745;
-    }
-    .stats-card__change.negative {
-        color: #dc3545;
-    }
-    .stats-card__icon {
-        position: absolute;
-        right: 1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 3rem;
-        opacity: 0.1;
-    }
 
-    /* Dashbox Widgets */
-    .dashbox {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-    }
-    .dashbox__header {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #e9ecef;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .dashbox__title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #212529;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .dashbox__actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-    .dashbox__actions a {
-        font-size: 0.875rem;
-        color: #6c757d;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-    .dashbox__actions a:hover {
-        color: #ff55a5;
-    }
-    .dashbox__table {
-        width: 100%;
-    }
-    .dashbox__table thead th {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        color: #6c757d;
-        background: #f8f9fa;
-        border-bottom: 1px solid #e9ecef;
-    }
-    .dashbox__table tbody td {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #f8f9fa;
-        vertical-align: middle;
-    }
-    .dashbox__table tbody tr:last-child td {
-        border-bottom: none;
-    }
-    .dashbox__table tbody tr:hover {
-        background: #f8f9fa;
-    }
-    .dashbox__table-text {
-        font-size: 0.875rem;
-        color: #212529;
-    }
-    .dashbox__table-text--grey {
-        color: #6c757d;
-        font-weight: 500;
-    }
-    .dashbox__table-text--rate {
-        color: #ffc107;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-    .dashbox__table-text a {
-        color: #212529;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-    .dashbox__table-text a:hover {
-        color: #ff55a5;
-    }
-</style>
-
-<div class="row mb-4">
+<!-- main title -->
+<div class="row">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2><i class="ti ti-dashboard"></i> @Localizer.GetString("Admin", "Dashboard")</h2>
-            <a asp-action="CreateMovie" class="btn btn-primary">
-                <i class="ti ti-plus"></i> @Localizer.GetString("Admin", "AddItem")
-            </a>
+        <div class="main__title">
+            <h2>@Localizer.GetString("Admin", "Dashboard")</h2>
+            <a asp-action="CreateMovie" class="main__title-link">@Localizer.GetString("Admin", "AddItem")</a>
         </div>
     </div>
 </div>
+<!-- end main title -->
 
 <!-- Statistics Cards -->
 <div class="row">
     <!-- Subscriptions this month -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin", "SubscriptionsThisMonth")</div>
-            <div class="stats-card__value">
+        <div class="stats">
+            <span>@Localizer.GetString("Admin", "SubscriptionsThisMonth")</span>
+            <span>
                 @Model.SubscriptionsThisMonth.ToString("N0")
                 @if (Model.SubscriptionsChange != 0)
                 {
-                    <span class="stats-card__change @(Model.SubscriptionsChange > 0 ? "positive" : "negative")">
+                    <span class="stats__change @(Model.SubscriptionsChange > 0 ? "positive" : "negative")">
                         @(Model.SubscriptionsChange > 0 ? "+" : "")@Model.SubscriptionsChange
                     </span>
                 }
-            </div>
-            <i class="ti ti-diamond stats-card__icon"></i>
-        </div>
-    </div>
+            </span>
+            <i class="ti ti-diamond"></i>
+        </span>
+    </span>
 
     <!-- Items added this month -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin", "ItemsAddedThisMonth")</div>
-            <div class="stats-card__value">
+        <div class="stats">
+            <span>@Localizer.GetString("Admin", "ItemsAddedThisMonth")</span>
+            <span>
                 @Model.ItemsAddedThisMonth.ToString("N0")
                 @if (Model.ItemsAddedChange != 0)
                 {
-                    <span class="stats-card__change @(Model.ItemsAddedChange > 0 ? "positive" : "negative")">
+                    <span class="stats__change @(Model.ItemsAddedChange > 0 ? "positive" : "negative")">
                         @(Model.ItemsAddedChange > 0 ? "+" : "")@Model.ItemsAddedChange
                     </span>
                 }
-            </div>
-            <i class="ti ti-movie stats-card__icon"></i>
-        </div>
-    </div>
+            </span>
+            <i class="ti ti-movie"></i>
+        </span>
+    </span>
 
     <!-- Views this month -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin", "ViewsThisMonth")</div>
-            <div class="stats-card__value">
+        <div class="stats">
+            <span>@Localizer.GetString("Admin", "ViewsThisMonth")</span>
+            <span>
                 @Model.ViewsThisMonth.ToString("N0")
                 @if (Model.ViewsChangePercent != 0)
                 {
-                    <span class="stats-card__change @(Model.ViewsChangePercent > 0 ? "positive" : "negative")">
+                    <span class="stats__change @(Model.ViewsChangePercent > 0 ? "positive" : "negative")">
                         @(Model.ViewsChangePercent > 0 ? "+" : "")@Model.ViewsChangePercent.ToString("0.0")%
                     </span>
                 }
-            </div>
-            <i class="ti ti-eye stats-card__icon"></i>
-        </div>
-    </div>
+            </span>
+            <i class="ti ti-eye"></i>
+        </span>
+    </span>
 
     <!-- Reviews this month -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stats-card">
-            <div class="stats-card__title">@Localizer.GetString("Admin", "ReviewsThisMonth")</div>
-            <div class="stats-card__value">
+        <div class="stats">
+            <span>@Localizer.GetString("Admin", "ReviewsThisMonth")</span>
+            <span>
                 @Model.ReviewsThisMonth.ToString("N0")
                 @if (Model.ReviewsChange != 0)
                 {
-                    <span class="stats-card__change @(Model.ReviewsChange > 0 ? "positive" : "negative")">
+                    <span class="stats__change @(Model.ReviewsChange > 0 ? "positive" : "negative")">
                         @(Model.ReviewsChange > 0 ? "+" : "")@Model.ReviewsChange
                     </span>
                 }
-            </div>
-            <i class="ti ti-star-half-filled stats-card__icon"></i>
-        </div>
-    </div>
+            </span>
+            <i class="ti ti-star-half-filled"></i>
+        </span>
+    </span>
 </div>
 
 <!-- Dashboard Widgets -->
