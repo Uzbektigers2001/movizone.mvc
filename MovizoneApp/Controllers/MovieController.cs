@@ -13,20 +13,17 @@ namespace MovizoneApp.Controllers
     {
         private readonly IMovieApplicationService _movieService;
         private readonly IReviewApplicationService _reviewService;
-        private readonly IWatchlistApplicationService _watchlistService;
         private readonly ILogger<MovieController> _logger;
         private readonly IMapper _mapper;
 
         public MovieController(
             IMovieApplicationService movieService,
             IReviewApplicationService reviewService,
-            IWatchlistApplicationService watchlistService,
             ILogger<MovieController> logger,
             IMapper mapper)
         {
             _movieService = movieService;
             _reviewService = reviewService;
-            _watchlistService = watchlistService;
             _logger = logger;
             _mapper = mapper;
         }
@@ -65,14 +62,9 @@ namespace MovizoneApp.Controllers
             var averageRating = await _reviewService.GetAverageRatingAsync(id);
             var reviewCount = await _reviewService.GetReviewCountAsync(id);
 
-            // Check if movie is in watchlist for authenticated user
-            var userId = GetCurrentUserId();
-            var isInWatchlist = userId.HasValue && await _watchlistService.IsInWatchlistAsync(userId.Value, id);
-
             ViewBag.Reviews = reviews;
             ViewBag.AverageRating = averageRating;
             ViewBag.ReviewCount = reviewCount;
-            ViewBag.IsInWatchlist = isInWatchlist;
 
             // Get similar movies based on genre (exclude current movie) - optimized query
             var similarMovies = await _movieService.GetSimilarMoviesByGenreAsync(id, movieDto.Genre, 6);
