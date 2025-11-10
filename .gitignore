@@ -96,13 +96,10 @@ MovizoneApp/wwwroot/img/covers/cover_*
 temp_extract/
 temp_extract_full/
 
-# Environment variables and secrets
+# Environment variables
 .env
 .env.local
 .env.production
-appsettings.Production.json
-**/appsettings.*.json
-!**/appsettings.Development.json
 
 # Node modules and Next.js
 node_modules/
