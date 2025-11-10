@@ -119,14 +119,14 @@
 				<li class="sidebar__nav-item">
 					<a asp-action="Comments" class="sidebar__nav-link @(currentAction == "Comments" ? "sidebar__nav-link--active" : "")">
 						<i class="ti ti-message"></i>
-						<span>@Localizer.GetString("Comments")</span>
+						<span>@Localizer.GetString("Common", "Comments")</span>
 					</a>
 				</li>
 
 				<li class="sidebar__nav-item">
 					<a asp-action="Reviews" class="sidebar__nav-link @(currentAction == "Reviews" ? "sidebar__nav-link--active" : "")">
 						<i class="ti ti-star-half-filled"></i>
-						<span>@Localizer.GetString("Reviews")</span>
+						<span>@Localizer.GetString("Common", "Reviews")</span>
 					</a>
 				</li>
 
