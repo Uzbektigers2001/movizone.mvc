@@ -161,7 +161,7 @@ namespace MovizoneApp.Controllers
 
                 // Additional statistics
                 TodayViews = 0, // TODO: Implement today's view tracking
-                MonthlyRevenue = usersDto.Count(u => u.SubscriptionType != "Free") * 9.99m, // Calculate based on paid subscriptions
+                MonthlyRevenue = 0, // Subscription/pricing system removed
 
                 // Dashboard widgets
                 TopItems = topItems,

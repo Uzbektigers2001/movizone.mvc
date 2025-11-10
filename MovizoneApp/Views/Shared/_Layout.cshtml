@@ -81,13 +81,6 @@
 							}
 							<!-- end Catalog Items -->
 
-							@if (navSettings.ShowPricingPlanInNav)
-							{
-								<li class="header__nav-item">
-									<a asp-controller="Pricing" asp-action="Index" class="header__nav-link">@Localizer.GetString("PricingPlan")</a>
-								</li>
-							}
-
 							@if (navSettings.ShowPagesInNav)
 							{
 								<!-- dropdown -->

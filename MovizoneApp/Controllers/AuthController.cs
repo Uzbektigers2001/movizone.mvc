@@ -103,8 +103,7 @@ namespace MovizoneApp.Controllers
                 Name = name,
                 Email = email,
                 Password = password,
-                Role = "User",
-                SubscriptionType = "Free"
+                Role = "User"
             };
 
             try

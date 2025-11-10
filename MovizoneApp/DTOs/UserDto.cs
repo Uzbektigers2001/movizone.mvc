@@ -13,8 +13,6 @@ namespace MovizoneApp.DTOs
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public string SubscriptionType { get; set; } = string.Empty;
-        public DateTime? SubscriptionExpiry { get; set; }
 
         // Audit fields
         public DateTime CreatedAt { get; set; }
@@ -49,11 +47,6 @@ namespace MovizoneApp.DTOs
 
         [MaxLength(50)]
         public string Role { get; set; } = "User";
-
-        [MaxLength(50)]
-        public string SubscriptionType { get; set; } = "Free";
-
-        public DateTime? SubscriptionExpiry { get; set; }
     }
 
     /// <summary>
@@ -79,11 +72,6 @@ namespace MovizoneApp.DTOs
 
         [MaxLength(50)]
         public string Role { get; set; } = "User";
-
-        [MaxLength(50)]
-        public string SubscriptionType { get; set; } = "Free";
-
-        public DateTime? SubscriptionExpiry { get; set; }
 
         [MaxLength(500)]
         public string Avatar { get; set; } = string.Empty;

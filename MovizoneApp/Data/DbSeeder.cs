@@ -83,15 +83,6 @@ namespace MovizoneApp.Data
                     await _context.SaveChangesAsync();
                 }
 
-                // Seed Pricing Plans
-                if (!await _context.PricingPlans.AnyAsync())
-                {
-                    _logger.LogInformation("Seeding pricing plans...");
-                    var plans = GetSeedPricingPlans();
-                    await _context.PricingPlans.AddRangeAsync(plans);
-                    await _context.SaveChangesAsync();
-                }
-
                 _logger.LogInformation("Database seeding completed successfully");
             }
             catch (Exception ex)
@@ -283,37 +274,6 @@ namespace MovizoneApp.Data
                     BirthDate = DateTime.SpecifyKind(new DateTime(1979, 8, 27), DateTimeKind.Utc),
                     Country = "USA",
                     Photo = "/img/covers/actor.jpg"
-                }
-            };
-        }
-
-        private List<PricingPlan> GetSeedPricingPlans()
-        {
-            return new List<PricingPlan>
-            {
-                new PricingPlan
-                {
-                    Name = "Basic",
-                    Price = 9.99m,
-                    Period = "Monthly",
-                    Features = new List<string> { "HD Quality", "Watch on 1 device", "Limited content" },
-                    IsPopular = false
-                },
-                new PricingPlan
-                {
-                    Name = "Standard",
-                    Price = 14.99m,
-                    Period = "Monthly",
-                    Features = new List<string> { "Full HD Quality", "Watch on 2 devices", "Full content library", "Download content" },
-                    IsPopular = true
-                },
-                new PricingPlan
-                {
-                    Name = "Premium",
-                    Price = 19.99m,
-                    Period = "Monthly",
-                    Features = new List<string> { "4K Ultra HD", "Watch on 4 devices", "Full content library", "Download content", "Priority support" },
-                    IsPopular = false
                 }
             };
         }

@@ -123,7 +123,6 @@ try
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
     builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
-    builder.Services.AddScoped<IPricingPlanRepository, PricingPlanRepository>();
 
     // Register Infrastructure Services
     builder.Services.AddScoped<IJwtService, JwtService>();
@@ -135,13 +134,11 @@ try
     builder.Services.AddScoped<IUserApplicationService, UserApplicationService>();
     builder.Services.AddScoped<IReviewApplicationService, ReviewApplicationService>();
     builder.Services.AddScoped<IWatchlistApplicationService, WatchlistApplicationService>();
-    builder.Services.AddScoped<IPricingApplicationService, PricingApplicationService>();
 
     // Keep old services for backward compatibility (will be removed after migration)
     builder.Services.AddSingleton<IMovieService, MovieService>();
     builder.Services.AddSingleton<ITVSeriesService, TVSeriesService>();
     builder.Services.AddSingleton<IActorService, ActorService>();
-    builder.Services.AddSingleton<IPricingService, PricingService>();
     builder.Services.AddSingleton<IUserService, UserService>();
     builder.Services.AddSingleton<IReviewService, ReviewService>();
     builder.Services.AddSingleton<ICommentService, CommentService>();
