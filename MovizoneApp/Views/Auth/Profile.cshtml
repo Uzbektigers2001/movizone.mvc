@@ -1,12 +1,10 @@
 @model MovizoneApp.Models.User
-@inject MovizoneApp.Services.IWatchlistService WatchlistService
 @inject MovizoneApp.Services.IReviewService ReviewService
 @inject MovizoneApp.Services.IMovieService MovieService
 @inject MovizoneApp.Services.ITVSeriesService TVSeriesService
 @{
     ViewData["Title"] = "My Profile";
     var userId = Context.Session.GetInt32("UserId") ?? 0;
-    var watchlistItems = WatchlistService.GetUserWatchlist(userId);
     var userReviews = ReviewService.GetReviewsByUserId(userId);
 }
 
@@ -48,16 +46,7 @@
 
                 <!-- Statistics Cards -->
                 <div class="row mb-4">
-                    <div class="col-md-4 mb-3">
-                        <div class="card bg-dark border-primary">
-                            <div class="card-body text-center">
-                                <i class="ti ti-bookmark" style="font-size: 32px; color: #ff55a5;"></i>
-                                <h3 class="mt-2">@watchlistItems.Count</h3>
-                                <p class="text-muted mb-0">Watchlist Items</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <div class="card bg-dark border-success">
                             <div class="card-body text-center">
                                 <i class="ti ti-star" style="font-size: 32px; color: #ffc107;"></i>
@@ -66,7 +55,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <div class="card bg-dark border-info">
                             <div class="card-body text-center">
                                 <i class="ti ti-trophy" style="font-size: 32px; color: #17a2b8;"></i>
@@ -80,13 +69,7 @@
                 <!-- Tabs -->
                 <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="watchlist-tab" data-bs-toggle="tab"
-                                data-bs-target="#watchlist" type="button">
-                            <i class="ti ti-bookmark"></i> Watchlist
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                        <button class="nav-link active" id="reviews-tab" data-bs-toggle="tab"
                                 data-bs-target="#reviews" type="button">
                             <i class="ti ti-star"></i> My Reviews
                         </button>
@@ -94,46 +77,8 @@
                 </ul>
 
                 <div class="tab-content" id="profileTabsContent">
-                    <!-- Watchlist Tab -->
-                    <div class="tab-pane fade show active" id="watchlist">
-                        @if (watchlistItems.Any())
-                        {
-                            <div class="row g-3">
-                                @foreach (var item in watchlistItems)
-                                {
-                                    var movie = MovieService.GetMovieById(item.MovieId);
-                                    var series = movie == null ? TVSeriesService.GetSeriesById(item.MovieId) : null;
-                                    var title = movie?.Title ?? series?.Title ?? "Unknown";
-                                    var coverImage = movie?.CoverImage ?? series?.CoverImage ?? "";
-                                    var rating = movie?.Rating ?? series?.Rating ?? 0;
-                                    var type = movie != null ? "Movie" : "Series";
-
-                                    <div class="col-md-4">
-                                        <div class="card bg-dark h-100">
-                                            <img src="@coverImage" class="card-img-top" alt="@title" style="height: 200px; object-fit: cover;">
-                                            <div class="card-body">
-                                                <h6 class="card-title">@title</h6>
-                                                <p class="mb-2">
-                                                    <span class="item__rate--green me-2">@rating</span>
-                                                    <span class="badge bg-info">@type</span>
-                                                </p>
-                                                <small class="text-muted">Added @item.CreatedAt.ToString("MMM dd, yyyy")</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-info">
-                                <i class="ti ti-info-circle"></i> Your watchlist is empty. Start adding movies and TV series!
-                            </div>
-                        }
-                    </div>
-
                     <!-- Reviews Tab -->
-                    <div class="tab-pane fade" id="reviews">
+                    <div class="tab-pane fade show active" id="reviews">
                         @if (userReviews.Any())
                         {
                             @foreach (var review in userReviews.OrderByDescending(r => r.CreatedAt))

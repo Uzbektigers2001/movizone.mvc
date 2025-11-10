@@ -35,11 +35,6 @@
             });
             saveFavorites(favorites);
 
-            // Also add to watchlist with full details
-            if (window.MovizoneWatchlist) {
-                window.MovizoneWatchlist.add(id, type, title, coverImage, rating, year, genre);
-            }
-
             return true;
         }
         return false;
@@ -79,7 +74,6 @@
 
     // Initialize favorites on page load
     function initFavorites() {
-        // Note: Click handlers are managed by watchlist.js to avoid conflicts
         // This function only updates button states for items already in favorites
         document.querySelectorAll('.item__favorite').forEach(button => {
             const id = parseInt(button.dataset.id);

@@ -209,23 +209,6 @@ namespace MovizoneApp.Application.Mappings
                 .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
 
-            // Watchlist mappings
-            CreateMap<WatchlistItem, WatchlistDto>()
-                .ForMember(dest => dest.MovieTitle, opt => opt.Ignore()) // Will be populated from Movie
-                .ForMember(dest => dest.MovieCoverImage, opt => opt.Ignore())
-                .ForMember(dest => dest.MovieGenre, opt => opt.Ignore())
-                .ForMember(dest => dest.MovieRating, opt => opt.Ignore());
-            CreateMap<WatchlistDto, WatchlistItem>();
-            CreateMap<CreateWatchlistItemDto, WatchlistItem>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedBy, opt => opt.Ignore());
-
             // Episode mappings
             CreateMap<Episode, EpisodeDto>()
                 .ForMember(dest => dest.SeriesTitle, opt => opt.Ignore()); // SeriesTitle not available in Episode entity

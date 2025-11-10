@@ -49,14 +49,4 @@ namespace MovizoneApp.Core.Interfaces
         Task<User?> GetByEmailAsync(string email);
         Task<bool> EmailExistsAsync(string email);
     }
-
-    public interface IWatchlistRepository : IRepository<WatchlistItem>
-    {
-        Task<IEnumerable<WatchlistItem>> GetUserWatchlistAsync(int userId);
-        Task<bool> IsInWatchlistAsync(int userId, int movieId);
-    }
-
-    public interface IPricingPlanRepository : IRepository<PricingPlan>
-    {
-    }
 }

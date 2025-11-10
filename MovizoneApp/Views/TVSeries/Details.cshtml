@@ -24,46 +24,6 @@
 							<div class="item__cover">
 								<img src="@Model.CoverImage" alt="@Model.Title">
 								<span class="item__rate @(Model.Rating >= 8 ? "item__rate--green" : Model.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@Model.Rating</span>
-								@if (Context.Session.GetInt32("UserId").HasValue)
-								{
-									@* Logged-in users: use server-side form *@
-									@if (ViewBag.IsInWatchlist)
-									{
-										<form asp-controller="Watchlist" asp-action="Remove" method="post" class="d-inline">
-											<input type="hidden" name="movieId" value="@Model.Id" />
-											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-											<button class="item__favorite item__favorite--static item__favorite--active" type="submit" title="@Localizer.GetString("Movie", "RemoveFromWatchlist")">
-												<i class="ti ti-bookmark-filled"></i>
-											</button>
-										</form>
-									}
-									else
-									{
-										<form asp-controller="Watchlist" asp-action="Add" method="post" class="d-inline">
-											<input type="hidden" name="movieId" value="@Model.Id" />
-											<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-											<button class="item__favorite item__favorite--static" type="submit" title="@Localizer.GetString("Movie", "AddToWatchlist")">
-												<i class="ti ti-bookmark"></i>
-											</button>
-										</form>
-									}
-								}
-								else
-								{
-									@* Anonymous users: use client-side JavaScript *@
-									<button class="item__favorite item__favorite--static"
-									        type="button"
-									        title="@Localizer.GetString("Movie", "AddToWatchlist")"
-									        data-id="@Model.Id"
-									        data-type="series"
-									        data-title="@Model.Title"
-									        data-cover-image="@Model.CoverImage"
-									        data-rating="@Model.Rating"
-									        data-year="@Model.Year"
-									        data-genre="@Model.Genre">
-										<i class="ti ti-bookmark"></i>
-									</button>
-								}
 							</div>
 						</div>
 						<!-- end card cover -->
@@ -419,18 +379,6 @@
 														<i class="ti ti-player-play-filled"></i>
 													</a>
 													<span class="item__rate @(similarShow.Rating >= 8 ? "item__rate--green" : similarShow.Rating >= 6 ? "item__rate--yellow" : "item__rate--red")">@similarShow.Rating</span>
-													<button class="item__favorite"
-													        type="button"
-													        title="@Localizer.GetString("Movie", "AddToWatchlist")"
-													        data-id="@similarShow.Id"
-													        data-type="series"
-													        data-title="@similarShow.Title"
-													        data-cover-image="@similarShow.CoverImage"
-													        data-rating="@similarShow.Rating"
-													        data-year="@similarShow.Year"
-													        data-genre="@similarShow.Genre">
-														<i class="ti ti-bookmark"></i>
-													</button>
 												</div>
 												<div class="item__content">
 													<h3 class="item__title"><a asp-action="Details" asp-route-id="@similarShow.Id">@similarShow.Title</a></h3>
