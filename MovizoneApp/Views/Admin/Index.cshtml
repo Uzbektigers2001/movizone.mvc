@@ -23,69 +23,69 @@
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats">
             <span>@Localizer.GetString("Admin", "SubscriptionsThisMonth")</span>
-            <span>
+            <p>
                 @Model.SubscriptionsThisMonth.ToString("N0")
                 @if (Model.SubscriptionsChange != 0)
                 {
-                    <span class="stats__change @(Model.SubscriptionsChange > 0 ? "positive" : "negative")">
+                    <b class="@(Model.SubscriptionsChange > 0 ? "green" : "red")">
                         @(Model.SubscriptionsChange > 0 ? "+" : "")@Model.SubscriptionsChange
-                    </span>
+                    </b>
                 }
-            </span>
+            </p>
             <i class="ti ti-diamond"></i>
-        </span>
-    </span>
+        </div>
+    </div>
 
     <!-- Items added this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats">
             <span>@Localizer.GetString("Admin", "ItemsAddedThisMonth")</span>
-            <span>
+            <p>
                 @Model.ItemsAddedThisMonth.ToString("N0")
                 @if (Model.ItemsAddedChange != 0)
                 {
-                    <span class="stats__change @(Model.ItemsAddedChange > 0 ? "positive" : "negative")">
+                    <b class="@(Model.ItemsAddedChange > 0 ? "green" : "red")">
                         @(Model.ItemsAddedChange > 0 ? "+" : "")@Model.ItemsAddedChange
-                    </span>
+                    </b>
                 }
-            </span>
+            </p>
             <i class="ti ti-movie"></i>
-        </span>
-    </span>
+        </div>
+    </div>
 
     <!-- Views this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats">
             <span>@Localizer.GetString("Admin", "ViewsThisMonth")</span>
-            <span>
+            <p>
                 @Model.ViewsThisMonth.ToString("N0")
                 @if (Model.ViewsChangePercent != 0)
                 {
-                    <span class="stats__change @(Model.ViewsChangePercent > 0 ? "positive" : "negative")">
+                    <b class="@(Model.ViewsChangePercent > 0 ? "green" : "red")">
                         @(Model.ViewsChangePercent > 0 ? "+" : "")@Model.ViewsChangePercent.ToString("0.0")%
-                    </span>
+                    </b>
                 }
-            </span>
+            </p>
             <i class="ti ti-eye"></i>
-        </span>
-    </span>
+        </div>
+    </div>
 
     <!-- Reviews this month -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="stats">
             <span>@Localizer.GetString("Admin", "ReviewsThisMonth")</span>
-            <span>
+            <p>
                 @Model.ReviewsThisMonth.ToString("N0")
                 @if (Model.ReviewsChange != 0)
                 {
-                    <span class="stats__change @(Model.ReviewsChange > 0 ? "positive" : "negative")">
+                    <b class="@(Model.ReviewsChange > 0 ? "green" : "red")">
                         @(Model.ReviewsChange > 0 ? "+" : "")@Model.ReviewsChange
-                    </span>
+                    </b>
                 }
-            </span>
+            </p>
             <i class="ti ti-star-half-filled"></i>
-        </span>
-    </span>
+        </div>
+    </div>
 </div>
 
 <!-- Dashboard Widgets -->

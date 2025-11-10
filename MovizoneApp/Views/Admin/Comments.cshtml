@@ -5,40 +5,54 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="ti ti-message"></i> @Localizer.GetString("Admin", "CommentsManagement")</h2>
+<!-- main title -->
+<div class="row">
+    <div class="col-12">
+        <div class="main__title">
+            <h2><i class="ti ti-message"></i> @Localizer.GetString("Admin", "CommentsManagement")</h2>
+        </div>
+    </div>
 </div>
+<!-- end main title -->
 
 <!-- Search Form -->
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-body">
-        <form asp-action="Comments" method="get" class="row g-3">
-            <div class="col-md-10">
-                <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchCommentsByUserOrText")" value="@ViewBag.SearchQuery">
+<div class="row">
+    <div class="col-12">
+        <div class="dashbox">
+            <div class="dashbox__title">
+                <h3><i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")</h3>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
-                </button>
+            <div style="padding: 20px;">
+                <form asp-action="Comments" method="get" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" name="search" class="form-control" placeholder="@Localizer.GetString("Admin", "SearchCommentsByUserOrText")" value="@ViewBag.SearchQuery" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100" style="background: var(--primary-color); border: none;">
+                            <i class="ti ti-search"></i> @Localizer.GetString("Admin", "Search")
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(40,167,69,0.1); border: 1px solid var(--success-color); color: var(--success-color);">
         <i class="ti ti-check"></i> @TempData["Success"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 
-<div class="card border-0 shadow-sm">
-    <div class="card-body">
-        @if (Model.Any())
-        {
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
+<div class="row">
+    <div class="col-12">
+        <div class="dashbox">
+            @if (Model.Any())
+            {
+                <div class="dashbox__table-wrap">
+                    <table class="dashbox__table">
                     <thead>
                         <tr>
                             <th>@Localizer.GetString("Admin", "ID")</th>
@@ -54,67 +68,75 @@
                         @foreach (var comment in Model)
                         {
                             <tr>
-                                <td>@comment.Id</td>
+                                <td><div class="dashbox__table-text dashbox__table-text--grey">@comment.Id</div></td>
                                 <td>
-                                    <strong>@comment.UserName</strong><br>
-                                    <small class="text-muted">User ID: @comment.UserId</small>
+                                    <div class="dashbox__table-text">
+                                        <strong>@comment.UserName</strong><br>
+                                        <small style="color: var(--text-muted);">User ID: @comment.UserId</small>
+                                    </div>
                                 </td>
                                 <td>
-                                    @if (comment.MovieId.HasValue)
-                                    {
-                                        <span class="badge bg-primary">Movie #@comment.MovieId</span>
-                                    }
-                                    else if (comment.TVSeriesId.HasValue)
-                                    {
-                                        <span class="badge bg-success">TV Series #@comment.TVSeriesId</span>
-                                    }
-                                </td>
-                                <td>
-                                    <p class="mb-0" style="max-width: 400px;">@comment.Text</p>
-                                </td>
-                                <td>
-                                    @if (comment.IsApproved)
-                                    {
-                                        <span class="badge bg-success">Approved</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-warning">Pending</span>
-                                    }
-                                </td>
-                                <td>
-                                    <small>@comment.CreatedAt.ToString("MMM dd, yyyy")<br>@comment.CreatedAt.ToString("HH:mm")</small>
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        @if (!comment.IsApproved)
+                                    <div class="dashbox__table-text">
+                                        @if (comment.MovieId.HasValue)
                                         {
-                                            <form asp-action="ApproveComment" asp-route-id="@comment.Id" method="post" class="d-inline">
-                                                <button type="submit" class="btn btn-sm btn-success" title="Approve">
-                                                    <i class="ti ti-check"></i>
-                                                </button>
-                                            </form>
+                                            <span style="color: var(--primary-color); background: rgba(255,85,165,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">Movie #@comment.MovieId</span>
                                         }
-                                        <form asp-action="DeleteComment" asp-route-id="@comment.Id" method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                    onclick="return confirm('Delete this comment?')">
-                                                <i class="ti ti-trash"></i>
+                                        else if (comment.TVSeriesId.HasValue)
+                                        {
+                                            <span style="color: var(--success-color); background: rgba(40,167,69,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">TV Series #@comment.TVSeriesId</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dashbox__table-text" style="max-width: 400px;">@comment.Text</div>
+                                </td>
+                                <td>
+                                    <div class="dashbox__table-text">
+                                        @if (comment.IsApproved)
+                                        {
+                                            <span style="color: var(--success-color); background: rgba(40,167,69,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">@Localizer.GetString("Admin", "Approved")</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color: var(--warning-color); background: rgba(255,193,7,0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">@Localizer.GetString("Admin", "Pending")</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dashbox__table-text">
+                                        <small>@comment.CreatedAt.ToString("MMM dd, yyyy")<br>@comment.CreatedAt.ToString("HH:mm")</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (!comment.IsApproved)
+                                    {
+                                        <form asp-action="ApproveComment" asp-route-id="@comment.Id" method="post" style="display: inline-block; margin-right: 5px;">
+                                            <button type="submit" style="padding: 6px 12px; background: rgba(40,167,69,0.1); border: none; border-radius: 6px; color: var(--success-color); cursor: pointer;" title="@Localizer.GetString("Admin", "Approve")">
+                                                <i class="ti ti-check"></i>
                                             </button>
                                         </form>
-                                    </div>
+                                    }
+                                    <form asp-action="DeleteComment" asp-route-id="@comment.Id" method="post" style="display: inline-block;">
+                                        <button type="submit" onclick="return confirm('@Localizer.GetString("Admin", "DeleteThisComment")')"
+                                                style="padding: 6px 12px; background: rgba(220,53,69,0.1); border: none; border-radius: 6px; color: var(--danger-color); cursor: pointer;">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-        }
-        else
-        {
-            <div class="alert alert-info">
-                <i class="ti ti-info-circle"></i> No comments found.
-            </div>
-        }
+            }
+            else
+            {
+                <div style="padding: 60px 20px; text-align: center;">
+                    <i class="ti ti-info-circle" style="font-size: 48px; opacity: 0.3; color: var(--text-muted);"></i>
+                    <p style="color: var(--text-muted); margin-top: 20px;">@Localizer.GetString("Admin", "NoCommentsFound")</p>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
