@@ -1,7 +1,7 @@
 @model MovizoneApp.Models.SiteSettings
 @inject MovizoneApp.Services.ILocalizationService Localizer
 @{
-    ViewData["Title"] = @Localizer.GetString("Admin", "SiteSettings");
+    ViewData["Title"] = Localizer.GetString("Admin", "SiteSettings");
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -31,9 +31,9 @@
                 <div class="dashbox__title" style="background: linear-gradient(90deg, var(--primary-color) 0%, rgba(255,85,165,0.7) 100%);">
                     <h3 style="color: #fff;"><i class="ti ti-photo"></i> @Localizer.GetString("Admin", "BannerHeroSection")</h3>
                 </div>
-                <div style="padding: 25px;">
+                <div style="padding: 18px;">
                     <div class="form-check form-switch">
-                        <input asp-for="ShowHeroBanner" class="form-check-input" type="checkbox" id="showHeroBanner" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                        <input asp-for="ShowHeroBanner" class="form-check-input" type="checkbox" id="showHeroBanner" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                         <label class="form-check-label" for="showHeroBanner" style="color: var(--text-color); margin-left: 10px;">
                             <strong>@Localizer.GetString("Admin", "ShowHeroBanner")</strong><br>
                             <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "DisplayMainBanner")</small>
@@ -49,25 +49,25 @@
                 <div class="dashbox__title" style="background: linear-gradient(90deg, var(--success-color) 0%, rgba(40,167,69,0.7) 100%);">
                     <h3 style="color: #fff;"><i class="ti ti-layout"></i> @Localizer.GetString("Admin", "HomePageSections")</h3>
                 </div>
-                <div style="padding: 25px;">
-                    <div class="form-check form-switch mb-4">
-                        <input asp-for="ShowCatalogSection" class="form-check-input" type="checkbox" id="showCatalog" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                <div style="padding: 18px;">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowCatalogSection" class="form-check-input" type="checkbox" id="showCatalog" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                         <label class="form-check-label" for="showCatalog" style="color: var(--text-color); margin-left: 10px;">
                             <strong>@Localizer.GetString("Admin", "ShowCatalogSection")</strong><br>
                             <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "DisplayCatalogGrid")</small>
                         </label>
                     </div>
 
-                    <div class="form-check form-switch mb-4">
-                        <input asp-for="ShowExpectedPremiere" class="form-check-input" type="checkbox" id="showPremiere" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowExpectedPremiere" class="form-check-input" type="checkbox" id="showPremiere" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                         <label class="form-check-label" for="showPremiere" style="color: var(--text-color); margin-left: 10px;">
                             <strong>@Localizer.GetString("Admin", "ShowExpectedPremiere")</strong><br>
                             <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "DisplayExpectedPremiere")</small>
                         </label>
                     </div>
 
-                    <div class="form-check form-switch mb-4">
-                        <input asp-for="ShowRecentlyUpdated" class="form-check-input" type="checkbox" id="showRecent" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="ShowRecentlyUpdated" class="form-check-input" type="checkbox" id="showRecent" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                         <label class="form-check-label" for="showRecent" style="color: var(--text-color); margin-left: 10px;">
                             <strong>@Localizer.GetString("Admin", "ShowRecentlyUpdated")</strong><br>
                             <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "DisplayRecentlyUpdated")</small>
@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="form-check form-switch">
-                        <input asp-for="ShowPricingPlans" class="form-check-input" type="checkbox" id="showPricing" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                        <input asp-for="ShowPricingPlans" class="form-check-input" type="checkbox" id="showPricing" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                         <label class="form-check-label" for="showPricing" style="color: var(--text-color); margin-left: 10px;">
                             <strong>@Localizer.GetString("Admin", "ShowPricingPlans")</strong><br>
                             <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "DisplayPricingPlans")</small>
@@ -91,12 +91,12 @@
                 <div class="dashbox__title" style="background: linear-gradient(90deg, #17a2b8 0%, rgba(23,162,184,0.7) 100%);">
                     <h3 style="color: #fff;"><i class="ti ti-menu"></i> @Localizer.GetString("Admin", "NavigationMenuItems")</h3>
                 </div>
-                <div style="padding: 25px;">
-                    <p style="color: var(--text-muted); margin-bottom: 20px;">@Localizer.GetString("Admin", "ControlMenuItems")</p>
+                <div style="padding: 18px;">
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">@Localizer.GetString("Admin", "ControlMenuItems")</p>
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowHomeInNav" class="form-check-input" type="checkbox" id="showHomeNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowHomeInNav" class="form-check-input" type="checkbox" id="showHomeNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showHomeNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowHome")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "LinkToHomePage")</small>
@@ -104,8 +104,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowMoviesInNav" class="form-check-input" type="checkbox" id="showMoviesNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowMoviesInNav" class="form-check-input" type="checkbox" id="showMoviesNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showMoviesNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowMovies")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "MoviesCatalogLink")</small>
@@ -113,8 +113,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowTVSeriesInNav" class="form-check-input" type="checkbox" id="showSeriesNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowTVSeriesInNav" class="form-check-input" type="checkbox" id="showSeriesNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showSeriesNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowTVSeries")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "TVSeriesCatalogLink")</small>
@@ -122,8 +122,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowActorsInNav" class="form-check-input" type="checkbox" id="showActorsNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowActorsInNav" class="form-check-input" type="checkbox" id="showActorsNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showActorsNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowActors")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "ActorsListLink")</small>
@@ -131,8 +131,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowPricingPlanInNav" class="form-check-input" type="checkbox" id="showPricingNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowPricingPlanInNav" class="form-check-input" type="checkbox" id="showPricingNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showPricingNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowPricingPlan")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "PricingPlansPage")</small>
@@ -140,8 +140,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowPagesInNav" class="form-check-input" type="checkbox" id="showPagesNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowPagesInNav" class="form-check-input" type="checkbox" id="showPagesNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showPagesNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowPages")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "PagesDropdownMenu")</small>
@@ -149,8 +149,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowMoreMenuInNav" class="form-check-input" type="checkbox" id="showMoreNav" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowMoreMenuInNav" class="form-check-input" type="checkbox" id="showMoreNav" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showMoreNav" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowMoreMenu")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "ThreeDotsMenu")</small>
@@ -168,12 +168,12 @@
                 <div class="dashbox__title" style="background: linear-gradient(90deg, var(--warning-color) 0%, rgba(255,193,7,0.7) 100%);">
                     <h3 style="color: #fff;"><i class="ti ti-user"></i> @Localizer.GetString("Admin", "AuthenticationElements")</h3>
                 </div>
-                <div style="padding: 25px;">
-                    <p style="color: var(--text-muted); margin-bottom: 20px;">@Localizer.GetString("Admin", "ControlAuthElements")</p>
+                <div style="padding: 18px;">
+                    <p style="color: var(--text-muted); margin-bottom: 15px;">@Localizer.GetString("Admin", "ControlAuthElements")</p>
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-check form-switch mb-4">
-                                <input asp-for="ShowSignInButton" class="form-check-input" type="checkbox" id="showSignInButton" style="width: 50px; height: 25px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="ShowSignInButton" class="form-check-input" type="checkbox" id="showSignInButton" style="width: 40px; height: 22px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                                 <label class="form-check-label" for="showSignInButton" style="color: var(--text-color); margin-left: 10px;">
                                     <strong>@Localizer.GetString("Admin", "ShowSignInButton")</strong><br>
                                     <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "DisplaySignInButton")</small>

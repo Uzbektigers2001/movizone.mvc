@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-12">
         <div class="main__title">
-            <h2><i class="ti ti-plus"></i> @Localizer.GetString("Admin", "AddNewMovie")</h2>
+            <h2>@Localizer.GetString("Admin", "AddNewMovie")</h2>
             <a asp-action="Movies" class="main__title-link">
                 <i class="ti ti-arrow-left"></i> @Localizer.GetString("Admin", "BackToMovies")
             </a>
@@ -20,212 +20,123 @@
 
 <form asp-action="CreateMovie" method="post" enctype="multipart/form-data">
     <div class="row">
-        <!-- Main Information -->
         <div class="col-12">
-            <div class="dashbox" style="margin-bottom: 30px;">
+            <div class="dashbox">
                 <div class="dashbox__title">
-                    <h3><i class="ti ti-info-circle"></i> @Localizer.GetString("Admin", "BasicInformation")</h3>
-                    <small style="color: var(--text-muted); font-weight: 400; margin-left: 10px;">* @Localizer.GetString("Admin", "RequiredFields")</small>
+                    <h3>@Localizer.GetString("Admin", "BasicInformation")</h3>
                 </div>
-                <div style="padding: 30px;">
+                <div style="padding: 20px;">
                     <div class="row">
                         <div class="col-md-8 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Movie", "Title") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Title" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 15px;">
+                            <label class="form-label">@Localizer.GetString("Movie", "Title") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Title" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
                         </div>
                         <div class="col-md-2 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Common", "Year") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Year" type="number" min="1900" max="2100" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
+                            <label class="form-label">@Localizer.GetString("Common", "Year") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Year" type="number" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
                         </div>
                         <div class="col-md-2 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Movie", "Rating") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Rating" type="number" step="0.1" min="0" max="10" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
+                            <label class="form-label">@Localizer.GetString("Movie", "Rating") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Rating" type="number" step="0.1" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Movie", "Director") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Director" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
+                            <label class="form-label">@Localizer.GetString("Movie", "Director") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Director" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Movie", "Genre") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Genre" class="form-control" placeholder="Action, Drama, Comedy..." required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">@Localizer.GetString("Movie", "Genre") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Genre" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
                         </div>
-                        <div class="col-md-2 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Admin", "Duration") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Duration" type="number" min="1" class="form-control" required placeholder="120" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                            <small style="color: var(--text-muted); font-size: 12px;">@Localizer.GetString("Admin", "Minutes")</small>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">@Localizer.GetString("Common", "Country") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Country" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
                         </div>
                         <div class="col-md-2 mb-3">
-                            <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                @Localizer.GetString("Common", "Country") <span style="color: var(--danger-color);">*</span>
-                            </label>
-                            <input asp-for="Country" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
+                            <label class="form-label">@Localizer.GetString("Admin", "Duration") <span style="color: #dc3545;">*</span></label>
+                            <input asp-for="Duration" type="number" class="form-control" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                            <small style="color: #999;">min</small>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                            @Localizer.GetString("Movie", "Description") <span style="color: var(--danger-color);">*</span>
-                        </label>
-                        <textarea asp-for="Description" class="form-control" rows="4" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px; line-height: 1.6;"></textarea>
-                        <small style="color: var(--text-muted); font-size: 12px;">@Localizer.GetString("Admin", "MovieDescriptionHelp")</small>
+                        <label class="form-label">@Localizer.GetString("Movie", "Description") <span style="color: #dc3545;">*</span></label>
+                        <textarea asp-for="Description" class="form-control" rows="3" required style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;"></textarea>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Images Section -->
-        <div class="col-md-6">
-            <div class="dashbox" style="margin-bottom: 30px;">
-                <div class="dashbox__title">
-                    <h3><i class="ti ti-photo"></i> @Localizer.GetString("Common", "CoverImage")</h3>
-                    <small style="color: var(--text-muted); font-weight: 400; margin-left: 10px;">@Localizer.GetString("Admin", "Required")</small>
-                </div>
-                <div style="padding: 25px;">
-                    <div class="mb-3">
-                        <label class="form-label" style="color: var(--text-color); font-weight: 500;">@Localizer.GetString("Admin", "ImagePath")</label>
-                        <input asp-for="CoverImage" class="form-control" placeholder="/img/covers/movie.jpg" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                        <small style="color: var(--text-muted); font-size: 12px; display: block; margin-top: 5px;">@Localizer.GetString("Admin", "OrUploadBelow")</small>
-                    </div>
-                    <div>
-                        <label class="form-label" style="color: var(--text-color); font-weight: 500;">@Localizer.GetString("Admin", "UploadFile")</label>
-                        <input type="file" name="coverFile" class="form-control" accept="image/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                        <small style="color: var(--text-muted); font-size: 12px; display: block; margin-top: 5px;">JPG, PNG, WebP (max 5MB)</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="dashbox" style="margin-bottom: 30px;">
-                <div class="dashbox__title">
-                    <h3><i class="ti ti-photo"></i> @Localizer.GetString("Admin", "PosterImage")</h3>
-                    <small style="color: var(--text-muted); font-weight: 400; margin-left: 10px;">@Localizer.GetString("Admin", "Optional")</small>
-                </div>
-                <div style="padding: 25px;">
-                    <div class="mb-3">
-                        <label class="form-label" style="color: var(--text-color); font-weight: 500;">@Localizer.GetString("Admin", "ImagePath")</label>
-                        <input asp-for="PosterImage" class="form-control" placeholder="/img/posters/movie.jpg" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                        <small style="color: var(--text-muted); font-size: 12px; display: block; margin-top: 5px;">@Localizer.GetString("Admin", "FallbackToCover")</small>
-                    </div>
-                    <div>
-                        <label class="form-label" style="color: var(--text-color); font-weight: 500;">@Localizer.GetString("Admin", "UploadFile")</label>
-                        <input type="file" name="posterFile" class="form-control" accept="image/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Optional Fields -->
-        <div class="col-12">
-            <div class="dashbox" style="margin-bottom: 30px;">
-                <div class="dashbox__title" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#additionalFields">
-                    <h3><i class="ti ti-adjustments"></i> @Localizer.GetString("Admin", "AdditionalOptions")</h3>
-                    <small style="color: var(--text-muted); font-weight: 400; margin-left: 10px;">@Localizer.GetString("Admin", "ClickToExpand")</small>
-                    <i class="ti ti-chevron-down" style="margin-left: auto;"></i>
-                </div>
-                <div class="collapse" id="additionalFields">
-                    <div style="padding: 30px; border-top: 1px solid rgba(255,255,255,0.05);">
-                        <div class="row">
-                            <div class="col-md-12 mb-4">
-                                <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                    <i class="ti ti-users"></i> @Localizer.GetString("Common", "Actors")
-                                </label>
-                                <input type="text" name="actorsList" class="form-control" placeholder="Tom Hanks, Morgan Freeman, Brad Pitt..." style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                                <small style="color: var(--text-muted); font-size: 12px;">@Localizer.GetString("Admin", "CommaSeparatedActors")</small>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                    <i class="ti ti-calendar"></i> @Localizer.GetString("Admin", "ReleaseDate")
-                                </label>
-                                <input asp-for="ReleaseDate" type="date" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                    <i class="ti ti-photo-up"></i> @Localizer.GetString("Admin", "BannerImage")
-                                </label>
-                                <input asp-for="BannerImage" class="form-control" placeholder="/img/banners/movie-banner.jpg" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                                <small style="color: var(--text-muted); font-size: 12px;">@Localizer.GetString("Admin", "ForHeroSection")</small>
-                            </div>
-
-                            <div class="col-md-12 mb-4">
-                                <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                    <i class="ti ti-photo"></i> @Localizer.GetString("Admin", "UploadBanner")
-                                </label>
-                                <input type="file" name="bannerFile" class="form-control" accept="image/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                                <small style="color: var(--text-muted); font-size: 12px;">@Localizer.GetString("Admin", "RecommendedSize") (1920x800px)</small>
-                            </div>
-
-                            <div class="col-md-12 mb-4">
-                                <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                    <i class="ti ti-player-play"></i> @Localizer.GetString("Admin", "VideoURL")
-                                </label>
-                                <input asp-for="VideoUrl" class="form-control" placeholder="https://example.com/video.mp4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                                <small style="color: var(--text-muted); font-size: 12px;">@Localizer.GetString("Admin", "OrUploadVideoBelow")</small>
-                            </div>
-
-                            <div class="col-md-12 mb-4">
-                                <label class="form-label" style="color: var(--text-color); font-weight: 500;">
-                                    <i class="ti ti-upload"></i> @Localizer.GetString("Admin", "UploadVideo")
-                                </label>
-                                <input type="file" name="videoFile" class="form-control" accept="video/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 12px 16px; border-radius: 8px;">
-                                <small style="color: var(--text-muted); font-size: 12px;">MP4, WebM, MKV</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings -->
-        <div class="col-12">
-            <div class="dashbox" style="margin-bottom: 30px;">
-                <div class="dashbox__title">
-                    <h3><i class="ti ti-settings"></i> @Localizer.GetString("Admin", "DisplaySettings")</h3>
-                </div>
-                <div style="padding: 30px;">
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-check form-switch mb-3" style="padding: 15px; background: rgba(255,85,165,0.05); border-radius: 8px; border: 1px solid rgba(255,85,165,0.1);">
-                                <input asp-for="IsFeatured" type="checkbox" class="form-check-input" id="featured" style="width: 45px; height: 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
-                                <label class="form-check-label" for="featured" style="color: var(--text-color); margin-left: 10px;">
-                                    <strong><i class="ti ti-star"></i> @Localizer.GetString("Admin", "FeaturedMovie")</strong><br>
-                                    <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "ShowInFeaturedSection")</small>
-                                </label>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Admin", "CoverImagePath")</label>
+                            <input asp-for="CoverImage" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Common", "UploadCoverImage")</label>
+                            <input type="file" name="coverFile" class="form-control" accept="image/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Admin", "PosterImagePath") <small style="color: #999;">(@Localizer.GetString("Admin", "Optional"))</small></label>
+                            <input asp-for="PosterImage" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Common", "UploadPosterImage")</label>
+                            <input type="file" name="posterFile" class="form-control" accept="image/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Admin", "BannerImagePath") <small style="color: #999;">(@Localizer.GetString("Admin", "Optional"))</small></label>
+                            <input asp-for="BannerImage" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Common", "UploadBannerImage")</label>
+                            <input type="file" name="bannerFile" class="form-control" accept="image/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer.GetString("Admin", "ActorsCommaSeparated") <small style="color: #999;">(@Localizer.GetString("Admin", "Optional"))</small></label>
+                        <input type="text" name="actorsList" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Admin", "ReleaseDate") <small style="color: #999;">(@Localizer.GetString("Admin", "Optional"))</small></label>
+                            <input asp-for="ReleaseDate" type="date" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">@Localizer.GetString("Admin", "VideoURL") <small style="color: #999;">(@Localizer.GetString("Admin", "Optional"))</small></label>
+                            <input asp-for="VideoUrl" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer.GetString("Admin", "VideoFileUpload") <small style="color: #999;">(@Localizer.GetString("Admin", "Optional"))</small></label>
+                        <input type="file" name="videoFile" class="form-control" accept="video/*" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                <input asp-for="IsFeatured" type="checkbox" class="form-check-input">
+                                <label class="form-check-label">@Localizer.GetString("Admin", "FeaturedMovie")</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-switch mb-3" style="padding: 15px; background: rgba(40,167,69,0.05); border-radius: 8px; border: 1px solid rgba(40,167,69,0.1);">
-                                <input asp-for="ShowInBanner" type="checkbox" class="form-check-input" id="showInBanner" style="width: 45px; height: 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
-                                <label class="form-check-label" for="showInBanner" style="color: var(--text-color); margin-left: 10px;">
-                                    <strong><i class="ti ti-layout"></i> @Localizer.GetString("Admin", "ShowInBanner")</strong><br>
-                                    <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "ShowInHeroCarousel")</small>
-                                </label>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                <input asp-for="ShowInBanner" type="checkbox" class="form-check-input">
+                                <label class="form-check-label">@Localizer.GetString("Admin", "ShowInBannerCarousel")</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-check form-switch mb-3" style="padding: 15px; background: rgba(220,53,69,0.05); border-radius: 8px; border: 1px solid rgba(220,53,69,0.1);">
-                                <input asp-for="IsHidden" type="checkbox" class="form-check-input" id="hidden" style="width: 45px; height: 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
-                                <label class="form-check-label" for="hidden" style="color: var(--text-color); margin-left: 10px;">
-                                    <strong><i class="ti ti-eye-off"></i> @Localizer.GetString("Admin", "HideMovie")</strong><br>
-                                    <small style="color: var(--text-muted);">@Localizer.GetString("Admin", "HideFromPublicView")</small>
-                                </label>
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                <input asp-for="IsHidden" type="checkbox" class="form-check-input">
+                                <label class="form-check-label">@Localizer.GetString("Admin", "HideFromPublic")</label>
                             </div>
                         </div>
                     </div>
@@ -233,14 +144,13 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="col-12">
-            <div style="display: flex; gap: 15px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px;">
-                <button type="submit" class="btn btn-primary" style="background: var(--primary-color); border: none; padding: 15px 40px; border-radius: 8px; font-weight: 600; font-size: 16px;">
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary" style="background: var(--primary-color); border: none;">
                     <i class="ti ti-device-floppy"></i> @Localizer.GetString("Admin", "SaveMovie")
                 </button>
-                <a asp-action="Movies" class="btn btn-outline-secondary" style="border: 1px solid rgba(255,255,255,0.1); color: var(--text-color); padding: 15px 40px; border-radius: 8px; font-weight: 600; font-size: 16px; text-decoration: none;">
-                    <i class="ti ti-x"></i> @Localizer.GetString("Common", "Cancel")
+                <a asp-action="Movies" class="btn btn-outline-secondary" style="border: 1px solid rgba(255,255,255,0.1); color: var(--text-color); text-decoration: none;">
+                    @Localizer.GetString("Common", "Cancel")
                 </a>
             </div>
         </div>
